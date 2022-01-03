@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/document_system?createDatabaseIfNotExist=true
+    username:
+    password:
+  #JPA Properties
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        #spring.jpa.show-sql=true
+        format_sql: TRUE
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
