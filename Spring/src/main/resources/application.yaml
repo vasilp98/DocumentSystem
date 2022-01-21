@@ -1,14 +1,16 @@
+server:
+  port: 8011
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/document_system?createDatabaseIfNotExist=true
-    username:
-    password:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://surus.db.elephantsql.com/jczyvpsi
+    username: jczyvpsi
+    password: ZC8Gv4I4NMR1sJaGPoIpjRUhD9peoXDw
   #JPA Properties
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         #spring.jpa.show-sql=true
         format_sql: TRUE
     hibernate:
