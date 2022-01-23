@@ -1,22 +1,11 @@
 <div class="main-container">
-    <div class="alert alert-app-level alert-info">
-        <div class="alert-items">
-            <div class="alert-item static">
-                <div class="alert-icon-wrapper">
-                    <clr-icon class="alert-icon" shape="info-circle"></clr-icon>
-                </div>
-                <div class="alert-text">
-                    App Level Alert
-                </div>
-                <div class="alert-actions">
-                    <button class="btn btn-sm alert-action">Action</button>
-                </div>
-            </div>
-        </div>
-        <button type="button" class="close" aria-label="Close">
-            <clr-icon aria-hidden="true" shape="close"></clr-icon>
-        </button>
-    </div>
+    <clr-alert [clrAlertType]="alertType" [clrAlertAppLevel]="true" [(clrAlertClosed)]="hideAlert">
+        <clr-alert-item>
+      <span class="alert-text">
+        {{content}}
+      </span>
+        </clr-alert-item>
+    </clr-alert>
     <header class="header header-6">
         <div class="branding">
             <a href="javascript:void(0)">
@@ -33,12 +22,15 @@
             </a>
         </div>
         <div class="settings">
-            <a [routerLink]="['/login']" class="nav-link nav-icon" aria-label="settings">
+            <a [routerLink]="['/login']" *ngIf="!isLoggedIn" class="nav-link">
                 Login
             </a>
-            <a href="javascript://" class="nav-link nav-icon" aria-label="settings">
-                <clr-icon shape="cog"></clr-icon>
-            </a>
+            <span *ngIf="isLoggedIn" class="nav-link">
+                Hello, {{username}}
+            </span>
+            <span (click)="signOut()" *ngIf="isLoggedIn" class="nav-link">
+                Logout
+            </span>
         </div>
     </header>
     <nav class="subnav">
@@ -62,27 +54,46 @@
     </nav>
     <div class="content-container">
         <div class="content-area">
+            <h2 (click)="testCall()">
+                Click here to test jwt interceptor.
+            </h2>
             <p>
-                Content Area
-            </p>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu odio nisi. Vestibulum dignissim eget massa
-                sit amet feugiat. Quisque auctor mattis quam eu suscipit. Morbi ipsum risus, feugiat vitae sem at, tincidunt
-                elementum magna. Phasellus tristique posuere dui, ut tempus felis sagittis quis. Integer iaculis ultrices elit,
-                sed venenatis eros. Vivamus interdum semper velit eget gravida. Sed finibus eget lacus sed semper. Suspendisse
-                fringilla, tellus in molestie cursus, sapien purus volutpat lacus, eget venenatis erat est vitae libero. Aliquam
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu odio nisi. Vestibulum dignissim eget
+                massa
+                sit amet feugiat. Quisque auctor mattis quam eu suscipit. Morbi ipsum risus, feugiat vitae sem at,
+                tincidunt
+                elementum magna. Phasellus tristique posuere dui, ut tempus felis sagittis quis. Integer iaculis
+                ultrices elit,
+                sed venenatis eros. Vivamus interdum semper velit eget gravida. Sed finibus eget lacus sed semper.
+                Suspendisse
+                fringilla, tellus in molestie cursus, sapien purus volutpat lacus, eget venenatis erat est vitae libero.
+                Aliquam
                 et orci hendrerit, consequat purus non, imperdiet ipsum.
             </p>
         </div>
         <nav class="sidenav">
             <section class="sidenav-content">
-                <a class="nav-link nav-icon"><clr-icon shape="home"></clr-icon> Home</a>
-                <a class="nav-link"><clr-icon shape="cog"></clr-icon> Settings</a>
-                <a class="nav-link active"><clr-icon shape="user"></clr-icon> Users</a>
-                <a class="nav-link"><clr-icon shape="Folder-open"></clr-icon> Files</a>
-                <a class="nav-link"><clr-icon shape="Cloud"></clr-icon> Data</a>
-                <a class="nav-link"><clr-icon shape="image-gallery"> Photos</clr-icon> 6</a>
-                <a class="nav-link"><clr-icon shape="video-gallery"></clr-icon> Videos</a>
+                <a class="nav-link nav-icon">
+                    <clr-icon shape="home"></clr-icon>
+                    Home</a>
+                <a class="nav-link">
+                    <clr-icon shape="cog"></clr-icon>
+                    Settings</a>
+                <a class="nav-link active">
+                    <clr-icon shape="user"></clr-icon>
+                    Users</a>
+                <a class="nav-link">
+                    <clr-icon shape="Folder-open"></clr-icon>
+                    Files</a>
+                <a class="nav-link">
+                    <clr-icon shape="Cloud"></clr-icon>
+                    Data</a>
+                <a class="nav-link">
+                    <clr-icon shape="image-gallery"> Photos</clr-icon>
+                    6</a>
+                <a class="nav-link">
+                    <clr-icon shape="video-gallery"></clr-icon>
+                    Videos</a>
             </section>
         </nav>
     </div>

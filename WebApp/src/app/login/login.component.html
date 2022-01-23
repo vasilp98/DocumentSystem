@@ -1,31 +1,24 @@
 <div class="login-wrapper">
-    <form class="login">
+    <form class="login"
+          *ngIf="!isLoggedIn"
+          [formGroup]="loginForm"
+          (ngSubmit)="onSubmit()"
+          novalidate>
         <section class="title">
             <h3 class="welcome">Welcome to</h3>
             Company Product Name
             <h5 class="hint">Use your Company ID to sign in or create one now</h5>
         </section>
         <div class="login-group">
-            <clr-select-container>
-                <label class="clr-sr-only">User Role</label>
-                <select clrSelect name="type" >
-                    <option value="local">Local Users</option>
-                    <option value="admin">Administrator</option>
-                </select>
-            </clr-select-container>
             <clr-input-container>
-                <label class="clr-sr-only">Username</label>
-                <input type="text" name="username" clrInput placeholder="Username"/>
+                <label class="clr-sr-only" >Username</label>
+                <input type="text" name="username" clrInput placeholder="Username" formControlName="username"/>
             </clr-input-container>
             <clr-password-container>
-                <label class="clr-sr-only">Password</label>
-                <input type="password" name="password" clrPassword placeholder="Password" />
+                <label class="clr-sr-only" >Password</label>
+                <input type="password" name="password" clrPassword placeholder="Password" formControlName="password"/>
             </clr-password-container>
-            <clr-checkbox-wrapper>
-                <label>Remember me</label>
-                <input type="checkbox" name="rememberMe" clrCheckbox />
-            </clr-checkbox-wrapper>
-            <div class="error active">
+            <div *ngIf="isLoginFailed" class="error active">
                 Invalid user name or password
             </div>
             <button type="submit" class="btn btn-primary">NEXT</button>
