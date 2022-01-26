@@ -1,4 +1,4 @@
-package com.example.documentsystem.dto;
+package com.example.documentsystem.dao;
 
 import com.example.documentsystem.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
