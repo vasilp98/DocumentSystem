@@ -9,6 +9,8 @@ public interface AuditService {
 
     AuditEntity findById(Long id);
 
+    List<AuditEntity> findByDocumentId(Long documentId);
+
     AuditEntity create(AuditEntity audit);
 
     AuditEntity update(AuditEntity audit);

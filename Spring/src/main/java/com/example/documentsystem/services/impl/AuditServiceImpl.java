@@ -28,6 +28,12 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<AuditEntity> findByDocumentId(Long documentId) {
+        return repo.findAllByDocumentId(documentId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public AuditEntity findById(Long auditId) {
         return repo.findById(auditId).orElseThrow(() ->
                 new EntityNotFoundException(
