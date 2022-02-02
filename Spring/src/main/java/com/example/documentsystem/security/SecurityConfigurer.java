@@ -1,7 +1,7 @@
 package com.example.documentsystem.security;
 
 import com.example.documentsystem.filters.JwtRequestFilter;
-import com.example.documentsystem.services.MyUserDetailsService;
+import com.example.documentsystem.services.Impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,14 +17,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
-    private MyUserDetailsService myUserDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(myUserDetailsService);
+        auth.userDetailsService(userDetailsService);
     }
 
     @Bean

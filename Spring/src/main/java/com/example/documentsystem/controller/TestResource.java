@@ -2,7 +2,7 @@ package com.example.documentsystem.controller;
 
 import com.example.documentsystem.models.AuthenticationRequest;
 import com.example.documentsystem.models.AuthenticationResponse;
-import com.example.documentsystem.services.MyUserDetailsService;
+import com.example.documentsystem.services.Impl.UserDetailsServiceImpl;
 import com.example.documentsystem.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class TestResource {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private MyUserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private JwtUtil jwtTokenUtil;

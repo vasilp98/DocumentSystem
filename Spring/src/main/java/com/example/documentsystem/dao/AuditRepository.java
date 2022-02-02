@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface AuditRepository extends JpaRepository<AuditEntity, Long> {
+    List<AuditEntity> removeByDocumentId(Long documentId);
     List<AuditEntity> findAllByDocumentId(Long documentId);
 }

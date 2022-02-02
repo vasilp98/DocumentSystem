@@ -1,8 +1,7 @@
 package com.example.documentsystem.filters;
 
-import com.example.documentsystem.services.MyUserDetailsService;
+import com.example.documentsystem.services.Impl.UserDetailsServiceImpl;
 import com.example.documentsystem.util.JwtUtil;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +20,7 @@ import java.io.IOException;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
-    private MyUserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private JwtUtil jwtUtil;
