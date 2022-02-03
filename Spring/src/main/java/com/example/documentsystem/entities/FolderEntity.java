@@ -1,5 +1,6 @@
 package com.example.documentsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -26,5 +27,6 @@ public class FolderEntity {
     private LocalDateTime created = LocalDateTime.now();
 
     @NotNull
+    @JsonIgnore
     private String storageLocation;
 }
