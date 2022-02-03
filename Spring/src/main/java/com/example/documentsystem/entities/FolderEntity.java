@@ -19,9 +19,11 @@ public class FolderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @ManyToOne(targetEntity = UserEntity.class)
-    @JoinColumn(name = "OWNER_ID", nullable = false)
+    @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
+    @JoinColumn(name = "owner_id", insertable = false, updatable = false)
+    private UserEntity owner;
+
+    @Column(name = "owner_id")
     private Long ownerId;
 
     @NotNull

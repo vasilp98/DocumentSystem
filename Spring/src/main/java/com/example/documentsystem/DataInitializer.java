@@ -29,8 +29,9 @@ public class DataInitializer implements ApplicationRunner {
     );
 
     private final List<FolderEntity> DEFAULT_FOLDERS = List.of(
-        new FolderEntity(1L, "Papka", LocalDateTime.now(), "polojenie"),
-        new FolderEntity(1L, "Papka2", LocalDateTime.now(), "polojenie2")
+        // fix hardcoded values!
+        new FolderEntity(5L, "Papka", LocalDateTime.now(), "polojenie"),
+        new FolderEntity(6L, "Papka2", LocalDateTime.now(), "polojenie2")
     );
 
     @Override
@@ -40,9 +41,9 @@ public class DataInitializer implements ApplicationRunner {
                     DEFAULT_USERS.stream().map(userService::create).collect(Collectors.toList()));
         }
 
-//        if(folderService.findAll().size() == 0){
-//            log.info("Successfully created folders: {}",
-//                    DEFAULT_FOLDERS.stream().map(folderService::create).collect(Collectors.toList()));
-//        }
+        if(folderService.findAll().size() == 0){
+            log.info("Successfully created folders: {}",
+                    DEFAULT_FOLDERS.stream().map(folderService::create).collect(Collectors.toList()));
+        }
     }
 }
