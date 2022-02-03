@@ -8,6 +8,7 @@ import com.example.documentsystem.dao.content.FileContentRepository;
 import com.example.documentsystem.entities.DocumentEntity;
 import com.example.documentsystem.entities.FileEntity;
 import com.example.documentsystem.entities.FolderEntity;
+import com.example.documentsystem.exceptions.FileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,9 +36,14 @@ public class FileSystemFileContentRepository implements FileContentRepository {
     }
 
     @Override
-    public InputStream retrieve(FileContentId id) throws IOException {
+    public InputStream retrieve(FileContentId id) {
         Path path = getLocation(id);
-        return Files.newInputStream(path);
+
+        try {
+            return Files.newInputStream(path);
+        } catch (IOException exception) {
+            throw new FileNotFoundException(String.format("File with name '%s' can't be found!", path));
+        }
     }
 
     @Override

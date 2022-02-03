@@ -1,23 +1,16 @@
-package com.example.documentsystem.entities;
+package com.example.documentsystem.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "documents")
 @Data
-public class DocumentEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@AllArgsConstructor
+public class Document {
     @NotNull
-    @ManyToOne(targetEntity = FolderEntity.class)
-    @JoinColumn(name = "FOLDER_ID", nullable = false)
-    private Long folderId;
+    private Long id;
 
     @NotNull
     private String name;
