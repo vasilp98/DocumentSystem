@@ -13,41 +13,45 @@ import java.util.List;
 @Service
 @Transactional
 public class CommentServiceImpl implements CommentService {
-    private final CommentRepository repo;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public CommentServiceImpl(CommentRepository repo) {
-        this.repo = repo;
+    public CommentServiceImpl(CommentRepository commentRepository) {
+        this.commentRepository = commentRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<CommentEntity> findAll() {
-        return repo.findAll();
+        return commentRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public CommentEntity findById(Long commentId) {
-        return repo.findById(commentId).orElseThrow(() ->
+        return commentRepository.findById(commentId).orElseThrow(() ->
                 new EntityNotFoundException(
                         String.format("Comment with ID=%s not found.", commentId)));
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<CommentEntity> findAllByDocumentId(Long documentId) { return commentRepository.findAllByDocumentId((documentId)); }
+
+    @Override
     public CommentEntity create(CommentEntity comment) {
-        return repo.save(comment);
+        return commentRepository.save(comment);
     }
 
     @Override
     public CommentEntity update(CommentEntity comment) {
-        return repo.save(comment);
+        return commentRepository.save(comment);
     }
 
     @Override
     public CommentEntity deleteById(Long commentId) {
         CommentEntity old = findById(commentId);
-        repo.deleteById(commentId);
+        commentRepository.deleteById(commentId);
         return old;
     }
 }
