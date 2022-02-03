@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from '../core/services/authentication.service';
-import {TokenStorageService} from '../core/services/token-storage.service';
+import {AuthenticationService} from '@core/services/authentication.service';
+import {TokenStorageService} from '@core/services/token-storage.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import jwt_decode from "jwt-decode";
 import {Router} from "@angular/router";
