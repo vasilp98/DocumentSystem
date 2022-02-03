@@ -1,13 +1,16 @@
 package com.example.documentsystem;
 
 import com.example.documentsystem.entities.UserEntity;
+import com.example.documentsystem.entities.FolderEntity;
 import com.example.documentsystem.services.UserService;
+import com.example.documentsystem.services.FolderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,9 +20,17 @@ public class DataInitializer implements ApplicationRunner {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private FolderService folderService;
+
     private final List<UserEntity> DEFAULT_USERS = List.of(
             new UserEntity("admin", "Admin123&", "admin@admin.com"),
             new UserEntity("user", "user", "user@user.com")
+    );
+
+    private final List<FolderEntity> DEFAULT_FOLDERS = List.of(
+        new FolderEntity(1L, "Papka", LocalDateTime.now(), "polojenie"),
+        new FolderEntity(1L, "Papka2", LocalDateTime.now(), "polojenie2")
     );
 
     @Override
@@ -28,5 +39,10 @@ public class DataInitializer implements ApplicationRunner {
             log.info("Successfully created users: {}",
                     DEFAULT_USERS.stream().map(userService::create).collect(Collectors.toList()));
         }
+
+//        if(folderService.findAll().size() == 0){
+//            log.info("Successfully created folders: {}",
+//                    DEFAULT_FOLDERS.stream().map(folderService::create).collect(Collectors.toList()));
+//        }
     }
 }

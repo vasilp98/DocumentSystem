@@ -1,0 +1,27 @@
+<header class="header header-6">
+    <div class="branding">
+        <a href="javascript:void(0)">
+            <clr-icon shape="vm-bug"></clr-icon>
+            <span class="title">Document System</span>
+        </a>
+    </div>
+    <div class="header-nav">
+        <a href="javascript://" class="nav-link nav-icon">
+            <clr-icon shape="cloud"></clr-icon>
+        </a>
+        <a href="javascript://" class="active nav-link nav-icon">
+            <clr-icon shape="folder"></clr-icon>
+        </a>
+    </div>
+    <div class="settings">
+        <a [routerLink]="['/login']" *ngIf="!isLoggedIn" class="nav-link">
+            Login
+        </a>
+        <span *ngIf="isLoggedIn" class="nav-link">
+                Hello, {{username}}
+            </span>
+        <span (click)="signOut()" *ngIf="isLoggedIn" class="nav-link">
+                Logout
+            </span>
+    </div>
+</header>

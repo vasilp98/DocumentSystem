@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {TokenStorageService} from "../../core/services/token-storage.service";
 import {DataService} from "../../core/services/data.service";
 
 @Component({
@@ -8,22 +7,14 @@ import {DataService} from "../../core/services/data.service";
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-    private roles: string[] = [];
-    isLoggedIn = false;
-    username?: string;
     content: string = '';
     hideAlert: boolean = true;
     alertType: string;
-    constructor(private tokenStorageService: TokenStorageService, private dataService: DataService) {
+    constructor(private dataService: DataService) {
     }
 
     ngOnInit(): void {
-        this.isLoggedIn = !!this.tokenStorageService.getToken();
 
-        if (this.isLoggedIn) {
-            const user = this.tokenStorageService.getUser();
-            this.username = user.sub;
-        }
     }
 
     testCall(){
@@ -40,10 +31,4 @@ export class HomeComponent implements OnInit {
             }
         });
     }
-
-    signOut(){
-        this.tokenStorageService.signOut();
-        location.reload();
-    }
-
 }

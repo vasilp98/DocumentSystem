@@ -13,8 +13,11 @@ import { HomeComponent } from "./modules/home/home.component";
 import { LoginComponent } from "./modules/login/login.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ClarityModule } from "@clr/angular";
+import { FoldersComponent } from './modules/folders/folders.component';
+import { HeaderComponent } from './core/header/header.component';
+import { FooterComponent } from './core/footer/footer.component';
 @NgModule({
-  declarations: [AppComponent, LoginComponent, HomeComponent],
+  declarations: [AppComponent, LoginComponent, HomeComponent, FoldersComponent, HeaderComponent, FooterComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
