@@ -1,6 +1,7 @@
 package com.example.documentsystem.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "links")
 @Data
+@NoArgsConstructor
 public class DocumentLinkEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +27,11 @@ public class DocumentLinkEntity {
     private String password;
 
     private LocalDateTime validUntil;
+
+    public DocumentLinkEntity(String token, Long documentId, String password, LocalDateTime validUntil) {
+        this.token = token;
+        this.documentId = documentId;
+        this.password = password;
+        this.validUntil = validUntil;
+    }
 }

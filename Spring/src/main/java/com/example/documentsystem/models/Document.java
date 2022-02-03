@@ -16,13 +16,13 @@ public class Document {
     private String name;
 
     @NotNull
-    private LocalDateTime storeDate = LocalDateTime.now();
+    private LocalDateTime storeDate;
 
     @NotNull
     private String storeUser;
 
     @NotNull
-    private LocalDateTime modifyDate = LocalDateTime.now();
+    private LocalDateTime modifyDate;
 
     @NotNull
     private String modifyUser;
