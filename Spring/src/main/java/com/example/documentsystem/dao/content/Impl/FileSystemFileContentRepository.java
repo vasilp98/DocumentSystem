@@ -9,11 +9,13 @@ import com.example.documentsystem.entities.DocumentEntity;
 import com.example.documentsystem.entities.FileEntity;
 import com.example.documentsystem.entities.FolderEntity;
 import com.example.documentsystem.exceptions.FileNotFoundException;
+import com.example.documentsystem.exceptions.UploadFileException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -47,21 +49,31 @@ public class FileSystemFileContentRepository implements FileContentRepository {
     }
 
     @Override
-    public void add(FileContentId id, InputStream stream) throws IOException {
-        Path path = generateLocation(id);
-        Files.copy(stream, path);
+    public void add(FileContentId id, InputStream stream) {
+        try {
+            Path path = generateLocation(id);
+            Files.createDirectories(path.getParent());
+            Files.copy(stream, path);
+        } catch (IOException exception) {
+            throw new UploadFileException(exception.getMessage());
+        }
     }
 
     @Override
-    public void update(FileContentId id, InputStream stream) throws IOException {
+    public void update(FileContentId id, InputStream stream) {
         delete(id);
         add(id, stream);
     }
 
     @Override
-    public void delete(FileContentId id) throws IOException {
-        Path path = getLocation(id);
-        Files.delete(path);
+    public void delete(FileContentId id) {
+        try {
+            Path path = getLocation(id);
+            Files.delete(path);
+        } catch (IOException exception) {
+            // Create custom exception
+            throw new RuntimeException(exception.getMessage());
+        }
     }
 
     private Path getLocation(FileContentId id) {
@@ -79,7 +91,7 @@ public class FileSystemFileContentRepository implements FileContentRepository {
 
         String relativePath = Path.of(folderEntity.getName(),
                 documentEntity.getId().toString(),
-                UUID.randomUUID() + fileEntity.getExtension()).toString();
+                UUID.randomUUID() + "." + fileEntity.getExtension()).toString();
 
         fileEntity.setLocation(relativePath);
         fileRepository.save(fileEntity);

@@ -57,9 +57,9 @@ public class DataInitializer implements ApplicationRunner {
                     DEFAULT_FOLDERS.stream().map(folderService::create).collect(Collectors.toList()));
         }
 
-        if(documentService.findAll().size() == 0){
-            log.info("Successfully created documents: {}",
-                    DEFAULT_DOCUMENTS.stream().map(documentService::create).collect(Collectors.toList()));
-        }
+//        if(documentService.findAll().size() == 0){
+//            log.info("Successfully created documents: {}",
+//                    DEFAULT_DOCUMENTS.stream().map(documentService::create).collect(Collectors.toList()));
+//        }
     }
 }
