@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface DocumentLinkRepository extends JpaRepository<DocumentLinkEntity, Long> {
-    Optional<DocumentLinkEntity> findByTokenAndPassword(String token, String password);
+    Optional<DocumentLinkEntity> findByToken(String token);
 }

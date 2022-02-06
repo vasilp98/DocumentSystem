@@ -1,7 +1,9 @@
 package com.example.documentsystem;
 
+import com.example.documentsystem.entities.DocumentEntity;
 import com.example.documentsystem.entities.UserEntity;
 import com.example.documentsystem.entities.FolderEntity;
+import com.example.documentsystem.services.DocumentService;
 import com.example.documentsystem.services.UserService;
 import com.example.documentsystem.services.FolderService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,9 @@ public class DataInitializer implements ApplicationRunner {
     @Autowired
     private FolderService folderService;
 
+    @Autowired
+    private DocumentService documentService;
+
     private final List<UserEntity> DEFAULT_USERS = List.of(
             new UserEntity("admin", "Admin123&", "admin@admin.com"),
             new UserEntity("user", "user", "user@user.com")
@@ -32,6 +37,12 @@ public class DataInitializer implements ApplicationRunner {
         // fix hardcoded values!
         new FolderEntity(5L, "Papka", LocalDateTime.now(), "polojenie"),
         new FolderEntity(6L, "Papka2", LocalDateTime.now(), "polojenie2")
+    );
+
+    private final List<DocumentEntity> DEFAULT_DOCUMENTS = List.of(
+            // fix hardcoded values!
+            new DocumentEntity(2L, "Document", "admin", "admin", 4L, 2),
+            new DocumentEntity(2L, "Document2", "user", "user", 4L, 2)
     );
 
     @Override
@@ -44,6 +55,11 @@ public class DataInitializer implements ApplicationRunner {
         if(folderService.findAll().size() == 0){
             log.info("Successfully created folders: {}",
                     DEFAULT_FOLDERS.stream().map(folderService::create).collect(Collectors.toList()));
+        }
+
+        if(documentService.findAll().size() == 0){
+            log.info("Successfully created documents: {}",
+                    DEFAULT_DOCUMENTS.stream().map(documentService::create).collect(Collectors.toList()));
         }
     }
 }

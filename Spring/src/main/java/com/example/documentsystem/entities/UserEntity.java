@@ -32,7 +32,7 @@ public class UserEntity {
 
     private LocalDateTime modified = LocalDateTime.now();
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private Set<RoleEntity> roles = new HashSet<>();
 
     public UserEntity(String username, String password, String email) {

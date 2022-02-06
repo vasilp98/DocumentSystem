@@ -13,9 +13,11 @@ public class FileEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @ManyToOne(targetEntity = DocumentEntity.class)
-    @JoinColumn(name = "DOCUMENT_ID", nullable = false)
+    @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @JoinColumn(name = "DOCUMENT_ID", insertable = false, updatable = false)
+    private DocumentEntity document;
+
+    @Column(name = "DOCUMENT_ID")
     private Long documentId;
 
     @NotNull
