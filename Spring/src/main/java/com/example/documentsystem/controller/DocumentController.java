@@ -1,6 +1,7 @@
 package com.example.documentsystem.controller;
 
 import com.example.documentsystem.models.Document;
+import com.example.documentsystem.models.DocumentUserFields;
 import com.example.documentsystem.models.StoredDocument;
 import com.example.documentsystem.models.ViewingDocumentBundle;
 import com.example.documentsystem.models.auditing.AuditEvent;
@@ -28,8 +29,18 @@ public class DocumentController {
         return documentService.getDocumentForViewing(documentId);
     }
 
-    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public Document upload(@RequestPart StoredDocument document, @RequestPart MultipartFile file) {
         return documentService.create(document, file);
+    }
+
+    @PostMapping("/{documentId}/fields")
+    public Document updateFields(@PathVariable Long documentId, @RequestBody DocumentUserFields fields) {
+        return documentService.updateFields(documentId, fields);
+    }
+
+    @PostMapping("/{documentId}/files")
+    public void addFile(@PathVariable Long documentId, @RequestParam("file") MultipartFile file) {
+        documentService.addFile(documentId, file);
     }
 }

@@ -9,8 +9,10 @@ import com.example.documentsystem.entities.FileEntity;
 import com.example.documentsystem.exceptions.UploadFileException;
 import com.example.documentsystem.extensions.EntityExtensions;
 import com.example.documentsystem.models.Document;
+import com.example.documentsystem.models.DocumentUserFields;
 import com.example.documentsystem.models.StoredDocument;
 import com.example.documentsystem.models.ViewingDocumentBundle;
+import com.example.documentsystem.models.auditing.AuditEventType;
 import com.example.documentsystem.models.auditing.AuditedField;
 import com.example.documentsystem.services.AuditingService;
 import com.example.documentsystem.services.DocumentService;
@@ -31,6 +33,7 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -56,26 +59,30 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Override
     @Transactional(readOnly = true)
-    public List<DocumentEntity> findAll() {
-        return documentRepository.findAll();
+    public List<Document> findAllInFolder(Long folderId)
+    {
+        return documentRepository.findByFolderIdOrderById(folderId)
+                .stream().map(de -> de.toDocument()).collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public DocumentEntity findById(Long documentId) {
-        return documentRepository.findById(documentId).orElseThrow(() ->
+    public Document findById(Long documentId) {
+        DocumentEntity documentEntity = documentRepository.findById(documentId).orElseThrow(() ->
                 new EntityNotFoundException(
                         String.format("Document with ID=%s not found.", documentId)));
+
+        return documentEntity.toDocument();
     }
 
     @Override
     @Transactional(readOnly = true)
     public ViewingDocumentBundle getDocumentForViewing(Long id) {
-        DocumentEntity documentEntity = findById(id);
+        Document document = findById(id);
         FileEntity firstFileEntity = fileRepository.findByDocumentIdAndNumber(id, 0L);
 
         InputStream firstFileStream = fileContentRepository.retrieve(new FileContentId(id, firstFileEntity.getId()));
-        return new ViewingDocumentBundle(firstFileStream, documentEntity.toDocument());
+        return new ViewingDocumentBundle(firstFileStream, document);
     }
 
     @Override
@@ -83,7 +90,7 @@ public class DocumentServiceImpl implements DocumentService {
         String currentUser = getCurrentUserName();
         DocumentEntity documentEntity = new DocumentEntity(
                 storedDocument.getFolderId(),
-                storedDocument.getName(),
+                storedDocument.getUserFields().getName(),
                 currentUser,
                 currentUser,
                 file.getSize(),
@@ -93,7 +100,7 @@ public class DocumentServiceImpl implements DocumentService {
         documentEntity = documentRepository.save(documentEntity);
 
         String extension = file.getOriginalFilename().split("\\.")[1];
-        FileEntity fileEntity = new FileEntity(documentEntity.getId(), 0L, file.getOriginalFilename(), extension, file.getSize());
+        FileEntity fileEntity = new FileEntity(documentEntity.getId(), 0, file.getOriginalFilename(), extension, file.getSize());
         fileEntity = fileRepository.save(fileEntity);
 
         InputStream inputStream;
@@ -111,15 +118,61 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public DocumentEntity update(DocumentEntity document) {
-        return documentRepository.save(document);
+    public Document updateFields(Long documentId, DocumentUserFields fields) {
+        String currentUser = getCurrentUserName();
+
+        DocumentEntity documentEntity = documentRepository.getById(documentId);
+        documentEntity.setModifyDate(LocalDateTime.now());
+        documentEntity.setModifyUser(currentUser);
+
+        //TODO Set user fields to entity
+        documentEntity.setName(fields.getName());
+
+        documentRepository.save(documentEntity);
+
+        auditingService.auditUpdateFields(getAuditedFields(documentEntity, fields), documentId);
+        return documentEntity.toDocument();
     }
 
     @Override
-    public DocumentEntity deleteById(Long documentId) {
-        DocumentEntity old = findById(documentId);
+    public void addFile(Long documentId, MultipartFile file) {
+        String currentUser = getCurrentUserName();
+
+        DocumentEntity documentEntity = documentRepository.getById(documentId);
+        documentEntity.setModifyDate(LocalDateTime.now());
+        documentEntity.setModifyUser(currentUser);
+
+        Integer fileNumber = documentEntity.getFilesCount();
+        documentEntity.setFilesCount(fileNumber + 1);
+        documentEntity.setSize(documentEntity.getSize() + file.getSize());
+
+        String extension = file.getOriginalFilename().split("\\.")[1];
+        FileEntity fileEntity = new FileEntity(documentEntity.getId(), fileNumber, file.getOriginalFilename(), extension, file.getSize());
+        fileEntity = fileRepository.save(fileEntity);
+
+        InputStream inputStream;
+        try {
+            inputStream = file.getInputStream();
+        } catch (IOException exception) {
+            throw new UploadFileException(exception.getMessage());
+        }
+
+        auditingService.auditEvent(AuditEventType.CHANGE_CONTENT, documentEntity.getId());
+
+        fileContentRepository.add(new FileContentId(documentEntity.getId(), fileEntity.getId()), inputStream);
+    }
+
+    private List<AuditedField> getAuditedFields(DocumentEntity currentDocumentEntity, DocumentUserFields updatedFields) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public Document deleteById(Long documentId) {
+        Document oldDocument = findById(documentId);
         documentRepository.deleteById(documentId);
-        return old;
+
+        auditingService.auditEvent(AuditEventType.DELETE, documentId);
+        return oldDocument;
     }
 
     private String getCurrentUserName() {

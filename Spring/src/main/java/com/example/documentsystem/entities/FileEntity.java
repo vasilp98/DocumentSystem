@@ -23,7 +23,7 @@ public class FileEntity {
     private Long documentId;
 
     @NotNull
-    private Long number;
+    private Integer number;
 
     private String location;
 
@@ -35,7 +35,7 @@ public class FileEntity {
     @NotNull
     private Long size;
 
-    public FileEntity(Long documentId, Long number, String originalFileName, String extension, Long size) {
+    public FileEntity(Long documentId, Integer number, String originalFileName, String extension, Long size) {
         this.documentId = documentId;
         this.number = number;
         this.originalFileName = originalFileName;
