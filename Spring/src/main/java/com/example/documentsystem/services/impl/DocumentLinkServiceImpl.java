@@ -18,7 +18,6 @@ import java.util.UUID;
 
 
 @Service
-@Slf4j
 @Transactional
 public class DocumentLinkServiceImpl implements DocumentLinkService {
     private final DocumentLinkRepository documentLinkRepository;

@@ -28,6 +28,7 @@ import javax.persistence.EntityNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
@@ -79,7 +80,7 @@ public class DocumentServiceImpl implements DocumentService {
     @Transactional(readOnly = true)
     public ViewingDocumentBundle getDocumentForViewing(Long id) {
         Document document = findById(id);
-        FileEntity firstFileEntity = fileRepository.findByDocumentIdAndNumber(id, 0L);
+        FileEntity firstFileEntity = fileRepository.findByDocumentIdAndNumber(id, 0);
 
         InputStream firstFileStream = fileContentRepository.retrieve(new FileContentId(id, firstFileEntity.getId()));
         return new ViewingDocumentBundle(firstFileStream, document);
@@ -160,6 +161,15 @@ public class DocumentServiceImpl implements DocumentService {
         auditingService.auditEvent(AuditEventType.CHANGE_CONTENT, documentEntity.getId());
 
         fileContentRepository.add(new FileContentId(documentEntity.getId(), fileEntity.getId()), inputStream);
+    }
+
+    @Override
+    public InputStream getFile(Long documentId, Integer fileNumber) {
+        FileEntity firstFileEntity = fileRepository.findByDocumentIdAndNumber(documentId, fileNumber);
+
+        InputStream firstFileStream = fileContentRepository.retrieve(new FileContentId(documentId, firstFileEntity.getId()));
+
+        return firstFileStream;
     }
 
     private List<AuditedField> getAuditedFields(DocumentEntity currentDocumentEntity, DocumentUserFields updatedFields) {

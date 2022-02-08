@@ -1,5 +1,6 @@
 package com.example.documentsystem.controller;
 
+import com.example.documentsystem.exceptions.FileNotFoundException;
 import com.example.documentsystem.models.Document;
 import com.example.documentsystem.models.DocumentUserFields;
 import com.example.documentsystem.models.StoredDocument;
@@ -7,11 +8,15 @@ import com.example.documentsystem.models.ViewingDocumentBundle;
 import com.example.documentsystem.models.auditing.AuditEvent;
 import com.example.documentsystem.services.AuditingService;
 import com.example.documentsystem.services.DocumentService;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -27,6 +32,21 @@ public class DocumentController {
     @GetMapping("/{documentId}")
     public ViewingDocumentBundle findByDocumentId(@PathVariable Long documentId){
         return documentService.getDocumentForViewing(documentId);
+    }
+
+    @GetMapping("/{documentId}/files/{number}")
+    public void getFile(HttpServletResponse response, @PathVariable Long documentId, @PathVariable Integer number) {
+        InputStream fileStream = documentService.getFile(documentId, number);
+
+        response.addHeader("Content-disposition", "attachment;filename=myfilename.txt");
+        response.setContentType("txt/plain");
+
+        try {
+            IOUtils.copy(fileStream, response.getOutputStream());
+            response.flushBuffer();
+        } catch (IOException exception) {
+            throw new FileNotFoundException(exception.getMessage());
+        }
     }
 
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })

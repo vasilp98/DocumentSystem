@@ -4,6 +4,8 @@ import com.example.documentsystem.dao.UserRepository;
 import com.example.documentsystem.entities.UserEntity;
 import com.example.documentsystem.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,15 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserEntity getCurrentUser() {
+        String username = getCurrentUserName();
+        return userRepository.findByUsername(username).orElseThrow(() ->
+                new EntityNotFoundException(
+                        String.format("User with username=%s not found or you don't have permissions to access it.", username)));
     }
 
     @Override
@@ -45,6 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity update(UserEntity userEntity) {
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         return userRepository.save(userEntity);
     }
 
@@ -53,5 +65,15 @@ public class UserServiceImpl implements UserService {
         UserEntity old = findById(userId);
         userRepository.deleteById(userId);
         return old;
+    }
+
+    private String getCurrentUserName() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            return ((UserDetails)principal).getUsername();
+        } else {
+            return principal.toString();
+        }
     }
 }

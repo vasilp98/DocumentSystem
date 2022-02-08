@@ -36,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentEntity> findAllByDocumentId(Long documentId) { return commentRepository.findAllByDocumentId((documentId)); }
+    public List<CommentEntity> findAllByDocumentId(Long documentId) { return commentRepository.findAllByDocumentIdOrderByCreatedAsc((documentId)); }
 
     @Override
     public CommentEntity create(CommentEntity comment) {

@@ -6,6 +6,8 @@ import com.example.documentsystem.entities.UserEntity;
 import java.util.List;
 
 public interface UserService {
+    UserEntity getCurrentUser();
+
     List<UserEntity> findAll();
 
     UserEntity findById(Long id);

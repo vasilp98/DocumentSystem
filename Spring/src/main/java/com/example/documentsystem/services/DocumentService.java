@@ -7,6 +7,8 @@ import com.example.documentsystem.models.StoredDocument;
 import com.example.documentsystem.models.ViewingDocumentBundle;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 public interface DocumentService {
@@ -21,6 +23,8 @@ public interface DocumentService {
     Document updateFields(Long id, DocumentUserFields fields);
 
     void addFile(Long documentId, MultipartFile file);
+
+    InputStream getFile(Long documentId, Integer fileNumber);
 
     Document deleteById(Long id);
 }
