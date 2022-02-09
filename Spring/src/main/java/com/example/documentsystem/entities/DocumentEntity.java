@@ -44,6 +44,10 @@ public class DocumentEntity {
     @NotNull
     private Integer filesCount;
 
+    private Long currentDocumentId;
+
+    private Integer versionNumber;
+
     public DocumentEntity(Long folderId, String name, String storeUser, String modifyUser, Long size, Integer filesCount) {
         this.folderId = folderId;
         this.name = name;
@@ -51,5 +55,18 @@ public class DocumentEntity {
         this.modifyUser = modifyUser;
         this.size = size;
         this.filesCount = filesCount;
+    }
+
+    public DocumentEntity(DocumentEntity another) {
+        this.folderId = another.getFolderId();
+        this.name = another.getName();
+        this.storeDate = another.getStoreDate();
+        this.storeUser = another.getStoreUser();
+        this.modifyDate = another.getModifyDate();
+        this.modifyUser = another.getModifyUser();
+        this.size = another.getSize();
+        this.filesCount = another.getFilesCount();
+        this.currentDocumentId = another.getCurrentDocumentId();
+        this.versionNumber = another.getVersionNumber();
     }
 }

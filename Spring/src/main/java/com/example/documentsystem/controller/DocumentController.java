@@ -8,6 +8,7 @@ import com.example.documentsystem.models.ViewingDocumentBundle;
 import com.example.documentsystem.models.auditing.AuditEvent;
 import com.example.documentsystem.services.AuditingService;
 import com.example.documentsystem.services.DocumentService;
+import com.example.documentsystem.services.DocumentVersionService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,10 +24,12 @@ import java.util.List;
 @RequestMapping("/api/document")
 public class DocumentController {
     private DocumentService documentService;
+    private DocumentVersionService documentVersionService;
 
     @Autowired
-    public DocumentController(DocumentService documentService) {
+    public DocumentController(DocumentService documentService, DocumentVersionService documentVersionService) {
         this.documentService = documentService;
+        this.documentVersionService = documentVersionService;
     }
 
     @GetMapping("/{documentId}")
@@ -48,6 +51,9 @@ public class DocumentController {
             throw new FileNotFoundException(exception.getMessage());
         }
     }
+
+    @GetMapping("/{documentId}/versions")
+    public List<Document> getVersionHistory(@PathVariable Long documentId) { return documentVersionService.findAllByDocumentId(documentId); }
 
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public Document upload(@RequestPart StoredDocument document, @RequestPart MultipartFile file) {

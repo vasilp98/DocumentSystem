@@ -1,17 +1,19 @@
 package com.example.documentsystem.services;
 
 import com.example.documentsystem.entities.DocumentVersionEntity;
+import com.example.documentsystem.models.Document;
 
+import java.io.InputStream;
 import java.util.List;
 
 public interface DocumentVersionService {
-    List<DocumentVersionEntity> findAll();
+    List<Document> findAllByDocumentId(Long documentId);
 
-    DocumentVersionEntity findById(Long id);
+    Document findById(Long id);
 
-    DocumentVersionEntity create(DocumentVersionEntity version);
+    InputStream getFile(Long documentId, Integer fileNumber);
 
-    DocumentVersionEntity update(DocumentVersionEntity version);
+    Document create(Long documentId);
 
-    DocumentVersionEntity deleteById(Long id);
+    Document deleteById(Long id);
 }

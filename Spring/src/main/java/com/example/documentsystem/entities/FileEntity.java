@@ -42,4 +42,12 @@ public class FileEntity {
         this.extension = extension;
         this.size = size;
     }
+
+    public FileEntity(FileEntity fileEntity) {
+        this.documentId = fileEntity.getDocumentId();
+        this.number = fileEntity.getNumber();
+        this.originalFileName = fileEntity.getOriginalFileName();
+        this.extension = fileEntity.getExtension();
+        this.size = fileEntity.getSize();
+    }
 }

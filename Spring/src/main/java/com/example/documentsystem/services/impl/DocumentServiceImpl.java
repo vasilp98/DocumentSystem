@@ -100,6 +100,10 @@ public class DocumentServiceImpl implements DocumentService {
 
         documentEntity = documentRepository.save(documentEntity);
 
+        documentEntity.setCurrentDocumentId(documentEntity.getId());
+        documentEntity.setVersionNumber(1);
+        documentEntity = documentRepository.save(documentEntity);
+
         String extension = file.getOriginalFilename().split("\\.")[1];
         FileEntity fileEntity = new FileEntity(documentEntity.getId(), 0, file.getOriginalFilename(), extension, file.getSize());
         fileEntity = fileRepository.save(fileEntity);

@@ -6,5 +6,6 @@ public enum AuditEventType {
     DELETE,
     CHANGE_CONTENT,
     DOWNLOAD,
-    OPEN
+    OPEN,
+    CREATE_VERSION
 }
