@@ -6,6 +6,7 @@ import com.example.documentsystem.models.filter.Filter;
 import com.example.documentsystem.services.FilterService;
 import com.example.documentsystem.settings.FieldType;
 import com.example.documentsystem.settings.Settings;
+import org.springframework.stereotype.Service;
 
 import javax.validation.ValidationException;
 import java.lang.reflect.Field;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 public class FilterServiceImpl implements FilterService {
     @Override
     public List<DocumentEntity> filterDocuments(List<DocumentEntity> documentEntities, List<Filter> filters) {

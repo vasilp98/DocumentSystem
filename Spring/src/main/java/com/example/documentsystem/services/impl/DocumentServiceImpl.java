@@ -14,8 +14,11 @@ import com.example.documentsystem.models.StoredDocument;
 import com.example.documentsystem.models.ViewingDocumentBundle;
 import com.example.documentsystem.models.auditing.AuditEventType;
 import com.example.documentsystem.models.auditing.AuditedField;
+import com.example.documentsystem.models.permission.Permission;
 import com.example.documentsystem.services.AuditingService;
 import com.example.documentsystem.services.DocumentService;
+import com.example.documentsystem.services.PermissionService;
+import com.example.documentsystem.services.context.Context;
 import lombok.experimental.ExtensionMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,18 +47,21 @@ public class DocumentServiceImpl implements DocumentService {
     private final FileRepository fileRepository;
     private FileContentRepository fileContentRepository;
     private AuditingService auditingService;
+    private PermissionService permissionService;
 
     @Autowired
     public DocumentServiceImpl(
             DocumentRepository documentRepository,
             FileRepository fileRepository,
             FileContentRepository fileContentRepository,
-            AuditingService auditingService) {
+            AuditingService auditingService,
+            PermissionService permissionService) {
 
         this.documentRepository = documentRepository;
         this.fileRepository = fileRepository;
         this.fileContentRepository = fileContentRepository;
         this.auditingService = auditingService;
+        this.permissionService = permissionService;
     }
     
     @Override
@@ -63,15 +69,17 @@ public class DocumentServiceImpl implements DocumentService {
     public List<Document> findAllInFolder(Long folderId)
     {
         return documentRepository.findByFolderIdOrderById(folderId)
-                .stream().map(de -> de.toDocument()).collect(Collectors.toList());
+                .stream().filter(d -> permissionService.hasDocumentPermission(d, Permission.READ))
+                .map(de -> de.toDocument()).collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public Document findById(Long documentId) {
-        DocumentEntity documentEntity = documentRepository.findById(documentId).orElseThrow(() ->
-                new EntityNotFoundException(
-                        String.format("Document with ID=%s not found.", documentId)));
+        DocumentEntity documentEntity = documentRepository.findById(documentId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Document with ID=%s not found.", documentId)));
+
+        permissionService.checkDocumentPermission(documentEntity, Permission.READ);
 
         return documentEntity.toDocument();
     }
@@ -88,7 +96,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Document create(StoredDocument storedDocument, MultipartFile file) {
-        String currentUser = getCurrentUserName();
+        String currentUser = Context.getCurrentUserName();
         DocumentEntity documentEntity = new DocumentEntity(
                 storedDocument.getFolderId(),
                 storedDocument.getUserFields().getName(),
@@ -124,11 +132,11 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Document updateFields(Long documentId, DocumentUserFields fields) {
-        String currentUser = getCurrentUserName();
-
         DocumentEntity documentEntity = documentRepository.getById(documentId);
+        permissionService.checkDocumentPermission(documentEntity, Permission.WRITE);
+
         documentEntity.setModifyDate(LocalDateTime.now());
-        documentEntity.setModifyUser(currentUser);
+        documentEntity.setModifyUser(Context.getCurrentUserName());
 
         //TODO Set user fields to entity
         documentEntity.setName(fields.getName());
@@ -141,11 +149,11 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public void addFile(Long documentId, MultipartFile file) {
-        String currentUser = getCurrentUserName();
-
         DocumentEntity documentEntity = documentRepository.getById(documentId);
+        permissionService.checkDocumentPermission(documentEntity, Permission.WRITE);
+
         documentEntity.setModifyDate(LocalDateTime.now());
-        documentEntity.setModifyUser(currentUser);
+        documentEntity.setModifyUser(Context.getCurrentUserName());
 
         Integer fileNumber = documentEntity.getFilesCount();
         documentEntity.setFilesCount(fileNumber + 1);
@@ -182,20 +190,14 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Document deleteById(Long documentId) {
-        Document oldDocument = findById(documentId);
+        DocumentEntity documentEntity = documentRepository.findById(documentId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Document with ID=%s not found.", documentId)));
+
+        permissionService.checkDocumentPermission(documentEntity, Permission.DELETE);
+
         documentRepository.deleteById(documentId);
 
         auditingService.auditEvent(AuditEventType.DELETE, documentId);
-        return oldDocument;
-    }
-
-    private String getCurrentUserName() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            return ((UserDetails)principal).getUsername();
-        } else {
-            return principal.toString();
-        }
+        return documentEntity.toDocument();
     }
 }

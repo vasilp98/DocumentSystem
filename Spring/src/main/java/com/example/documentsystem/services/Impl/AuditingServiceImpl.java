@@ -7,6 +7,7 @@ import com.example.documentsystem.dao.AuditRepository;
 import com.example.documentsystem.entities.AuditEntity;
 import com.example.documentsystem.models.auditing.AuditEvent;
 import com.example.documentsystem.services.AuditingService;
+import com.example.documentsystem.services.context.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +37,7 @@ public class AuditingServiceImpl implements AuditingService {
 
     @Override
     public void auditEvent(AuditEventType eventType, Long documentId) {
-        String username = getCurrentUserName();
+        String username = Context.getCurrentUserName();
 
         AuditEntity auditEntity = new AuditEntity(documentId, eventType.toString(), LocalDateTime.now(), username, null);
         auditRepository.save(auditEntity);
@@ -44,7 +45,7 @@ public class AuditingServiceImpl implements AuditingService {
 
     @Override
     public void auditUpdateFields(List<AuditedField> auditedFields, Long documentId) {
-        String username = getCurrentUserName();
+        String username = Context.getCurrentUserName();
         String details = getDetailsAsString(auditedFields);
 
         AuditEntity auditEntity = new AuditEntity(documentId, AuditEventType.UPDATE_FIELDS.name(), LocalDateTime.now(), username, details);
@@ -53,7 +54,7 @@ public class AuditingServiceImpl implements AuditingService {
 
     @Override
     public void auditStore(List<AuditedField> auditedFields, Long documentId) {
-        String username = getCurrentUserName();
+        String username = Context.getCurrentUserName();
         String details = getDetailsAsString(auditedFields);
 
         AuditEntity auditEntity = new AuditEntity(documentId, AuditEventType.STORE.name(), LocalDateTime.now(), username, details);
@@ -82,16 +83,6 @@ public class AuditingServiceImpl implements AuditingService {
                         e.getEventDate(),
                         e.getUserInitiated(),
                         getAuditedFields(e.getDetails()))).collect(Collectors.toList());
-    }
-
-    private String getCurrentUserName() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            return ((UserDetails)principal).getUsername();
-        } else {
-            return principal.toString();
-        }
     }
 
     private String getDetailsAsString(List<AuditedField> auditedFields) {

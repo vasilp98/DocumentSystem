@@ -2,7 +2,6 @@ package com.example.documentsystem.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -32,8 +31,11 @@ public class UserEntity {
 
     private LocalDateTime modified = LocalDateTime.now();
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-    private Set<RoleEntity> roles = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_permissions",
+            joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "id", nullable = false, updatable = false)},
+            inverseJoinColumns = { @JoinColumn(name = "PERMISSION_ID", referencedColumnName = "id", nullable = false, updatable = false)})
+    private Set<PermissionEntity> permissions = new HashSet<>();
 
     public UserEntity(String username, String password, String email) {
         setUsername(username);

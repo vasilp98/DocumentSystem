@@ -14,6 +14,7 @@ import com.example.documentsystem.models.Document;
 import com.example.documentsystem.models.auditing.AuditEventType;
 import com.example.documentsystem.services.AuditingService;
 import com.example.documentsystem.services.DocumentVersionService;
+import com.example.documentsystem.services.context.Context;
 import lombok.experimental.ExtensionMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -77,15 +78,13 @@ public class DocumentVersionServiceImpl implements DocumentVersionService {
 
     @Override
     public Document create(Long documentId) {
-        String currentUser = getCurrentUserName();
-
         DocumentEntity currentDocumentEntity = documentRepository.getById(documentId);
         DocumentEntity versionEntity = new DocumentEntity(currentDocumentEntity);
 
         currentDocumentEntity.setVersionNumber(currentDocumentEntity.getVersionNumber() + 1);
         documentRepository.save(currentDocumentEntity);
 
-        versionEntity.setModifyUser(currentUser);
+        versionEntity.setModifyUser(Context.getCurrentUserName());
         versionEntity.setModifyDate(LocalDateTime.now());
         versionEntity = documentRepository.save(versionEntity);
 
@@ -112,15 +111,5 @@ public class DocumentVersionServiceImpl implements DocumentVersionService {
         Document oldDocument = findById(versionId);
         documentRepository.deleteById(versionId);
         return oldDocument;
-    }
-
-    private String getCurrentUserName() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            return ((UserDetails)principal).getUsername();
-        } else {
-            return principal.toString();
-        }
     }
 }
