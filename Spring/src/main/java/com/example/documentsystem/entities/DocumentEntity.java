@@ -48,13 +48,24 @@ public class DocumentEntity {
 
     private Integer versionNumber;
 
-    public DocumentEntity(Long folderId, String name, String storeUser, String modifyUser, Long size, Integer filesCount) {
+    private String customFieldValue1;
+    private String customFieldValue2;
+    private String customFieldValue3;
+    private String customFieldValue4;
+    private String customFieldValue5;
+
+    public DocumentEntity(Long folderId, String name, String storeUser, String modifyUser, Long size, Integer filesCount, String customFieldValue1, String customFieldValue2, String customFieldValue3, String customFieldValue4, String customFieldValue5) {
         this.folderId = folderId;
         this.name = name;
         this.storeUser = storeUser;
         this.modifyUser = modifyUser;
         this.size = size;
         this.filesCount = filesCount;
+        this.customFieldValue1 = customFieldValue1;
+        this.customFieldValue2 = customFieldValue2;
+        this.customFieldValue3 = customFieldValue3;
+        this.customFieldValue4 = customFieldValue4;
+        this.customFieldValue5 = customFieldValue5;
     }
 
     public DocumentEntity(DocumentEntity another) {
@@ -68,5 +79,10 @@ public class DocumentEntity {
         this.filesCount = another.getFilesCount();
         this.currentDocumentId = another.getCurrentDocumentId();
         this.versionNumber = another.getVersionNumber();
+        this.customFieldValue1 = another.getCustomFieldValue1();
+        this.customFieldValue2 = another.getCustomFieldValue2();
+        this.customFieldValue3 = another.getCustomFieldValue3();
+        this.customFieldValue4 = another.getCustomFieldValue4();
+        this.customFieldValue5 = another.getCustomFieldValue5();
     }
 }

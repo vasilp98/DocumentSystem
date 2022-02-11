@@ -27,7 +27,7 @@ public class FolderEntity {
     private Long ownerId;
 
     @NotNull
-    private String Name;
+    private String name;
 
     @NotNull
     private LocalDateTime created = LocalDateTime.now();
@@ -36,10 +36,21 @@ public class FolderEntity {
     @JsonIgnore
     private String storageLocation;
 
-    public FolderEntity(Long ownerId, String name, LocalDateTime datetime, String storageLocation) {
+    private String customField1;
+    private String customField2;
+    private String customField3;
+    private String customField4;
+    private String customField5;
+
+    public FolderEntity(Long ownerId, String name, LocalDateTime datetime, String storageLocation, String customField1, String customField2, String customField3, String customField4, String customField5) {
         setOwnerId(ownerId);
         setName(name);
         setCreated(datetime);
         setStorageLocation(storageLocation);
+        setCustomField1(customField1);
+        setCustomField2(customField2);
+        setCustomField3(customField3);
+        setCustomField4(customField4);
+        setCustomField5(customField5);
     }
 }

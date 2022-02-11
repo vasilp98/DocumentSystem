@@ -103,7 +103,9 @@ public class DocumentServiceImpl implements DocumentService {
                 currentUser,
                 currentUser,
                 file.getSize(),
-                1
+                1,
+                "",
+                "","","",""
         );
 
         documentEntity = documentRepository.save(documentEntity);

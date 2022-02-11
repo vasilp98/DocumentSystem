@@ -1,0 +1,11 @@
+.permissions-wrapper {
+    padding: 80px 70px;
+    margin: 0 auto;
+    width: 100%;
+    .formGroup-wrapper {
+        padding-bottom: 30px; // for the line
+        hr {
+            margin-top: 30px;
+        }
+    }
+}

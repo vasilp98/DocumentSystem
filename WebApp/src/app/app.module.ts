@@ -16,8 +16,9 @@ import { ClarityModule } from "@clr/angular";
 import { FoldersComponent } from './modules/folders/folders.component';
 import { HeaderComponent } from './core/header/header.component';
 import { FooterComponent } from './core/footer/footer.component';
+import { PermissionsComponent } from './modules/permissions/permissions.component';
 @NgModule({
-  declarations: [AppComponent, LoginComponent, HomeComponent, FoldersComponent, HeaderComponent, FooterComponent],
+  declarations: [AppComponent, LoginComponent, HomeComponent, FoldersComponent, HeaderComponent, FooterComponent, PermissionsComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
