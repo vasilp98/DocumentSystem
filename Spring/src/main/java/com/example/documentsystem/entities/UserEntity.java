@@ -1,7 +1,11 @@
 package com.example.documentsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,6 +17,8 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = "permissions")
+@ToString(exclude = "permissions")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +37,7 @@ public class UserEntity {
 
     private LocalDateTime modified = LocalDateTime.now();
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_permissions",
             joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "id", nullable = false, updatable = false)},
