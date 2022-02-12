@@ -15,20 +15,19 @@ import com.example.documentsystem.services.PermissionService;
 import com.example.documentsystem.services.context.Context;
 import lombok.experimental.ExtensionMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Transactional
+@Service
 @ExtensionMethod(EntityExtensions.class)
-public class PermissionServiceImpl implements PermissionService {
+public class AllPermissionsServiceImpl implements PermissionService {
     private PermissionRepository permissionRepository;
     private UserRepository userRepository;
     private FilterService filterService;
 
-    public PermissionServiceImpl(
+    public AllPermissionsServiceImpl(
             PermissionRepository permissionRepository,
             UserRepository userRepository,
             FilterService filterService) {
@@ -40,46 +39,22 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public void checkFolderPermission(Long folderId, Permission permission) {
-        if (!hasFolderPermission(folderId, permission))
-            throw new PermissionException("You don't have permission to execute this action");
+        return;
     }
 
     @Override
     public boolean hasFolderPermission(Long folderId, Permission permission) {
-        String username = Context.getCurrentUserName();
-        UserEntity userEntity = userRepository.findByUsername(username).orElseThrow(() ->
-                new EntityNotFoundException(
-                        String.format("User with username=%s not found or you don't have permissions to access it.", username)));
-
-        return userEntity.getPermissions()
-                .stream().anyMatch(p -> p.getArea() == PermissionArea.FOLDER &&
-                        p.getFolderId() == folderId &&
-                        p.getPermissions().contains(permission));
+        return true;
     }
 
     @Override
     public void checkDocumentPermission(DocumentEntity documentEntity, Permission permission) {
-        if (hasDocumentPermission(documentEntity, permission))
-            throw new PermissionException("You don't have permission to execute this action");
+        return;
     }
 
     @Override
     public boolean hasDocumentPermission(DocumentEntity documentEntity, Permission permission) {
-        String username = Context.getCurrentUserName();
-        UserEntity userEntity = userRepository.findByUsername(username).orElseThrow(() ->
-                new EntityNotFoundException(
-                        String.format("User with username=%s not found or you don't have permissions to access it.", username)));
-
-        List<PermissionEntity> documentPermissions = userEntity.getPermissions()
-                .stream().filter(p -> p.getArea() == PermissionArea.DOCUMENT)
-                .collect(Collectors.toList());
-
-        for (PermissionEntity permissionEntity : documentPermissions) {
-            if (filterService.checkDocument(documentEntity, permissionEntity.getFilter().deserializeToFilters()))
-                return true;
-        }
-
-        return false;
+        return true;
     }
 
     @Override
