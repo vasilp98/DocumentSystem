@@ -21,8 +21,13 @@ export class DataService {
     getDocuments(id: number): Observable<any>{
         return this.http.get( API_URL + `folder/${id}/documents`, {responseType: 'json'});
     }
+
     getFile(documentId: number, fileId: number): Observable<any>{
         return this.http.get( API_URL + `document/${documentId}/files/${fileId}`, {responseType: 'blob'});
+    }
+
+    getFiles(documentId: number): Observable<any>{
+        return this.http.get( API_URL + `document/${documentId}/files`, {responseType: 'json'});
     }
 
 }

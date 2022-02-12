@@ -3,9 +3,9 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://surus.db.elephantsql.com/jczyvpsi
-    username: jczyvpsi
-    password: ZC8Gv4I4NMR1sJaGPoIpjRUhD9peoXDw
+    url: jdbc:postgresql://localhost:5433/DocumentSystem
+    username: postgres
+    password: postgres
   #JPA Properties
   jpa:
     properties:

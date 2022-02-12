@@ -11,6 +11,8 @@ import { MessageService } from "@core/services/message.service";
 })
 export class DocumentsComponent implements OnInit {
   public documents = null;
+  public files = null;
+  selectedFile;
   showDocument: boolean = false;
 
   selectedDocument;
@@ -36,10 +38,29 @@ export class DocumentsComponent implements OnInit {
       });
   }
 
+  getFiles(id){
+    this.dataService.getFiles(id).subscribe({
+      next: data => {
+        this.files = data;
+        this.messageService.changeMessage({
+          id: id,
+          files: data
+        });
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
+  changeFile(fileId){
+    this.messageService.changeFileId(fileId);
+  }
+
 
   showModal(id){
     this.showDocument = true;
     this.selectedDocument  = id;
-    this.messageService.changeMessage(id);
+    this.getFiles(id);
   }
 }
