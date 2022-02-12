@@ -21,14 +21,9 @@ public class PermissionController {
         return permissionService.findAllInFolder(folderId);
     }
 
-    @GetMapping("/{listId}")
-    public PermissionDto getList(@PathVariable Long permissionId) {
+    @GetMapping("/{permissionId}")
+    public PermissionDto getPermission(@PathVariable Long permissionId) {
         return permissionService.findById(permissionId);
-    }
-
-    @PostMapping
-    public PermissionDto createList(@RequestBody PermissionDto permissionDto) {
-        return permissionService.create(permissionDto);
     }
 
     @PostMapping
