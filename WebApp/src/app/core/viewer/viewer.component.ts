@@ -4,6 +4,8 @@ import getInstance from '@pdftron/webviewer';
 import {DataService} from "@core/services/data.service";
 import {Subject} from "rxjs";
 import { MessageService } from "@core/services/message.service";
+import { mimeTypes } from "mime-wrapper";
+
 
 @Component({
   selector: 'app-viewer',
@@ -62,9 +64,9 @@ export class ViewerComponent implements OnInit, OnDestroy {
   loadFile(fileNumber: number = 0){
     this.dataService.getFile(this.selectedDocument, fileNumber).subscribe({
       next: data => {
-        const blob = new Blob([data], { type: 'application/pdf' });
+        const blob = new Blob([data], { type: data.type });
         setTimeout(() => {
-          this.wvInstance.Core.documentViewer.loadDocument(blob);
+          this.wvInstance.Core.documentViewer.loadDocument(blob, {extension: mimeTypes.getExtension(data.type)});
         });
       },
       error: err => {
