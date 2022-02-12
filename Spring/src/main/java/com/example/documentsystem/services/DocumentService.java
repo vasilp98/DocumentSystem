@@ -1,6 +1,7 @@
 package com.example.documentsystem.services;
 
 import com.example.documentsystem.entities.DocumentEntity;
+import com.example.documentsystem.entities.FileEntity;
 import com.example.documentsystem.models.Document;
 import com.example.documentsystem.models.DocumentUserFields;
 import com.example.documentsystem.models.StoredDocument;
@@ -25,6 +26,8 @@ public interface DocumentService {
     void addFile(Long documentId, MultipartFile file);
 
     InputStream getFile(Long documentId, Integer fileNumber);
+
+    List<FileEntity> getFiles(Long documentId);
 
     Document deleteById(Long id);
 }

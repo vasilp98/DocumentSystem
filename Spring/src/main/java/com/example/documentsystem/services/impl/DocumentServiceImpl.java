@@ -191,6 +191,11 @@ public class DocumentServiceImpl implements DocumentService {
         return firstFileStream;
     }
 
+    @Override
+    public List<FileEntity> getFiles(Long documentId) {
+        return fileRepository.findAllByDocumentId(documentId);
+    }
+
     private List<AuditedField> getAuditedFields(DocumentEntity currentDocumentEntity, DocumentUserFields updatedFields) {
         return new ArrayList<>();
     }

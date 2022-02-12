@@ -1,5 +1,6 @@
 package com.example.documentsystem.controller;
 
+import com.example.documentsystem.entities.FileEntity;
 import com.example.documentsystem.exceptions.FileNotFoundException;
 import com.example.documentsystem.models.Document;
 import com.example.documentsystem.models.DocumentUserFields;
@@ -50,6 +51,11 @@ public class DocumentController {
         } catch (IOException exception) {
             throw new FileNotFoundException(exception.getMessage());
         }
+    }
+
+    @GetMapping("/{documentId}/files")
+    public List<FileEntity> getFiles(@PathVariable Long documentId) {
+        return documentService.getFiles(documentId);
     }
 
     @GetMapping("/{documentId}/versions")
