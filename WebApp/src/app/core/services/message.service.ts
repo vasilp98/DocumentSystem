@@ -7,13 +7,21 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class MessageService {
 
-    private messageSource = new BehaviorSubject('default message');
+    private messageSource = new BehaviorSubject(<any>{});
     currentMessage = this.messageSource.asObservable();
+
+    private fileIdSource = new BehaviorSubject(0);
+    currentFile = this.fileIdSource.asObservable();
 
     constructor() { }
 
-    changeMessage(message: string) {
+    changeMessage(message: any) {
         this.messageSource.next(message)
     }
+
+    changeFileId(message: number) {
+        this.fileIdSource.next(message)
+    }
+
 
 }

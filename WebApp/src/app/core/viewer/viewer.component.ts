@@ -12,6 +12,7 @@ import { MessageService } from "@core/services/message.service";
 })
 export class ViewerComponent implements OnInit, OnDestroy {
   selectedDocument;
+  files;
   @ViewChild('viewer') viewer: ElementRef;
   wvInstance: WebViewerInstance;
   @Output() coreControlsEvent:EventEmitter<string> = new EventEmitter();
@@ -20,10 +21,16 @@ export class ViewerComponent implements OnInit, OnDestroy {
   constructor(private dataService: DataService,private messageService: MessageService) {
     this.documentLoaded$ = new Subject<void>();
     this.messageService.currentMessage.subscribe(message => {
-      this.selectedDocument = message;
+      this.selectedDocument = message.id;
+      this.files = message.files;
+      console.log(this.files)
       setTimeout(() => {
         this.loadViewer();
       });
+    });
+
+    this.messageService.currentFile.subscribe(message => {
+      this.loadFile(message)
     });
   }
 
@@ -52,12 +59,12 @@ export class ViewerComponent implements OnInit, OnDestroy {
     return this.documentLoaded$.asObservable();
   }
 
-  loadFile(){
-    this.dataService.getFile(this.selectedDocument,0).subscribe({
+  loadFile(fileNumber: number = 0){
+    this.dataService.getFile(this.selectedDocument, fileNumber).subscribe({
       next: data => {
         const blob = new Blob([data], { type: 'application/pdf' });
         setTimeout(() => {
-          this.wvInstance.Core.documentViewer.loadDocument(blob, {extension:"pdf"});
+          this.wvInstance.Core.documentViewer.loadDocument(blob);
         });
       },
       error: err => {
