@@ -2,10 +2,7 @@ package com.example.documentsystem.services;
 
 import com.example.documentsystem.entities.DocumentEntity;
 import com.example.documentsystem.entities.FileEntity;
-import com.example.documentsystem.models.Document;
-import com.example.documentsystem.models.DocumentUserFields;
-import com.example.documentsystem.models.StoredDocument;
-import com.example.documentsystem.models.ViewingDocumentBundle;
+import com.example.documentsystem.models.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -25,7 +22,7 @@ public interface DocumentService {
 
     void addFile(Long documentId, MultipartFile file);
 
-    InputStream getFile(Long documentId, Integer fileNumber);
+    FileStream getFile(Long documentId, Integer fileNumber);
 
     List<FileEntity> getFiles(Long documentId);
 

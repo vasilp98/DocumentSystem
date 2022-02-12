@@ -8,10 +8,7 @@ import com.example.documentsystem.entities.DocumentEntity;
 import com.example.documentsystem.entities.FileEntity;
 import com.example.documentsystem.exceptions.UploadFileException;
 import com.example.documentsystem.extensions.EntityExtensions;
-import com.example.documentsystem.models.Document;
-import com.example.documentsystem.models.DocumentUserFields;
-import com.example.documentsystem.models.StoredDocument;
-import com.example.documentsystem.models.ViewingDocumentBundle;
+import com.example.documentsystem.models.*;
 import com.example.documentsystem.models.auditing.AuditEventType;
 import com.example.documentsystem.models.auditing.AuditedField;
 import com.example.documentsystem.models.permission.Permission;
@@ -183,12 +180,12 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public InputStream getFile(Long documentId, Integer fileNumber) {
+    public FileStream getFile(Long documentId, Integer fileNumber) {
         FileEntity firstFileEntity = fileRepository.findByDocumentIdAndNumber(documentId, fileNumber);
 
         InputStream firstFileStream = fileContentRepository.retrieve(new FileContentId(documentId, firstFileEntity.getId()));
 
-        return firstFileStream;
+        return new FileStream(firstFileStream, firstFileEntity.getOriginalFileName());
     }
 
     @Override

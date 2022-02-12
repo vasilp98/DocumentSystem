@@ -2,10 +2,7 @@ package com.example.documentsystem.controller;
 
 import com.example.documentsystem.entities.FileEntity;
 import com.example.documentsystem.exceptions.FileNotFoundException;
-import com.example.documentsystem.models.Document;
-import com.example.documentsystem.models.DocumentUserFields;
-import com.example.documentsystem.models.StoredDocument;
-import com.example.documentsystem.models.ViewingDocumentBundle;
+import com.example.documentsystem.models.*;
 import com.example.documentsystem.models.auditing.AuditEvent;
 import com.example.documentsystem.services.AuditingService;
 import com.example.documentsystem.services.DocumentService;
@@ -19,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -40,13 +39,20 @@ public class DocumentController {
 
     @GetMapping("/{documentId}/files/{number}")
     public void getFile(HttpServletResponse response, @PathVariable Long documentId, @PathVariable Integer number) {
-        InputStream fileStream = documentService.getFile(documentId, number);
+        FileStream fileStream = documentService.getFile(documentId, number);
+
+        String contentType;
+        try {
+            contentType = Files.probeContentType(Path.of(fileStream.getName()));
+        } catch (IOException e) {
+            contentType = "txt/plain";
+        }
 
         response.addHeader("Content-disposition", "attachment;filename=myfilename.txt");
-        response.setContentType("txt/plain");
+        response.setContentType(contentType);
 
         try {
-            IOUtils.copy(fileStream, response.getOutputStream());
+            IOUtils.copy(fileStream.getStream(), response.getOutputStream());
             response.flushBuffer();
         } catch (IOException exception) {
             throw new FileNotFoundException(exception.getMessage());
