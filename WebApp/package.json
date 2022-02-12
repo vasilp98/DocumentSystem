@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "move-static": "cp -a ./node_modules/@pdftron/webviewer/public/. ./dist/public/webviewer",
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "test": "ng test",
@@ -23,6 +24,7 @@
     "@clr/angular": "13.0.0-next.1",
     "@clr/icons": "13.0.0-next.1",
     "@clr/ui": "13.0.0-next.1",
+    "@pdftron/webviewer": "^8.0.0",
     "@webcomponents/custom-elements": "1.5.0",
     "@webcomponents/webcomponentsjs": " 2.6.0",
     "jwt-decode": "^3.1.2",
