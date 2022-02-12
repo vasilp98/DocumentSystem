@@ -2,14 +2,18 @@ package com.example.documentsystem.services.impl;
 
 import com.example.documentsystem.dao.FolderRepository;
 import com.example.documentsystem.entities.FolderEntity;
+import com.example.documentsystem.entities.UserEntity;
+import com.example.documentsystem.models.FolderDto;
 import com.example.documentsystem.models.permission.Permission;
 import com.example.documentsystem.services.FolderService;
 import com.example.documentsystem.services.PermissionService;
+import com.example.documentsystem.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,11 +22,16 @@ import java.util.stream.Collectors;
 public class FolderServiceImpl implements FolderService {
     private final FolderRepository folderRepository;
     private PermissionService permissionService;
+    private UserService userService;
 
     @Autowired
-    public FolderServiceImpl(FolderRepository folderRepository, PermissionService permissionService) {
+    public FolderServiceImpl(
+            FolderRepository folderRepository,
+            PermissionService permissionService,
+            UserService userService) {
         this.folderRepository = folderRepository;
         this.permissionService = permissionService;
+        this.userService = userService;
     }
 
     @Override
@@ -42,15 +51,26 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public FolderEntity create(FolderEntity folder) {
-        return folderRepository.save(folder);
+    public FolderEntity create(FolderDto folderDto) {
+        UserEntity currentUser = userService.getCurrentUser();
+
+        FolderEntity folderEntity = new FolderEntity(
+                currentUser.getId(),
+                folderDto.getName(),
+                LocalDateTime.now(),
+                folderDto.getStorageLocation()
+        );
+        return folderRepository.save(folderEntity);
     }
 
     @Override
-    public FolderEntity update(FolderEntity folder) {
-        permissionService.checkFolderPermission(folder.getId(), Permission.WRITE);
+    public FolderEntity update(Long folderId, String name) {
+        permissionService.checkFolderPermission(folderId, Permission.WRITE);
 
-        return folderRepository.save(folder);
+        FolderEntity folderEntity = folderRepository.getById(folderId);
+        folderEntity.setName(name);
+
+        return folderRepository.save(folderEntity);
     }
 
     @Override

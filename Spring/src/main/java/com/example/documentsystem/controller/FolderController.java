@@ -2,6 +2,7 @@ package com.example.documentsystem.controller;
 
 import com.example.documentsystem.entities.FolderEntity;
 import com.example.documentsystem.models.Document;
+import com.example.documentsystem.models.FolderDto;
 import com.example.documentsystem.models.permission.Permission;
 import com.example.documentsystem.models.permission.PermissionDto;
 import com.example.documentsystem.services.DocumentService;
@@ -42,5 +43,10 @@ public class FolderController {
     @GetMapping("/{folderId}/documents")
     public List<Document> findDocumentsByFolderId(@PathVariable Long folderId){
         return documentService.findAllInFolder(folderId);
+    }
+
+    @PostMapping
+    public FolderEntity createFolder(@RequestBody FolderDto folderDto) {
+        return folderService.create(folderDto);
     }
 }
