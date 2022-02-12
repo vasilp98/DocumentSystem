@@ -43,14 +43,4 @@ public class FolderController {
     public List<Document> findDocumentsByFolderId(@PathVariable Long folderId){
         return documentService.findAllInFolder(folderId);
     }
-
-    @PostMapping("/{folderId}/permissions")
-    public PermissionDto createPermissions(@PathVariable Long folderId, @RequestBody PermissionDto permissionDto) {
-        return permissionService.create(permissionDto);
-    }
-
-    @PostMapping("/{folderId}/permissions/{permissionId}")
-    public PermissionDto createPermissions(@PathVariable Long folderId, @PathVariable Long permissionId, @RequestBody PermissionDto permissionDto) {
-        return permissionService.update(permissionDto);
-    }
 }

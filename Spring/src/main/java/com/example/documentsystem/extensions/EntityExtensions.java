@@ -1,9 +1,11 @@
 package com.example.documentsystem.extensions;
 
 import com.example.documentsystem.entities.DocumentEntity;
+import com.example.documentsystem.entities.ListEntity;
 import com.example.documentsystem.entities.PermissionEntity;
 import com.example.documentsystem.entities.UserEntity;
 import com.example.documentsystem.models.Document;
+import com.example.documentsystem.models.ListDto;
 import com.example.documentsystem.models.filter.Filter;
 import com.example.documentsystem.models.filter.FilterList;
 import com.example.documentsystem.models.permission.Permission;
@@ -42,6 +44,14 @@ public class EntityExtensions {
                 permissionEntity.getArea(),
                 new ArrayList<>(permissionEntity.getPermissions()),
                 deserializeToFilters(permissionEntity.getFilter())
+        );
+    }
+
+    public static ListDto toDto(ListEntity listEntity) {
+        return new ListDto(
+                listEntity.getId(),
+                listEntity.getFolderId(),
+                deserializeToFilters(listEntity.getFilters())
         );
     }
 
