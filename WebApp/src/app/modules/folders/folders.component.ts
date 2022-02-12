@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from "@core/services/data.service";
+import {Data} from "@angular/router";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-folders',
@@ -6,10 +9,26 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./folders.component.scss']
 })
 export class FoldersComponent implements OnInit {
-
-  constructor() { }
+  folders = null;
+  constructor(private dataService: DataService, private route: Router) { }
 
   ngOnInit(): void {
+    this.getFolders();
   }
 
+  openFolder(id){
+    this.route.navigate([`folders/${id}/documents`]);
+  }
+
+
+  getFolders(): void{
+      this.dataService.getFolders().subscribe({
+        next: data => {
+          this.folders = data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      });
+  }
 }

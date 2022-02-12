@@ -1,26 +1,15 @@
 <main>
+    <p>Folders</p>
     <div class="clr-row clr-justify-content-start">
         <div class="clr-col-12">
             <clr-datagrid>
-                <clr-dg-column>User ID</clr-dg-column>
                 <clr-dg-column [clrDgField]="'name'">Name</clr-dg-column>
-                <clr-dg-column [clrDgField]="'creation'">Creation date</clr-dg-column>
-                <clr-dg-column [clrDgField]="'pokemon.name'">Pokemon</clr-dg-column>
-                <clr-dg-column [clrDgField]="'color'">Favorite color</clr-dg-column>
-                <clr-dg-column [clrDgField]="'wins'" [clrDgColType]="'number'">Wins</clr-dg-column>
 
-                <clr-dg-row> <!--*clrDgItems="let user of users"-->
-                    <clr-dg-cell>1</clr-dg-cell>
-                    <clr-dg-cell>Don Carlito</clr-dg-cell>
-                    <clr-dg-cell>24.12.2012</clr-dg-cell>
-                    <clr-dg-cell>Junior</clr-dg-cell>
-                    <clr-dg-cell>
-                        <span class="color-square" [style.backgroundColor]="'#dddddd'"></span>
-                    </clr-dg-cell>
-                    <clr-dg-cell>3</clr-dg-cell>
+                <clr-dg-row *clrDgItems="let folder of folders" (click)="openFolder(folder.id)">
+                    <clr-dg-cell>{{folder.name}}</clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer>2500 users</clr-dg-footer>
+                <clr-dg-footer (click)="getFolders()">2500 users</clr-dg-footer>
             </clr-datagrid>
         </div>
     </div>
