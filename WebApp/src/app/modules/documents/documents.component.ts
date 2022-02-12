@@ -14,6 +14,7 @@ export class DocumentsComponent implements OnInit {
   public files = null;
   selectedFile;
   showDocument: boolean = false;
+  showAddNewDocumentModal: boolean = false;
 
   selectedDocument;
   constructor(private dataService: DataService, private messageService: MessageService, private router: ActivatedRoute) {

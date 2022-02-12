@@ -9,8 +9,37 @@
                     <clr-dg-cell>{{folder.name}}</clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer (click)="getFolders()">2500 users</clr-dg-footer>
+                <clr-dg-footer (click)="getFolders()">{{folders?.length || 0}} folder(s)</clr-dg-footer>
             </clr-datagrid>
         </div>
     </div>
+
+    <div class="clr-row clr-justify-content-start">
+        <div class="clr-col-12">
+            <button type="button" class="btn btn-icon" aria-label="add" (click)="showAddNewFolderModal = true">
+                <clr-icon shape="plus"></clr-icon>
+            </button>
+        </div>
+    </div>
+
+    <clr-modal [(clrModalOpen)]="showAddNewFolderModal">
+        <h3 class="modal-title">Add document</h3>
+        <div class="modal-body">
+            <form clrForm>
+                <clr-input-container>
+                    <label>Field 1 label</label>
+                    <input clrInput type="text" name="example" />
+                </clr-input-container>
+                <clr-input-container>
+                    <label>Field 2 label</label>
+                    <input clrInput type="text" name="example" />
+                </clr-input-container>
+            </form>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" (click)="showAddNewFolderModal = false">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="showAddNewFolderModal = false">Ok</button>
+        </div>
+    </clr-modal>
 </main>
