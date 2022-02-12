@@ -28,6 +28,7 @@ public class UserEntity {
     private String username;
 
     @NotNull
+    @JsonIgnore
     private String password;
 
     @NotNull

@@ -69,7 +69,7 @@ class DocumentSystemApplicationTests {
     @Test
     public void uploadDocument() throws Exception {
         MockMultipartFile documentJSON = new MockMultipartFile("document", null,
-                "application/json", "{\"name\": \"Document\", \"folderId\" : \"2\"}".getBytes());
+                "application/json", "{\"userFields\": {\"name\" : \"Document\"}, \"folderId\" : \"2\"}".getBytes());
 
         FileInputStream fileInputStream = new FileInputStream("/Users/vasilp/Desktop/Vasko/Staj/otchet.pdf");
         MockMultipartFile file = new MockMultipartFile("file", "otchet.pdf", "application/pdf", fileInputStream);
@@ -154,7 +154,7 @@ class DocumentSystemApplicationTests {
         filters.add(new Filter("storeUser", Operation.EQUAL, "admin"));
 
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/folder/1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/folder/3")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

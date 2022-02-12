@@ -99,11 +99,11 @@ public class DocumentServiceImpl implements DocumentService {
         String currentUser = Context.getCurrentUserName();
         DocumentEntity documentEntity = new DocumentEntity(
                 storedDocument.getFolderId(),
-                storedDocument.getUserFields().getName(),
                 currentUser,
                 currentUser,
                 file.getSize(),
-                1
+                1,
+                storedDocument.getUserFields()
         );
 
         documentEntity = documentRepository.save(documentEntity);
@@ -138,8 +138,15 @@ public class DocumentServiceImpl implements DocumentService {
         documentEntity.setModifyDate(LocalDateTime.now());
         documentEntity.setModifyUser(Context.getCurrentUserName());
 
-        //TODO Set user fields to entity
+        //User fields
         documentEntity.setName(fields.getName());
+        documentEntity.setDocumentType(fields.getDocumentType());
+        documentEntity.setCompany(fields.getCompany());
+        documentEntity.setDate(fields.getDate());
+        documentEntity.setContact(fields.getContact());
+        documentEntity.setStatus(fields.getStatus());
+        documentEntity.setAmount(fields.getAmount());
+        documentEntity.setNumber(fields.getNumber());
 
         documentRepository.save(documentEntity);
 
