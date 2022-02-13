@@ -13,9 +13,6 @@ public class Document {
     private Long id;
 
     @NotNull
-    private String name;
-
-    @NotNull
     private Long storeDate;
 
     @NotNull
@@ -32,4 +29,6 @@ public class Document {
 
     @NotNull
     private Integer filesCount;
+
+    private DocumentUserFields userFields;
 }

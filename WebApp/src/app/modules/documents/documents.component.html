@@ -11,8 +11,8 @@
                 <clr-dg-column [clrDgField]="'name'">Store Date</clr-dg-column>
                 <clr-dg-column [clrDgField]="'name'">Store User</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let document of documents" (dblclick)="showModal(document.id)">
-                    <clr-dg-cell>{{document.name}}</clr-dg-cell>
+                <clr-dg-row *clrDgItems="let document of documents" (dblclick)="showModal(document)">
+                    <clr-dg-cell>{{document.userFields.name}}</clr-dg-cell>
                     <clr-dg-cell>{{document.size}}</clr-dg-cell>
                     <clr-dg-cell>{{document.modifyDate}}</clr-dg-cell>
                     <clr-dg-cell>{{document.modifyUser}}</clr-dg-cell>
@@ -41,27 +41,103 @@
                     <app-viewer *ngIf="showDocument"></app-viewer>
                 </div>
                 <div class="clr-col-3">
-                    <form clrForm>
-                        <clr-select-container>
-                            <label>File: </label>
-                            <select clrSelect (change)="changeFile($event.target.value)">
-                                <option *ngFor="let elem of files"[value]="elem.number">
-                                    {{elem['originalFileName']}}
-                                </option>
-                            </select>
-                        </clr-select-container>
-                    </form>
-                    <div class="clr-row clr-justify-content-start">
-                        <div class="clr-col-12">
-                                <input class="form-control" type="file"
-                                       (change)="onFileChange($event)">
+                    <clr-accordion>
+                        <clr-accordion-panel>
+                            <clr-accordion-title>File controls</clr-accordion-title>
+                            <clr-accordion-content *clrIfExpanded>
+                                <form clrForm>
+                                    <clr-select-container>
+                                        <label>File: </label>
+                                        <select style="width: 95%" clrSelect (change)="changeFile($event.target.value)">
+                                            <option *ngFor="let elem of files"[value]="elem.number">
+                                                {{elem['originalFileName']}}
+                                            </option>
+                                        </select>
 
-                                <button (click)="uploadFileToDocument()"
-                                        class="btn btn-success">
-                                    Upload
-                                </button>
-                        </div>
-                    </div>
+                                    </clr-select-container>
+                                    <div style="text-align:center; margin-top: 10px;">
+                                        <input class="form-control" type="file" id="selectedFile" style="display: none;"
+                                               (change)="onFileChange($event)">
+                                        <button class="btn btn-sm btn-outline" onclick="document.getElementById('selectedFile').click();">Browse</button>
+                                        <button (click)="uploadFileToDocument()" class="btn btn-sm btn-primary">Upload</button>
+                                    </div>
+                                </form>
+                            </clr-accordion-content>
+                        </clr-accordion-panel>
+
+                        <clr-accordion-panel>
+                            <clr-accordion-title>Document Fields</clr-accordion-title>
+                            <clr-accordion-content *clrIfExpanded>
+                            <form class="clr-form clr-form-vertical"  [formGroup]="documentForm">
+                                <div class="clr-form-control">
+                                    <label for="name" class="clr-control-label">Name</label>
+                                    <div class="clr-control-container">
+                                        <div class="clr-input-wrapper">
+                                            <input type="text" id="name" placeholder="Name" class="clr-input" name="name" formControlName="name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clr-form-control">
+                                    <label for="company" class="clr-control-label">Company</label>
+                                    <div class="clr-control-container">
+                                        <div class="clr-input-wrapper">
+                                            <input type="text" id="company" placeholder="Company" class="clr-input" name="company" formControlName="company"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clr-form-control">
+                                    <label for="documentType" class="clr-control-label">Document Type</label>
+                                    <div class="clr-control-container">
+                                        <div class="clr-input-wrapper">
+                                            <input type="text" id="documentType" placeholder="Document Type" class="clr-input" name="documentType" formControlName="documentType"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clr-form-control">
+                                    <label for="status" class="clr-control-label">Status</label>
+                                    <div class="clr-control-container">
+                                        <div class="clr-input-wrapper">
+                                            <input type="text" id="status" placeholder="Status" class="clr-input" name="status" formControlName="status"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clr-form-control">
+                                    <label for="number" class="clr-control-label">Number</label>
+                                    <div class="clr-control-container">
+                                        <div class="clr-input-wrapper">
+                                            <input type="text" id="number" placeholder="Number" class="clr-input" name="number" formControlName="number"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clr-form-control">
+                                    <label for="contact" class="clr-control-label">Contact</label>
+                                    <div class="clr-control-container">
+                                        <div class="clr-input-wrapper">
+                                            <input type="text" id="contact" placeholder="Contact" class="clr-input" name="contact" formControlName="contact"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clr-form-control">
+                                    <label for="amount" class="clr-control-label">Amount</label>
+                                    <div class="clr-control-container">
+                                        <div class="clr-input-wrapper">
+                                            <input type="text" id="amount" placeholder="Amount" class="clr-input" name="amount" formControlName="amount"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                                <div>
+                                    <button class="btn btn-link" (click)="updateFields()" [attr.disabled]="!formHasChanged ? '' : null">Update</button>
+                                </div>
+                            </clr-accordion-content>
+
+                        </clr-accordion-panel>
+
+                        <clr-accordion-panel>
+                            <clr-accordion-title>Item 3</clr-accordion-title>
+                            <clr-accordion-content *clrIfExpanded>Content 3</clr-accordion-content>
+                        </clr-accordion-panel>
+                    </clr-accordion>
                 </div>
             </div>
         </div>

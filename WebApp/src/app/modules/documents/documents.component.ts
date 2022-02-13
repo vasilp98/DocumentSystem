@@ -4,6 +4,7 @@ import {Data} from "@angular/router";
 import {ActivatedRoute} from "@angular/router";
 import { MessageService } from "@core/services/message.service";
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-folders',
@@ -13,9 +14,23 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 export class DocumentsComponent implements OnInit {
   public documents = null;
   public files = null;
+  private valueChangeSubscription:Subscription;
   showDocument: boolean = false;
   showAddNewDocumentModal: boolean = false;
+  formHasChanged: boolean = false;
   form = new FormGroup({
+    "name": new FormControl("", Validators.required),
+    "documentType": new FormControl("", Validators.required),
+    "company": new FormControl("", Validators.required),
+    "date": new FormControl(Date.now(), Validators.required),
+    "contact": new FormControl("", Validators.required),
+    "status": new FormControl("", Validators.required),
+    "amount": new FormControl("", Validators.required),
+    "number": new FormControl("", Validators.required),
+  });
+  file: File = null; // Variable to store file
+  currentFolderId = null;
+  documentForm = new FormGroup({
     "name": new FormControl("", Validators.required),
     "documentType": new FormControl("", Validators.required),
     "company": new FormControl("", Validators.required),
@@ -25,8 +40,6 @@ export class DocumentsComponent implements OnInit {
     "amount": new FormControl("", Validators.required),
     "number": new FormControl("", Validators.required),
   });
-  file: File = null; // Variable to store file
-  currentFolderId = null;
 
   selectedDocument;
   constructor(private dataService: DataService, private messageService: MessageService, private router: ActivatedRoute) {
@@ -52,13 +65,13 @@ export class DocumentsComponent implements OnInit {
       });
   }
 
-  getFiles(id){
-    this.dataService.getFiles(id).subscribe({
+  getFiles(document){
+    this.dataService.getFiles(document.id).subscribe({
       next: data => {
         this.files = data;
         this.messageService.changeMessage({
-          id: id,
-          files: data
+          files: data,
+          document: document
         });
       },
       error: err => {
@@ -72,10 +85,18 @@ export class DocumentsComponent implements OnInit {
   }
 
 
-  showModal(id){
+  showModal(document){
+    if(this.valueChangeSubscription)
+      this.valueChangeSubscription.unsubscribe();
+    this.formHasChanged = false;
     this.showDocument = true;
-    this.selectedDocument  = id;
-    this.getFiles(id);
+    this.selectedDocument  = document.id;
+    this.documentForm.patchValue(document.userFields);
+
+    this.valueChangeSubscription = this.documentForm.valueChanges.subscribe(x => {
+      this.formHasChanged = true;
+    })
+    this.getFiles(document);
   }
 
 
@@ -86,7 +107,6 @@ export class DocumentsComponent implements OnInit {
   uploadFileToDocument(documentId = this.selectedDocument) {
     this.dataService.uploadFile(this.file, documentId).subscribe(
         (event: any) => {
-          console.log(event)
         }
     );
   }
@@ -101,6 +121,14 @@ export class DocumentsComponent implements OnInit {
         console.log(err);
       }
     });
+  }
+
+  updateFields(){
+    this.dataService.updateFields(this.selectedDocument, this.documentForm.getRawValue()).subscribe(
+        (event: any) => {
+            this.formHasChanged = false;
+        }
+    );
   }
 
 }

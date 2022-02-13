@@ -46,4 +46,9 @@ export class DataService {
         return this.http.get( API_URL + `document/${documentId}/files`, {responseType: 'json'});
     }
 
+    updateFields(documentId, payload): Observable<any>{
+        return this.http.post( API_URL + `document/${documentId}/fields`, payload);
+
+    }
+
 }

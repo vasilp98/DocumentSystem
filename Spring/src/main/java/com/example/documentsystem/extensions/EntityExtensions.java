@@ -5,6 +5,7 @@ import com.example.documentsystem.entities.ListEntity;
 import com.example.documentsystem.entities.PermissionEntity;
 import com.example.documentsystem.entities.UserEntity;
 import com.example.documentsystem.models.Document;
+import com.example.documentsystem.models.DocumentUserFields;
 import com.example.documentsystem.models.ListDto;
 import com.example.documentsystem.models.filter.Filter;
 import com.example.documentsystem.models.filter.FilterList;
@@ -26,13 +27,22 @@ public class EntityExtensions {
     public static Document toDocument(DocumentEntity documentEntity) {
         return new Document(
                 documentEntity.getId(),
-                documentEntity.getName(),
                 documentEntity.getStoreDate(),
                 documentEntity.getStoreUser(),
                 documentEntity.getModifyDate(),
                 documentEntity.getModifyUser(),
                 documentEntity.getSize(),
-                documentEntity.getFilesCount()
+                documentEntity.getFilesCount(),
+                new DocumentUserFields(
+                        documentEntity.getName(),
+                        documentEntity.getDocumentType(),
+                        documentEntity.getCompany(),
+                        documentEntity.getDate(),
+                        documentEntity.getContact(),
+                        documentEntity.getStatus(),
+                        documentEntity.getAmount(),
+                        documentEntity.getNumber()
+                )
         );
     }
 
