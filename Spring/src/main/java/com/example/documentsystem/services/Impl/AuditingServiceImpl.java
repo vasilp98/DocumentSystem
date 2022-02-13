@@ -22,6 +22,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,7 +83,7 @@ public class AuditingServiceImpl implements AuditingService {
                         AuditEventType.valueOf(e.getEventType()),
                         e.getEventDate(),
                         e.getUserInitiated(),
-                        getAuditedFields(e.getDetails()))).collect(Collectors.toList());
+                        new ArrayList<>())).collect(Collectors.toList());
     }
 
     private String getDetailsAsString(List<AuditedField> auditedFields) {
