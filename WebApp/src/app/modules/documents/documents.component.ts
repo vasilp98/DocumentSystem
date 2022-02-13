@@ -151,4 +151,8 @@ export class DocumentsComponent implements OnInit {
     return new Date(date).toLocaleDateString();
   }
 
+  createNewVersion(){
+    console.log('s')
+  }
+
 }

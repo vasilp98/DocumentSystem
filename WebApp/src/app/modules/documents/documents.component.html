@@ -144,8 +144,12 @@
                         </clr-accordion-panel>
 
                         <clr-accordion-panel>
-                            <clr-accordion-title>Item 3</clr-accordion-title>
-                            <clr-accordion-content *clrIfExpanded>Content 3</clr-accordion-content>
+                            <clr-accordion-title>Versioning</clr-accordion-title>
+                            <clr-accordion-content *clrIfExpanded>
+                                <div style="text-align:center;">
+                                    <button (click)="createNewVersion()" class="btn btn-sm btn-primary">New Version</button>
+                                </div>
+                            </clr-accordion-content>
                         </clr-accordion-panel>
                     </clr-accordion>
                 </div>
