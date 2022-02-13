@@ -30,6 +30,8 @@
               "src/files"
             ],
             "styles": [
+              "node_modules/@cds/city/css/bundles/default.min.css",
+              "node_modules/@cds/core/styles/module.shims.min.css",
               "src/styles.scss",
               "node_modules/@clr/icons/clr-icons.min.css",
               "node_modules/@clr/ui/clr-ui.min.css",
@@ -141,6 +143,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "documentsystem"
 }

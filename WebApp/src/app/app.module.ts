@@ -20,6 +20,7 @@ import { DocumentsComponent } from './modules/documents/documents.component';
 import { TestComponent } from './modules/test/test.component';
 import { ViewerComponent } from './core/viewer/viewer.component';
 import { DocumentLinksComponent } from './modules/document-links/document-links.component';
+import { CdsModule } from '@cds/angular';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { DocumentLinksComponent } from './modules/document-links/document-links.
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    CdsModule,
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent],

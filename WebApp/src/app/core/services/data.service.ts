@@ -52,7 +52,10 @@ export class DataService {
 
     updateFields(documentId, payload): Observable<any>{
         return this.http.post( API_URL + `document/${documentId}/fields`, payload);
+    }
 
+    getAudits(documentId: number): Observable<any>{
+        return this.http.get( API_URL + `audit/${documentId}/`, {responseType: 'json'});
     }
 
 }

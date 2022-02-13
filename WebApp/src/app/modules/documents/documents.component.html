@@ -3,21 +3,31 @@
     <div class="clr-row clr-justify-content-start">
         <div class="clr-col-12">
             <clr-datagrid>
+                <clr-dg-column [clrDgField]="'name'">Actions</clr-dg-column>
                 <clr-dg-column [clrDgField]="'name'">Name</clr-dg-column>
-                <clr-dg-column [clrDgField]="'name'">Size</clr-dg-column>
-                <clr-dg-column [clrDgField]="'name'">Modify Date</clr-dg-column>
                 <clr-dg-column [clrDgField]="'name'">Modify User</clr-dg-column>
-                <clr-dg-column [clrDgField]="'name'">Files Count</clr-dg-column>
-                <clr-dg-column [clrDgField]="'name'">Store Date</clr-dg-column>
                 <clr-dg-column [clrDgField]="'name'">Store User</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let document of documents" (dblclick)="showModal(document)">
+                    <clr-dg-cell>
+                        <div clr-layout="horizontal gap:sm">
+                            <cds-icon-button title="Open Document" action="outline" size="sm" (click)="showModal(document)">
+                                <clr-icon shape="script-execute"></clr-icon>
+                            </cds-icon-button>
+                            <cds-icon-button title="View Audits" action="outline" size="sm" (click)="showAuditsModal(document)">
+                                <clr-icon shape="history"></clr-icon>
+                            </cds-icon-button>
+                            <cds-icon-button action="outline" size="sm">
+                                <clr-icon shape="user"></clr-icon>
+                            </cds-icon-button>
+                            <cds-icon-button action="outline" status="danger" size="sm">
+                                <clr-icon shape="times"></clr-icon>
+                            </cds-icon-button>
+                        </div>
+
+                    </clr-dg-cell>
                     <clr-dg-cell>{{document.userFields.name}}</clr-dg-cell>
-                    <clr-dg-cell>{{document.size}}</clr-dg-cell>
-                    <clr-dg-cell>{{document.modifyDate}}</clr-dg-cell>
                     <clr-dg-cell>{{document.modifyUser}}</clr-dg-cell>
-                    <clr-dg-cell>{{document.filesCount}}</clr-dg-cell>
-                    <clr-dg-cell>{{document.storeDate}}</clr-dg-cell>
                     <clr-dg-cell>{{document.storeUser}}</clr-dg-cell>
                 </clr-dg-row>
 
@@ -188,6 +198,31 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-outline" (click)="showAddNewDocumentModal = false">Cancel</button>
             <button type="submit" class="btn btn-primary" (click)="onSubmit()">Add</button>
+        </div>
+    </clr-modal>
+
+    <clr-modal [(clrModalOpen)]="showAuditsModalFlag">
+        <h3 class="modal-title">View Audits</h3>
+        <div class="modal-body">
+            <table class="table" *ngIf="auditsToShow">
+                <thead>
+                <tr>
+                    <th>Event Type:</th>
+                    <th>Event Date:</th>
+                    <th>User:</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let audit of auditsToShow">
+                    <td>{{audit.eventType}}</td>
+                    <td>{{parseDateToString(audit.eventDate)}}</td>
+                    <td>{{audit.userInitiated}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" (click)="showAuditsModalFlag = false">Close</button>
         </div>
     </clr-modal>
 </main>

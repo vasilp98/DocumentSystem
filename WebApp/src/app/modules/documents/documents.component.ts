@@ -5,6 +5,8 @@ import {ActivatedRoute} from "@angular/router";
 import { MessageService } from "@core/services/message.service";
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import {Subscription} from "rxjs";
+import '@cds/core/icon/register.js';
+import '@cds/core/button/register.js';
 
 @Component({
   selector: 'app-folders',
@@ -17,6 +19,7 @@ export class DocumentsComponent implements OnInit {
   private valueChangeSubscription:Subscription;
   showDocument: boolean = false;
   showAddNewDocumentModal: boolean = false;
+  showAuditsModalFlag: boolean = false;
   formHasChanged: boolean = false;
   form = new FormGroup({
     "name": new FormControl("", Validators.required),
@@ -28,7 +31,7 @@ export class DocumentsComponent implements OnInit {
     "amount": new FormControl("", Validators.required),
     "number": new FormControl("", Validators.required),
   });
-  file: File = null; // Variable to store file
+  file: File = null;
   currentFolderId = null;
   documentForm = new FormGroup({
     "name": new FormControl("", Validators.required),
@@ -42,6 +45,7 @@ export class DocumentsComponent implements OnInit {
   });
 
   selectedDocument;
+  auditsToShow;
   constructor(private dataService: DataService, private messageService: MessageService, private router: ActivatedRoute) {
 
   }
@@ -129,6 +133,22 @@ export class DocumentsComponent implements OnInit {
             this.formHasChanged = false;
         }
     );
+  }
+
+  showAuditsModal(document){
+    this.showAuditsModalFlag = true;
+    this.dataService.getAudits(document.id).subscribe({
+      next: data => {
+        this.auditsToShow = data;
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
+  parseDateToString(date){
+    return new Date(date).toLocaleDateString();
   }
 
 }
