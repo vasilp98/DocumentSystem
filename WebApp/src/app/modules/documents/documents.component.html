@@ -17,10 +17,10 @@
                             <cds-icon-button title="View Audits" action="outline" size="sm" (click)="showAuditsModal(document)">
                                 <clr-icon shape="history"></clr-icon>
                             </cds-icon-button>
-                            <cds-icon-button action="outline" size="sm">
-                                <clr-icon shape="user"></clr-icon>
+                            <cds-icon-button title="Link" action="outline" size="sm" (click)="showLinksModal(document)">
+                                <clr-icon shape="link" ></clr-icon>
                             </cds-icon-button>
-                            <cds-icon-button action="outline" status="danger" size="sm">
+                            <cds-icon-button title="Delete" action="outline" status="danger" size="sm">
                                 <clr-icon shape="times"></clr-icon>
                             </cds-icon-button>
                         </div>
@@ -232,6 +232,26 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-outline" (click)="showAuditsModalFlag = false">Close</button>
+        </div>
+    </clr-modal>
+
+    <clr-modal [(clrModalOpen)]="showLinksModalFlag">
+        <h3 class="modal-title">Add link to document</h3>
+        <div class="modal-body">
+            <form clrForm>
+                <clr-input-container>
+                    <label>Password:</label>
+                    <input clrInput type="text" name="password" [(ngModel)]="linksPasswordModel"/>
+                </clr-input-container>
+                <clr-date-container>
+                    <label>Valid until:</label>
+                    <input type="date" clrDate name="demo" [(ngModel)]="linksDateModel" />
+                </clr-date-container>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn" (click)="createLink()">Create link</button>
+            <button type="button" class="btn btn-outline" (click)="showLinksModalFlag = false">Close</button>
         </div>
     </clr-modal>
 </main>

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +38,7 @@ public class DocumentLinkServiceImpl implements DocumentLinkService {
         if (!passwordEncoder.matches(password, documentLinkEntity.getPassword()))
             throw new UnauthorizedException("Wrong password for document link");
 
-        if (documentLinkEntity.getValidUntil() != null && documentLinkEntity.getValidUntil().isBefore(LocalDateTime.now())) {
+        if (documentLinkEntity.getValidUntil() != null && documentLinkEntity.getValidUntil().isBefore(LocalDate.now())) {
             documentLinkRepository.delete(documentLinkEntity);
             throw new EntityNotFoundException("Document link not found");
         }

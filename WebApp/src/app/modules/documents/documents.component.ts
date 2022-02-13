@@ -22,6 +22,7 @@ export class DocumentsComponent implements OnInit {
   showAddNewDocumentModal: boolean = false;
   showAuditsModalFlag: boolean = false;
   formHasChanged: boolean = false;
+  showLinksModalFlag: boolean = false;
   form = new FormGroup({
     "name": new FormControl("", Validators.required),
     "documentType": new FormControl("", Validators.required),
@@ -49,6 +50,8 @@ export class DocumentsComponent implements OnInit {
   auditsToShow;
   versionsToShow;
   currentDocument;
+  linksDateModel;
+  linksPasswordModel;
   constructor(private dataService: DataService, private messageService: MessageService, private router: ActivatedRoute) {
 
   }
@@ -214,6 +217,29 @@ export class DocumentsComponent implements OnInit {
     }
     else
       return false;
+  }
+
+  showLinksModal(document){
+    this.showLinksModalFlag = true;
+    this.currentDocument = document;
+  }
+
+  createLink(){
+    let selectedDateObject = new Date(this.linksDateModel);
+    let payload = {
+      documentId: this.currentDocument.id,
+      validUntil: selectedDateObject.toISOString().split('T')[0],
+      password: this.linksPasswordModel
+    };
+
+    this.dataService.createLink(payload).subscribe({
+      next: data => {
+        console.log(data);
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 
 }

@@ -78,4 +78,8 @@ export class DataService {
         return this.http.get( API_URL + `document/${documentId}/versions`, {responseType: 'json'});
     }
 
+    createLink(payload): Observable<any>{
+        return this.http.post( API_URL + `link/`, payload);
+    }
+
 }
