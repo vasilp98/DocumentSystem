@@ -10,6 +10,7 @@ import { Router } from "@angular/router";
 })
 export class FoldersComponent implements OnInit {
   folders = null;
+  showAddNewFolderModal: boolean = false;
   constructor(private dataService: DataService, private route: Router) { }
 
   ngOnInit(): void {
