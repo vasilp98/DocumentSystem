@@ -1,0 +1,31 @@
+<main>
+    <div *ngIf="!showDocument" class="password-form">
+        <form clrForm>
+            <clr-input-container class="password-input">
+                <label>Password</label>
+                <input placeholder="Enter password for link:" clrInput [(ngModel)]="password" name="passwrod" required />
+                <clr-control-helper>Enter the password that was provided to you to view the document.</clr-control-helper>
+            </clr-input-container>
+            <button type="button" class="btn btn-icon" aria-label="add" (click)="openDocumentFromLink()">
+                <clr-icon shape="floppy"></clr-icon>
+            </button>
+        </form>
+    </div>
+    <div class="clr-row">
+        <div class="clr-col-9">
+            <app-viewer *ngIf="showDocument"></app-viewer>
+        </div>
+        <div *ngIf="showDocument" class="clr-col-3">
+            <form clrForm>
+                <clr-select-container>
+                    <label>File: </label>
+                    <select clrSelect (change)="changeFile($event.target.value)">
+                        <option *ngFor="let elem of files"[value]="elem.number">
+                            {{elem['originalFileName']}}
+                        </option>
+                    </select>
+                </clr-select-container>
+            </form>
+        </div>
+    </div>
+</main>

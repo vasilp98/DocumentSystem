@@ -11,6 +11,13 @@ public class Settings {
         fieldType.put("storeUser", FieldType.TEXT);
         fieldType.put("modifyDate", FieldType.DATE);
         fieldType.put("modifyUser", FieldType.TEXT);
+        fieldType.put("documentType", FieldType.TEXT);
+        fieldType.put("company", FieldType.TEXT);
+        fieldType.put("date", FieldType.DATE);
+        fieldType.put("contact", FieldType.TEXT);
+        fieldType.put("status", FieldType.TEXT);
+        fieldType.put("amount", FieldType.NUMERIC);
+        fieldType.put("number", FieldType.NUMERIC);
 
         return fieldType;
     }
