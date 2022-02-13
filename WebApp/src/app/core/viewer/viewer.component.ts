@@ -47,9 +47,9 @@ export class ViewerComponent implements OnInit, OnDestroy {
       this.wvInstance = instance;
       this.coreControlsEvent.emit(instance.UI.LayoutMode.Single);
       const { documentViewer, Annotations, annotationManager } = instance.Core;
-      instance.UI.openElements(['notesPanel']);
       documentViewer.zoomTo(100);
       documentViewer.enableReadOnlyMode();
+      //instance.UI.disableElements(['toolsHeader', 'toolbarGroup-Annotate', 'toolbarGroup-Shapes', 'toolbarGroup-Insert', 'toolbarGroup-Measure'])
       this.loadFile();
     })
   }

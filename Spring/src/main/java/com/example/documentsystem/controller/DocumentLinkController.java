@@ -1,6 +1,7 @@
 package com.example.documentsystem.controller;
 
 import com.example.documentsystem.entities.DocumentLinkEntity;
+import com.example.documentsystem.models.Document;
 import com.example.documentsystem.models.DocumentLink;
 import com.example.documentsystem.models.DocumentLinkPassword;
 import com.example.documentsystem.models.ViewingDocumentBundle;
@@ -24,8 +25,8 @@ public class DocumentLinkController {
     }
 
     @PostMapping("/{token}")
-    public Long getDocumentId(@PathVariable String token, @RequestBody DocumentLinkPassword linkPassword) {
-        return documentLinkService.getDocumentIdFromLink(token, linkPassword.getPassword());
+    public Document getDocumentId(@PathVariable String token, @RequestBody DocumentLinkPassword linkPassword) {
+        return documentLinkService.getDocumentFromLink(token, linkPassword.getPassword());
     }
 
     @PostMapping

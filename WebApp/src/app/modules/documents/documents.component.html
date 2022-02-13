@@ -143,14 +143,20 @@
 
                         </clr-accordion-panel>
 
-                        <clr-accordion-panel *ngIf="isCurrentDocumentVersion()">
+                        <clr-accordion-panel>
                             <clr-accordion-title>Versioning</clr-accordion-title>
                             <clr-accordion-content *clrIfExpanded>
-                                <div *ngFor="let version of versionsToShow">
-                                    <span style="font-weight: bold">Version {{version.versionNumber}}:</span>
-                                    <button class="btn btn-link btn-sm" (click)="openDocumentVersion(version)">Open</button>
+                                <div *ngIf="isCurrentDocumentVersion()">
+                                    <div *ngFor="let version of versionsToShow">
+                                        <span style="font-weight: bold">Version {{version.versionNumber}}:</span>
+                                        <button class="btn btn-link btn-sm" (click)="openDocument(version)">Open</button>
+                                    </div>
                                 </div>
-                                <div style="text-align:center;">
+                                <div *ngIf="!isCurrentDocumentVersion()">
+                                    <span style="font-weight: bold">Original :</span>
+                                    <button class="btn btn-link btn-sm" (click)="openDocument(originalDocument)">Open</button>
+                                </div>
+                                <div style="text-align:center;" *ngIf="isCurrentDocumentVersion()">
                                     <button (click)="createNewVersion()" class="btn btn-sm btn-primary">New Version</button>
                                 </div>
 

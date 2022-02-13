@@ -52,6 +52,7 @@ export class DocumentsComponent implements OnInit {
   currentDocument;
   linksDateModel;
   linksPasswordModel;
+  originalDocument;
   constructor(private dataService: DataService, private messageService: MessageService, private router: ActivatedRoute) {
 
   }
@@ -117,19 +118,19 @@ export class DocumentsComponent implements OnInit {
     this.formHasChanged = false;
     this.showDocument = true;
     this.selectedDocument  = document.id;
+    this.originalDocument = document;
     this.documentForm.patchValue(document.userFields);
 
     this.valueChangeSubscription = this.documentForm.valueChanges.subscribe(x => {
       this.formHasChanged = true;
     })
-    this.getVersionsOfDocument(document.id);
-    this.getFiles(document);
+    this.openDocument(document)
 
   }
 
-  openDocumentVersion(version){
-    this.getVersionsOfDocument(version.id);
-    this.getFiles(version);
+  openDocument(document){
+    this.getVersionsOfDocument(document.id);
+    this.getFiles(document);
   }
 
 
@@ -235,6 +236,11 @@ export class DocumentsComponent implements OnInit {
     this.dataService.createLink(payload).subscribe({
       next: data => {
         console.log(data);
+        this.messageService.changeAlert({
+          show: true,
+          message: data.token,
+          type: 'info'
+        })
       },
       error: err => {
         console.log(err);

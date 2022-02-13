@@ -13,6 +13,9 @@ export class MessageService {
     private fileIdSource = new BehaviorSubject(-1);
     currentFile = this.fileIdSource.asObservable();
 
+    private alertSource = new BehaviorSubject({show: false, message: '', type: ''});
+    currentAlert = this.alertSource.asObservable();
+
     constructor() { }
 
     changeMessage(message: any) {
@@ -23,5 +26,7 @@ export class MessageService {
         this.fileIdSource.next(message)
     }
 
-
+    changeAlert(message: any){
+        this.alertSource.next(message);
+    }
 }

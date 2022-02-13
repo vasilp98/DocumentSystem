@@ -11,21 +11,119 @@
             </button>
         </form>
     </div>
+    <h3 *ngIf="showDocument" class="modal-title">{{isCurrentDocumentVersion() ? ('Document: ' + currentDocument?.userFields.name) : ('Version ' + currentDocument?.versionNumber + ': ' + currentDocument?.userFields.name)}}</h3>
+
     <div class="clr-row">
         <div class="clr-col-9">
             <app-viewer *ngIf="showDocument"></app-viewer>
         </div>
         <div *ngIf="showDocument" class="clr-col-3">
-            <form clrForm>
-                <clr-select-container>
-                    <label>File: </label>
-                    <select clrSelect (change)="changeFile($event.target.value)">
-                        <option *ngFor="let elem of files"[value]="elem.number">
-                            {{elem['originalFileName']}}
-                        </option>
-                    </select>
-                </clr-select-container>
-            </form>
+
+
+            <clr-accordion>
+                <clr-accordion-panel>
+                    <clr-accordion-title>File controls</clr-accordion-title>
+                    <clr-accordion-content *clrIfExpanded>
+                        <form clrForm>
+                            <clr-select-container>
+                                <label>File: </label>
+                                <select style="width: 95%" clrSelect (change)="changeFile($event.target.value)">
+                                    <option *ngFor="let elem of files"[value]="elem.number">
+                                        {{elem['originalFileName']}}
+                                    </option>
+                                </select>
+
+                            </clr-select-container>
+                        </form>
+                    </clr-accordion-content>
+                </clr-accordion-panel>
+
+                <clr-accordion-panel>
+                    <clr-accordion-title>Document Fields</clr-accordion-title>
+                    <clr-accordion-content *clrIfExpanded>
+                        <form class="clr-form clr-form-vertical"  [formGroup]="documentForm">
+                            <div class="clr-form-control">
+                                <label for="name" class="clr-control-label">Name</label>
+                                <div class="clr-control-container">
+                                    <div class="clr-input-wrapper">
+                                        <input type="text" id="name" placeholder="Name" class="clr-input" name="name" formControlName="name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clr-form-control">
+                                <label for="company" class="clr-control-label">Company</label>
+                                <div class="clr-control-container">
+                                    <div class="clr-input-wrapper">
+                                        <input type="text" id="company" placeholder="Company" class="clr-input" name="company" formControlName="company"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clr-form-control">
+                                <label for="documentType" class="clr-control-label">Document Type</label>
+                                <div class="clr-control-container">
+                                    <div class="clr-input-wrapper">
+                                        <input type="text" id="documentType" placeholder="Document Type" class="clr-input" name="documentType" formControlName="documentType"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clr-form-control">
+                                <label for="status" class="clr-control-label">Status</label>
+                                <div class="clr-control-container">
+                                    <div class="clr-input-wrapper">
+                                        <input type="text" id="status" placeholder="Status" class="clr-input" name="status" formControlName="status"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clr-form-control">
+                                <label for="number" class="clr-control-label">Number</label>
+                                <div class="clr-control-container">
+                                    <div class="clr-input-wrapper">
+                                        <input type="text" id="number" placeholder="Number" class="clr-input" name="number" formControlName="number"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clr-form-control">
+                                <label for="contact" class="clr-control-label">Contact</label>
+                                <div class="clr-control-container">
+                                    <div class="clr-input-wrapper">
+                                        <input type="text" id="contact" placeholder="Contact" class="clr-input" name="contact" formControlName="contact"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clr-form-control">
+                                <label for="amount" class="clr-control-label">Amount</label>
+                                <div class="clr-control-container">
+                                    <div class="clr-input-wrapper">
+                                        <input type="text" id="amount" placeholder="Amount" class="clr-input" name="amount" formControlName="amount"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </clr-accordion-content>
+
+                </clr-accordion-panel>
+
+                <clr-accordion-panel>
+                    <clr-accordion-title>Versioning</clr-accordion-title>
+                    <clr-accordion-content *clrIfExpanded>
+                        <div *ngIf="isCurrentDocumentVersion()">
+                            <div *ngFor="let version of versionsToShow">
+                                <span style="font-weight: bold">Version {{version.versionNumber}}:</span>
+                                <button class="btn btn-link btn-sm" (click)="openDocument(version, true)">Open</button>
+                            </div>
+                        </div>
+                        <div *ngIf="!isCurrentDocumentVersion()">
+                            <span style="font-weight: bold">Original :</span>
+                            <button class="btn btn-link btn-sm" (click)="openDocument(originalDocument)">Open</button>
+                        </div>
+                    </clr-accordion-content>
+                </clr-accordion-panel>
+            </clr-accordion>
+
+
+
+
+
         </div>
     </div>
 </main>

@@ -1,10 +1,15 @@
 package com.example.documentsystem.services.impl;
 
 import com.example.documentsystem.dao.DocumentLinkRepository;
+import com.example.documentsystem.dao.DocumentRepository;
 import com.example.documentsystem.entities.DocumentLinkEntity;
 import com.example.documentsystem.exceptions.UnauthorizedException;
+import com.example.documentsystem.extensions.EntityExtensions;
+import com.example.documentsystem.models.Document;
 import com.example.documentsystem.models.DocumentLink;
 import com.example.documentsystem.services.DocumentLinkService;
+import com.example.documentsystem.services.DocumentService;
+import lombok.experimental.ExtensionMethod;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,18 +25,21 @@ import java.util.UUID;
 
 @Service
 @Transactional
+@ExtensionMethod(EntityExtensions.class)
 public class DocumentLinkServiceImpl implements DocumentLinkService {
     private final DocumentLinkRepository documentLinkRepository;
     private PasswordEncoder passwordEncoder;
+    private DocumentRepository documentRepository;
 
     @Autowired
-    public DocumentLinkServiceImpl(DocumentLinkRepository documentLinkRepository, PasswordEncoder passwordEncoder) {
+    public DocumentLinkServiceImpl(DocumentRepository documentRepository, DocumentLinkRepository documentLinkRepository, PasswordEncoder passwordEncoder) {
         this.documentLinkRepository = documentLinkRepository;
         this.passwordEncoder = passwordEncoder;
+        this.documentRepository = documentRepository;
     }
 
     @Override
-    public Long getDocumentIdFromLink(String token, String password) {
+    public Document getDocumentFromLink(String token, String password) {
         DocumentLinkEntity documentLinkEntity = documentLinkRepository.findByToken(token)
                 .orElseThrow(() -> new UnauthorizedException("Wrong password for document link"));
 
@@ -43,7 +51,7 @@ public class DocumentLinkServiceImpl implements DocumentLinkService {
             throw new EntityNotFoundException("Document link not found");
         }
 
-        return documentLinkEntity.getDocumentId();
+        return documentRepository.getById(documentLinkEntity.getDocumentId()).toDocument();
     }
 
     @Override

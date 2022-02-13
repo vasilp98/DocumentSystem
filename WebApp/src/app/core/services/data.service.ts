@@ -46,7 +46,7 @@ export class DataService {
         return this.http.get( API_URL + `document/${documentId}/files`, {responseType: 'json'});
     }
 
-    getDocumentIdFromLink(token, password): Observable<any> {
+    getDocumentFromLink(token, password): Observable<any> {
         return this.http.post(API_URL + `link/${token}`, { password: password });
     }
 
