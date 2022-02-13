@@ -22,6 +22,7 @@ import { ViewerComponent } from './core/viewer/viewer.component';
 import { DocumentLinksComponent } from './modules/document-links/document-links.component';
 import { ListComponent } from './modules/list/list.component';
 import { PermissionsComponent } from './modules/permissions/permissions.component';
+import { CdsModule } from '@cds/angular';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { PermissionsComponent } from './modules/permissions/permissions.componen
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    CdsModule,
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent],

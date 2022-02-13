@@ -10,7 +10,7 @@ export class MessageService {
     private messageSource = new BehaviorSubject(<any>{});
     currentMessage = this.messageSource.asObservable();
 
-    private fileIdSource = new BehaviorSubject(0);
+    private fileIdSource = new BehaviorSubject(-1);
     currentFile = this.fileIdSource.asObservable();
 
     constructor() { }

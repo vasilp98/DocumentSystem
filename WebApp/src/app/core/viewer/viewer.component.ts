@@ -23,16 +23,20 @@ export class ViewerComponent implements OnInit, OnDestroy {
   constructor(private dataService: DataService,private messageService: MessageService) {
     this.documentLoaded$ = new Subject<void>();
     this.messageService.currentMessage.subscribe(message => {
-      this.selectedDocument = message.id;
-      this.files = message.files;
-      console.log(this.files)
-      setTimeout(() => {
-        this.loadViewer();
-      });
+      if(message.document){
+        this.selectedDocument = message.document;
+        console.log(this.selectedDocument)
+
+        this.files = message.files;
+        setTimeout(() => {
+          this.loadViewer();
+        });
+      }
     });
 
     this.messageService.currentFile.subscribe(message => {
-      this.loadFile(message)
+      if(message != -1)
+        this.loadFile(message)
     });
   }
 
@@ -62,7 +66,7 @@ export class ViewerComponent implements OnInit, OnDestroy {
   }
 
   loadFile(fileNumber: number = 0){
-    this.dataService.getFile(this.selectedDocument, fileNumber).subscribe({
+    this.dataService.getFile(this.selectedDocument.id, fileNumber).subscribe({
       next: data => {
         const blob = new Blob([data], { type: data.type });
         setTimeout(() => {

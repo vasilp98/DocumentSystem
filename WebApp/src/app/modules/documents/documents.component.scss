@@ -5,3 +5,18 @@ main{
 clr-dg-cell{
   line-height: 0.9rem !important;
 }
+
+:host ::ng-deep .clr-accordion-inner-content{
+  padding: 0.6rem !important;
+  overflow: auto;
+  max-height: 23rem;
+}
+
+clr-select-container{
+  margin-top:0 !important;
+}
+
+cds-icon-button{
+  margin-right: 1px;
+}
+
