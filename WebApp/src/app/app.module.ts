@@ -19,6 +19,7 @@ import { FooterComponent } from './core/footer/footer.component';
 import { DocumentsComponent } from './modules/documents/documents.component';
 import { TestComponent } from './modules/test/test.component';
 import { ViewerComponent } from './core/viewer/viewer.component';
+import { DocumentLinksComponent } from './modules/document-links/document-links.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ViewerComponent } from './core/viewer/viewer.component';
     FooterComponent,
     DocumentsComponent,
     TestComponent,
-    ViewerComponent
+    ViewerComponent,
+    DocumentLinksComponent
   ],
   imports: [
     BrowserModule,

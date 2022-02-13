@@ -24,11 +24,8 @@ public class DocumentLinkController {
     }
 
     @PostMapping("/{token}")
-    public InputStream downloadFormLink(@PathVariable String token, @RequestBody DocumentLinkPassword linkPassword) {
-        Long documentId = documentLinkService.getDocumentIdFromLink(token, linkPassword.getPassword());
-        ViewingDocumentBundle documentBundle = documentService.getDocumentForViewing(documentId);
-
-        return documentBundle.getFirstFileStream();
+    public Long getDocumentId(@PathVariable String token, @RequestBody DocumentLinkPassword linkPassword) {
+        return documentLinkService.getDocumentIdFromLink(token, linkPassword.getPassword());
     }
 
     @PostMapping
