@@ -20,6 +20,8 @@ import { DocumentsComponent } from './modules/documents/documents.component';
 import { TestComponent } from './modules/test/test.component';
 import { ViewerComponent } from './core/viewer/viewer.component';
 import { DocumentLinksComponent } from './modules/document-links/document-links.component';
+import { ListComponent } from './modules/list/list.component';
+import { PermissionsComponent } from './modules/permissions/permissions.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { DocumentLinksComponent } from './modules/document-links/document-links.
     DocumentsComponent,
     TestComponent,
     ViewerComponent,
-    DocumentLinksComponent
+    DocumentLinksComponent,
+    ListComponent,
+    PermissionsComponent
   ],
   imports: [
     BrowserModule,

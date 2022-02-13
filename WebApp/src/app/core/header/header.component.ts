@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {TokenStorageService} from "../../core/services/token-storage.service";
+import {DataService} from '@core/services/data.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -10,8 +12,9 @@ export class HeaderComponent implements OnInit {
   private roles: string[] = [];
   isLoggedIn = false;
   username?: string;
+  lists = null;
 
-  constructor(private tokenStorageService: TokenStorageService,) { }
+  constructor(private tokenStorageService: TokenStorageService, private dataService: DataService, private router: Router) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
@@ -27,4 +30,24 @@ export class HeaderComponent implements OnInit {
     location.reload();
   }
 
+  getLists() {
+    if (this.lists == null) {
+      this.dataService.getLists().subscribe({
+        next: data => {
+          this.lists = data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      });
+    }
+  }
+
+  openList(id) {
+    this.router.navigate(['/list/' + id]);
+  }
+
+  addList() {
+    this.router.navigate(['list']);
+  }
 }

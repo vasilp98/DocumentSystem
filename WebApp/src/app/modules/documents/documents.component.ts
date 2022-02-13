@@ -42,14 +42,27 @@ export class DocumentsComponent implements OnInit {
 
 
   getDocuments(id: number): void{
-      this.dataService.getDocuments(id).subscribe({
-        next: data => {
-          this.documents = data;
-        },
-        error: err => {
-          console.log(err);
-        }
-      });
+    this.router.url.subscribe(segments => {
+      if (segments[0].path === 'list') {
+        this.dataService.getDocumentsFromList(id).subscribe({
+          next: data => {
+            this.documents = data;
+          },
+          error: err => {
+            console.log(err);
+          }
+        });
+      } else {
+        this.dataService.getDocuments(id).subscribe({
+          next: data => {
+            this.documents = data;
+          },
+          error: err => {
+            console.log(err);
+          }
+        });
+      }
+    });
   }
 
   getFiles(id){

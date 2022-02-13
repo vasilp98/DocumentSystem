@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ListRepository extends JpaRepository<ListEntity, Long> {
     List<ListEntity> findAllByFolderId(Long folderId);
+
+    List<ListEntity> findAllByOwnerId(Long ownerId);
 }

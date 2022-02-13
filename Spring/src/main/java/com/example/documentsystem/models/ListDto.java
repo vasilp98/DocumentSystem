@@ -13,5 +13,9 @@ public class ListDto {
 
     private Long folderId;
 
+    private Long ownerId;
+
+    private String name;
+
     private List<Filter> filters;
 }

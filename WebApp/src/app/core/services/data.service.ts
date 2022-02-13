@@ -49,4 +49,16 @@ export class DataService {
     getDocumentIdFromLink(token, password): Observable<any> {
         return this.http.post(API_URL + `link/${token}`, { password: password });
     }
+
+    getLists(): Observable<any> {
+        return this.http.get(API_URL + 'list');
+    }
+
+    getDocumentsFromList(id): Observable<any> {
+        return this.http.get(API_URL + `list/${id}/documents`);
+    }
+
+    getFolder(id): Observable<any> {
+        return this.http.get(API_URL + `folder/${id}`);
+    }
 }

@@ -1,0 +1,65 @@
+<div class="permissions-wrapper">
+    <span *ngIf="folder">Edit permissions on folder: {{ folder.name }}</span>
+    <form class="clr-form clr-form-horizontal">
+        <!-- should load all existing permissions -->
+        <div class="formGroup-wrapper" *ngFor="let formGroup of form.controls" [formGroup]="formGroup">
+            <div class="clr-form-control">
+                <label for="filter" class="clr-control-label">Filter Field</label>
+                <div class="clr-control-container">
+                    <div class="clr-input-wrapper">
+                        <input
+                                type="text"
+                                id="filter"
+                                placeholder="Placeholder"
+                                class="clr-input"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="clr-form-control">
+                <label for="filterValue" class="clr-control-label">Filter Value</label>
+                <div class="clr-control-container">
+                    <div class="clr-input-wrapper">
+                        <input
+                                type="text"
+                                id="filterValue"
+                                placeholder="Placeholder"
+                                class="clr-input"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="clr-form-control">
+                <label for="users" class="clr-control-label">Users</label>
+                <div class="clr-control-container">
+                    <div class="clr-input-wrapper">
+                        <input
+                                type="text"
+                                id="users"
+                                placeholder="Placeholder"
+                                class="clr-input"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="clr-form-control">
+                <label for="rights" class="clr-control-label">Access</label>
+                <div class="clr-control-container">
+                    <div class="clr-input-wrapper">
+                        <input
+                                type="text"
+                                id="rights"
+                                placeholder="Placeholder"
+                                class="clr-input"
+                        />
+                    </div>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </form>
+    <!-- should add a new set of inputs to fill new permissions -->
+    <button class="btn btn-link" (click)="addPermissionRule()">
+        Add new permission rule
+    </button>
+</div>

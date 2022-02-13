@@ -1,11 +1,19 @@
 package com.example.documentsystem.services.impl;
 
+import com.example.documentsystem.dao.DocumentRepository;
 import com.example.documentsystem.dao.ListRepository;
+import com.example.documentsystem.entities.DocumentEntity;
 import com.example.documentsystem.entities.ListEntity;
+import com.example.documentsystem.entities.UserEntity;
 import com.example.documentsystem.extensions.EntityExtensions;
+import com.example.documentsystem.models.Document;
 import com.example.documentsystem.models.ListDto;
 import com.example.documentsystem.models.filter.Filter;
+import com.example.documentsystem.models.permission.Permission;
+import com.example.documentsystem.services.DocumentService;
+import com.example.documentsystem.services.FilterService;
 import com.example.documentsystem.services.ListService;
+import com.example.documentsystem.services.UserService;
 import lombok.experimental.ExtensionMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +27,40 @@ import java.util.stream.Collectors;
 @ExtensionMethod(EntityExtensions.class)
 public class ListServiceImpl implements ListService {
     private ListRepository listRepository;
+    private UserService userService;
+    private DocumentRepository documentRepository;
+    private FilterService filterService;
 
-    public ListServiceImpl(ListRepository listRepository) {
+    public ListServiceImpl(
+            ListRepository listRepository,
+            UserService userService,
+            DocumentRepository documentRepository,
+            FilterService filterService) {
+
         this.listRepository = listRepository;
+        this.userService = userService;
+        this.documentRepository = documentRepository;
+        this.filterService = filterService;
+    }
+
+    @Override
+    public List<Document> getDocuments(Long listId) {
+        ListDto listDto = findById(listId);
+        List<DocumentEntity> documentEntities = documentRepository.findByFolderIdOrderById(listDto.getFolderId());
+
+        return filterService.filterDocuments(documentEntities, listDto.getFilters()).stream().map(d -> d.toDocument()).collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<ListDto> findAllInFolder(Long folderId) {
         return listRepository.findAllByFolderId(folderId).stream().map(l -> l.toDto()).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ListDto> findAllForCurrentUser() {
+        UserEntity userEntity = userService.getCurrentUser();
+        return listRepository.findAllByOwnerId(userEntity.getId()).stream().map(l -> l.toDto()).collect(Collectors.toList());
     }
 
     @Override
@@ -39,18 +72,14 @@ public class ListServiceImpl implements ListService {
     }
 
     @Override
-    public ListDto create(Long folderId, List<Filter> filters) {
-        return listRepository.save(new ListEntity(folderId, filters.serialize())).toDto();
-    }
+    public ListDto create(ListDto listDto) {
+        UserEntity userEntity = userService.getCurrentUser();
 
-    @Override
-    public ListDto update(Long id, List<Filter> filters) {
-        ListEntity listEntity = listRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException(String.format("List with ID=%s not found.", id)));
-
-        listEntity.setFilters(filters.serialize());
-
-        return listRepository.save(listEntity).toDto();
+        return listRepository.save(new ListEntity(
+                listDto.getFolderId(),
+                userEntity.getId(),
+                listDto.getName(),
+                listDto.getFilters().serialize())).toDto();
     }
 
     @Override
