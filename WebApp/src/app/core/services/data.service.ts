@@ -70,4 +70,12 @@ export class DataService {
         return this.http.get( API_URL + `audit/${documentId}/`, {responseType: 'json'});
     }
 
+    createVersion(documentId): Observable<any>{
+        return this.http.post( API_URL + `version/${documentId}`, {});
+    }
+
+    getVersionsOfDocument(documentId): Observable<any>{
+        return this.http.get( API_URL + `document/${documentId}/versions`, {responseType: 'json'});
+    }
+
 }

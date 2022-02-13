@@ -18,6 +18,7 @@ export class DocumentsComponent implements OnInit {
   public files = null;
   private valueChangeSubscription:Subscription;
   showDocument: boolean = false;
+  showViewer: boolean = false;
   showAddNewDocumentModal: boolean = false;
   showAuditsModalFlag: boolean = false;
   formHasChanged: boolean = false;
@@ -46,6 +47,8 @@ export class DocumentsComponent implements OnInit {
 
   selectedDocument;
   auditsToShow;
+  versionsToShow;
+  currentDocument;
   constructor(private dataService: DataService, private messageService: MessageService, private router: ActivatedRoute) {
 
   }
@@ -83,9 +86,12 @@ export class DocumentsComponent implements OnInit {
   }
 
   getFiles(document){
+    this.showViewer = false;
+    this.currentDocument = document;
     this.dataService.getFiles(document.id).subscribe({
       next: data => {
         this.files = data;
+        this.showViewer = true;
         this.messageService.changeMessage({
           files: data,
           document: document
@@ -113,7 +119,14 @@ export class DocumentsComponent implements OnInit {
     this.valueChangeSubscription = this.documentForm.valueChanges.subscribe(x => {
       this.formHasChanged = true;
     })
+    this.getVersionsOfDocument(document.id);
     this.getFiles(document);
+
+  }
+
+  openDocumentVersion(version){
+    this.getVersionsOfDocument(version.id);
+    this.getFiles(version);
   }
 
 
@@ -121,9 +134,17 @@ export class DocumentsComponent implements OnInit {
     this.file = event.target.files[0];
   }
 
-  uploadFileToDocument(documentId = this.selectedDocument) {
+  uploadFileToDocument(documentId = this.currentDocument.id) {
     this.dataService.uploadFile(this.file, documentId).subscribe(
         (event: any) => {
+          this.dataService.getFiles(documentId).subscribe({
+            next: data => {
+              this.files = data;
+            },
+            error: err => {
+              console.log(err);
+            }
+          });
         }
     );
   }
@@ -160,12 +181,39 @@ export class DocumentsComponent implements OnInit {
     });
   }
 
+  getVersionsOfDocument(documentId = this.selectedDocument){
+    this.dataService.getVersionsOfDocument(documentId).subscribe({
+      next: data => {
+        console.log(data);
+        this.versionsToShow = data;
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
   parseDateToString(date){
     return new Date(date).toLocaleDateString();
   }
 
   createNewVersion(){
-    console.log('s')
+    this.dataService.createVersion(this.selectedDocument).subscribe({
+      next: data => {
+        this.versionsToShow.unshift(data);
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
+  isCurrentDocumentVersion(){
+    if(this.currentDocument){
+      return this.currentDocument.id === this.currentDocument.currentDocumentId;
+    }
+    else
+      return false;
   }
 
 }

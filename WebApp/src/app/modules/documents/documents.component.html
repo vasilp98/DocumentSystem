@@ -43,12 +43,12 @@
         </div>
     </div>
     <clr-modal [(clrModalOpen)]="showDocument" [clrModalSize]="'xl'">
-        <h3 class="modal-title">Document</h3>
+        <h3 class="modal-title">{{isCurrentDocumentVersion() ? ('Document: ' + currentDocument?.userFields.name) : ('Version ' + currentDocument?.versionNumber + ': ' + currentDocument?.userFields.name)}}</h3>
         <div  class="modal-body">
 
             <div class="clr-row">
                 <div class="clr-col-9">
-                    <app-viewer *ngIf="showDocument"></app-viewer>
+                    <app-viewer *ngIf="showViewer"></app-viewer>
                 </div>
                 <div class="clr-col-3">
                     <clr-accordion>
@@ -143,12 +143,17 @@
 
                         </clr-accordion-panel>
 
-                        <clr-accordion-panel>
+                        <clr-accordion-panel *ngIf="isCurrentDocumentVersion()">
                             <clr-accordion-title>Versioning</clr-accordion-title>
                             <clr-accordion-content *clrIfExpanded>
+                                <div *ngFor="let version of versionsToShow">
+                                    <span style="font-weight: bold">Version {{version.versionNumber}}:</span>
+                                    <button class="btn btn-link btn-sm" (click)="openDocumentVersion(version)">Open</button>
+                                </div>
                                 <div style="text-align:center;">
                                     <button (click)="createNewVersion()" class="btn btn-sm btn-primary">New Version</button>
                                 </div>
+
                             </clr-accordion-content>
                         </clr-accordion-panel>
                     </clr-accordion>

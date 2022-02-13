@@ -30,5 +30,9 @@ public class Document {
     @NotNull
     private Integer filesCount;
 
+    private Integer versionNumber;
+
+    private Long currentDocumentId;
+
     private DocumentUserFields userFields;
 }
