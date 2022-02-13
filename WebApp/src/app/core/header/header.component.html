@@ -9,9 +9,22 @@
         <a href="javascript://" class="nav-link nav-icon">
             <clr-icon shape="cloud"></clr-icon>
         </a>
-        <a href="javascript://" class="active nav-link nav-icon">
+        <a href="/folders" class="active nav-link nav-icon">
             <clr-icon shape="folder"></clr-icon>
         </a>
+        <clr-dropdown [clrCloseMenuOnItemClick]="false" (click)="getLists()">
+            <button clrDropdownTrigger aria-label="Lists" class="active nav-link nav-icon">
+                <clr-icon shape="list" direction="down"></clr-icon>
+            </button>
+            <clr-dropdown-menu *clrIfOpen>
+                <label class="dropdown-header" aria-hidden="true">Lists:</label>
+                <div *ngFor="let list of lists" (click)="openList(list.id)">
+                    <div clrDropdownItem>{{list.name}}</div>
+                </div>
+                <div class="dropdown-divider" role="separator" aria-hidden="true"></div>
+                <div clrDropdownItem (click)="addList()">Add new list</div>
+            </clr-dropdown-menu>
+        </clr-dropdown>
     </div>
     <div class="settings">
         <a [routerLink]="['/login']" *ngIf="!isLoggedIn" class="nav-link">

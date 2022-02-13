@@ -61,6 +61,8 @@ public class EntityExtensions {
         return new ListDto(
                 listEntity.getId(),
                 listEntity.getFolderId(),
+                listEntity.getOwnerId(),
+                listEntity.getName(),
                 deserializeToFilters(listEntity.getFilters())
         );
     }

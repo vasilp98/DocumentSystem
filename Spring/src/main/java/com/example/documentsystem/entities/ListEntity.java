@@ -21,9 +21,13 @@ public class ListEntity {
     @Column(name = "FOLDER_ID")
     private Long folderId;
 
+    private Long ownerId;
+
+    private String name;
+
     private String filters;
 
-    public ListEntity(Long folderId, String filters) {
+    public ListEntity(Long folderId, Long ownerId, String name, String filters) {
         this.folderId = folderId;
         this.filters = filters;
     }

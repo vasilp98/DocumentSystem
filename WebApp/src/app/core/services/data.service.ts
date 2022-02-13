@@ -50,6 +50,18 @@ export class DataService {
         return this.http.post(API_URL + `link/${token}`, { password: password });
     }
 
+    getLists(): Observable<any> {
+        return this.http.get(API_URL + 'list');
+    }
+
+    getDocumentsFromList(id): Observable<any> {
+        return this.http.get(API_URL + `list/${id}/documents`);
+    }
+
+    getFolder(id): Observable<any> {
+        return this.http.get(API_URL + `folder/${id}`);
+    }
+
     updateFields(documentId, payload): Observable<any>{
         return this.http.post( API_URL + `document/${documentId}/fields`, payload);
     }
