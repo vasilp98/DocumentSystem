@@ -51,6 +51,17 @@
                             </select>
                         </clr-select-container>
                     </form>
+                    <div class="clr-row clr-justify-content-start">
+                        <div class="clr-col-12">
+                                <input class="form-control" type="file"
+                                       (change)="onFileChange($event)">
+
+                                <button (click)="uploadFileToDocument()"
+                                        class="btn btn-success">
+                                    Upload
+                                </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,21 +70,48 @@
     <clr-modal [(clrModalOpen)]="showAddNewDocumentModal">
         <h3 class="modal-title">Add document</h3>
         <div class="modal-body">
-            <form clrForm>
+            <form clrForm [formGroup]="form">
                 <clr-input-container>
-                    <label>Field 1 label</label>
-                    <input clrInput type="text" name="example" />
+                    <label>Document Name:</label>
+                    <input clrInput type="text" name="name" formControlName="name"/>
                 </clr-input-container>
                 <clr-input-container>
-                    <label>Field 2 label</label>
-                    <input clrInput type="text" name="example" />
+                    <label>Document Type:</label>
+                    <input  clrInput type="text" name="documentType"  formControlName="documentType"/>
+                </clr-input-container>
+                <clr-input-container>
+                    <label>Company:</label>
+                    <input  clrInput type="text" name="company"  formControlName="company"/>
+                </clr-input-container>
+                <clr-input-container>
+                    <label>Date:</label>
+                    <input  clrInput type="text" name="date"  formControlName="date"/>
+                </clr-input-container>
+                <clr-input-container>
+                    <label>Contact:</label>
+                    <input  clrInput type="text" name="contact"  formControlName="contact"/>
+                </clr-input-container>
+                <clr-input-container>
+                    <label>Status:</label>
+                    <input  clrInput type="text" name="status"  formControlName="status"/>
+                </clr-input-container>
+                <clr-input-container>
+                    <label>Amount:</label>
+                    <input  clrInput type="text" name="amount"  formControlName="amount"/>
+                </clr-input-container>
+                <clr-input-container>
+                    <label>Number:</label>
+                    <input  clrInput type="number" name="number"  formControlName="number"/>
+                </clr-input-container>
+                <clr-input-container>
+                    <label>File:</label>
+                    <input  clrInput type="file" name="file"  (change)="onFileChange($event)"/>
                 </clr-input-container>
             </form>
-
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-outline" (click)="showAddNewDocumentModal = false">Cancel</button>
-            <button type="button" class="btn btn-primary" (click)="showAddNewDocumentModal = false">Ok</button>
+            <button type="submit" class="btn btn-primary" (click)="onSubmit()">Add</button>
         </div>
     </clr-modal>
 </main>

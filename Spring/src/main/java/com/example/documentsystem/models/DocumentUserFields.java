@@ -12,7 +12,7 @@ public class DocumentUserFields {
 
     private String company;
 
-    private LocalDateTime date;
+    private Long date;
 
     private String contact;
 

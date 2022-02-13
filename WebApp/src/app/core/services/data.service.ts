@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpRequest} from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 const API_URL = '/api/';
@@ -18,12 +18,28 @@ export class DataService {
         return this.http.get( API_URL + 'folder', {responseType: 'json'});
     }
 
+    createFolder(name: string, location: string): Observable<any>{
+        return this.http.post( API_URL + 'folder', {name: name, storageLocation: location});
+    }
+
     getDocuments(id: number): Observable<any>{
         return this.http.get( API_URL + `folder/${id}/documents`, {responseType: 'json'});
     }
 
+    createDocument(payload, folderId): Observable<any>{
+        payload.date = Date.now();
+        return this.http.post( API_URL + 'document', {userFields: payload, folderId: folderId});
+    }
+
     getFile(documentId: number, fileId: number): Observable<any>{
         return this.http.get( API_URL + `document/${documentId}/files/${fileId}`, {responseType: 'blob'});
+    }
+
+    uploadFile(file, documentId): Observable<any>{
+        const formData = new FormData();
+        formData.append("file", file, file.name);
+        return this.http.post(API_URL + `document/${documentId}/files`, formData)
+
     }
 
     getFiles(documentId: number): Observable<any>{

@@ -3,6 +3,7 @@ import { DataService } from "@core/services/data.service";
 import {Data} from "@angular/router";
 import {ActivatedRoute} from "@angular/router";
 import { MessageService } from "@core/services/message.service";
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-folders',
@@ -12,9 +13,20 @@ import { MessageService } from "@core/services/message.service";
 export class DocumentsComponent implements OnInit {
   public documents = null;
   public files = null;
-  selectedFile;
   showDocument: boolean = false;
   showAddNewDocumentModal: boolean = false;
+  form = new FormGroup({
+    "name": new FormControl("", Validators.required),
+    "documentType": new FormControl("", Validators.required),
+    "company": new FormControl("", Validators.required),
+    "date": new FormControl("", Validators.required),
+    "contact": new FormControl("", Validators.required),
+    "status": new FormControl("", Validators.required),
+    "amount": new FormControl("", Validators.required),
+    "number": new FormControl("", Validators.required),
+  });
+  file: File = null; // Variable to store file
+  currentFolderId = null;
 
   selectedDocument;
   constructor(private dataService: DataService, private messageService: MessageService, private router: ActivatedRoute) {
@@ -24,6 +36,7 @@ export class DocumentsComponent implements OnInit {
   ngOnInit(): void {
     this.router.params.subscribe(params => {
       this.getDocuments(params['id']);
+      this.currentFolderId = params['id'];
     });
   }
 
@@ -64,4 +77,30 @@ export class DocumentsComponent implements OnInit {
     this.selectedDocument  = id;
     this.getFiles(id);
   }
+
+
+  onFileChange(event) {
+    this.file = event.target.files[0];
+  }
+
+  uploadFileToDocument(documentId = this.selectedDocument) {
+    this.dataService.uploadFile(this.file, documentId).subscribe(
+        (event: any) => {
+          console.log(event)
+        }
+    );
+  }
+
+  onSubmit(){
+    this.dataService.createDocument(this.form.getRawValue(), this.currentFolderId).subscribe({
+      next: data => {
+        this.selectedDocument = data.id;
+        this.uploadFileToDocument(data.id);
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
 }

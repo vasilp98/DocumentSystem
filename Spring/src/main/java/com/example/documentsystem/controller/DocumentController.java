@@ -1,6 +1,8 @@
 package com.example.documentsystem.controller;
 
+import com.example.documentsystem.entities.DocumentEntity;
 import com.example.documentsystem.entities.FileEntity;
+import com.example.documentsystem.entities.FolderEntity;
 import com.example.documentsystem.exceptions.FileNotFoundException;
 import com.example.documentsystem.models.*;
 import com.example.documentsystem.models.auditing.AuditEvent;
@@ -67,9 +69,9 @@ public class DocumentController {
     @GetMapping("/{documentId}/versions")
     public List<Document> getVersionHistory(@PathVariable Long documentId) { return documentVersionService.findAllByDocumentId(documentId); }
 
-    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public Document upload(@RequestPart StoredDocument document, @RequestPart MultipartFile file) {
-        return documentService.create(document, file);
+    @PostMapping()
+    public Document upload(@RequestBody StoredDocument document) {
+        return documentService.create(document);
     }
 
     @PostMapping("/{documentId}/fields")

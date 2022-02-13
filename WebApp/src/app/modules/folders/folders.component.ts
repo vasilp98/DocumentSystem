@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from "@core/services/data.service";
-import {Data} from "@angular/router";
 import { Router } from "@angular/router";
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-folders',
@@ -11,6 +11,11 @@ import { Router } from "@angular/router";
 export class FoldersComponent implements OnInit {
   folders = null;
   showAddNewFolderModal: boolean = false;
+  form = new FormGroup({
+    "folderName": new FormControl("", Validators.required),
+    "location": new FormControl("", Validators.required),
+  });
+
   constructor(private dataService: DataService, private route: Router) { }
 
   ngOnInit(): void {
@@ -31,5 +36,15 @@ export class FoldersComponent implements OnInit {
           console.log(err);
         }
       });
+  }
+
+  onSubmit(){
+    this.dataService.createFolder(this.form.controls['folderName'].value, this.form.controls['location'].value).subscribe({
+      next: data => {
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 }

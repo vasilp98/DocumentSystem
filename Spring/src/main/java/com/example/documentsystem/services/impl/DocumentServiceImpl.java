@@ -92,14 +92,14 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document create(StoredDocument storedDocument, MultipartFile file) {
+    public Document create(StoredDocument storedDocument) {
         String currentUser = Context.getCurrentUserName();
         DocumentEntity documentEntity = new DocumentEntity(
                 storedDocument.getFolderId(),
                 currentUser,
                 currentUser,
-                file.getSize(),
-                1,
+                0L,
+                0,
                 storedDocument.getUserFields()
         );
 
@@ -109,20 +109,7 @@ public class DocumentServiceImpl implements DocumentService {
         documentEntity.setVersionNumber(1);
         documentEntity = documentRepository.save(documentEntity);
 
-        String extension = file.getOriginalFilename().split("\\.")[1];
-        FileEntity fileEntity = new FileEntity(documentEntity.getId(), 0, file.getOriginalFilename(), extension, file.getSize());
-        fileEntity = fileRepository.save(fileEntity);
-
-        InputStream inputStream;
-        try {
-            inputStream = file.getInputStream();
-        } catch (IOException exception) {
-            throw new UploadFileException(exception.getMessage());
-        }
-
         auditingService.auditStore(new ArrayList<>(), documentEntity.getId());
-
-        fileContentRepository.add(new FileContentId(documentEntity.getId(), fileEntity.getId()), inputStream);
 
         return documentEntity.toDocument();
     }
@@ -132,7 +119,7 @@ public class DocumentServiceImpl implements DocumentService {
         DocumentEntity documentEntity = documentRepository.getById(documentId);
         permissionService.checkDocumentPermission(documentEntity, Permission.WRITE);
 
-        documentEntity.setModifyDate(LocalDateTime.now());
+        documentEntity.setModifyDate(System.currentTimeMillis() / 1000L);
         documentEntity.setModifyUser(Context.getCurrentUserName());
 
         //User fields
@@ -156,7 +143,7 @@ public class DocumentServiceImpl implements DocumentService {
         DocumentEntity documentEntity = documentRepository.getById(documentId);
         permissionService.checkDocumentPermission(documentEntity, Permission.WRITE);
 
-        documentEntity.setModifyDate(LocalDateTime.now());
+        documentEntity.setModifyDate(System.currentTimeMillis() / 1000L);
         documentEntity.setModifyUser(Context.getCurrentUserName());
 
         Integer fileNumber = documentEntity.getFilesCount();

@@ -47,15 +47,15 @@ public class DataInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if(userService.findAll().size() == 0) {
-            log.info("Successfully created users: {}",
-                    DEFAULT_USERS.stream().map(userService::create).collect(Collectors.toList()));
-        }
-
-        if(folderService.findAll().size() == 0){
-            log.info("Successfully created folders: {}",
-                    DEFAULT_FOLDERS.stream().map(folderService::create).collect(Collectors.toList()));
-        }
+//        if(userService.findAll().size() == 0) {
+//            log.info("Successfully created users: {}",
+//                    DEFAULT_USERS.stream().map(userService::create).collect(Collectors.toList()));
+//        }
+//
+//        if(folderService.findAll().size() == 0){
+//            log.info("Successfully created folders: {}",
+//                    DEFAULT_FOLDERS.stream().map(folderService::create).collect(Collectors.toList()));
+//        }
 
 //        if(documentService.findAll().size() == 0){
 //            log.info("Successfully created documents: {}",

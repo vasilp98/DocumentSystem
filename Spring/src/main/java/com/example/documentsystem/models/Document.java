@@ -16,13 +16,13 @@ public class Document {
     private String name;
 
     @NotNull
-    private LocalDateTime storeDate;
+    private Long storeDate;
 
     @NotNull
     private String storeUser;
 
     @NotNull
-    private LocalDateTime modifyDate;
+    private Long modifyDate;
 
     @NotNull
     private String modifyUser;

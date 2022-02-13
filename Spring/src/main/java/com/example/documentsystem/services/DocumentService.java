@@ -16,7 +16,7 @@ public interface DocumentService {
 
     ViewingDocumentBundle getDocumentForViewing(Long id);
 
-    Document create(StoredDocument document, MultipartFile file);
+    Document create(StoredDocument document);
 
     Document updateFields(Long id, DocumentUserFields fields);
 

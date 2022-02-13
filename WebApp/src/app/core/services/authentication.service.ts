@@ -15,7 +15,7 @@ export class AuthenticationService {
     constructor(private http: HttpClient) { }
 
     login(username: string, password: string): Observable<any> {
-        return this.http.post(AUTH_API + 'authenticate', {
+        return this.http.post(AUTH_API + '/auth/authenticate', {
             username,
             password
         }, httpOptions);

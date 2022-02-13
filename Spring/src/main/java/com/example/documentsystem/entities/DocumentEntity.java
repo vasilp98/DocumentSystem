@@ -28,13 +28,13 @@ public class DocumentEntity {
     private String name;
 
     @NotNull
-    private LocalDateTime storeDate = LocalDateTime.now();
+    private Long storeDate = System.currentTimeMillis() / 1000L;;
 
     @NotNull
     private String storeUser;
 
     @NotNull
-    private LocalDateTime modifyDate = LocalDateTime.now();
+    private Long modifyDate = System.currentTimeMillis() / 1000L;
 
     @NotNull
     private String modifyUser;
@@ -55,7 +55,7 @@ public class DocumentEntity {
 
     private String company;
 
-    private LocalDateTime date;
+    private Long date;
 
     private String contact;
 

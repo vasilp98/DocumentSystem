@@ -85,7 +85,7 @@ public class DocumentVersionServiceImpl implements DocumentVersionService {
         documentRepository.save(currentDocumentEntity);
 
         versionEntity.setModifyUser(Context.getCurrentUserName());
-        versionEntity.setModifyDate(LocalDateTime.now());
+        versionEntity.setModifyDate(System.currentTimeMillis() / 1000L);
         versionEntity = documentRepository.save(versionEntity);
 
         auditingService.auditEvent(AuditEventType.CREATE_VERSION, documentId);

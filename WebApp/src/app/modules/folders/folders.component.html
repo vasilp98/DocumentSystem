@@ -25,21 +25,21 @@
     <clr-modal [(clrModalOpen)]="showAddNewFolderModal">
         <h3 class="modal-title">Add document</h3>
         <div class="modal-body">
-            <form clrForm>
+            <form clrForm [formGroup]="form">
                 <clr-input-container>
-                    <label>Field 1 label</label>
-                    <input clrInput type="text" name="example" />
+                    <label>Folder name:</label>
+                    <input clrInput type="text" name="folderName" formControlName="folderName"/>
                 </clr-input-container>
                 <clr-input-container>
-                    <label>Field 2 label</label>
-                    <input clrInput type="text" name="example" />
+                    <label>Location:</label>
+                    <input  clrInput type="text" name="location"  formControlName="location"/>
                 </clr-input-container>
             </form>
 
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-outline" (click)="showAddNewFolderModal = false">Cancel</button>
-            <button type="button" class="btn btn-primary" (click)="showAddNewFolderModal = false">Ok</button>
+            <button type="submit" class="btn btn-primary" (click)="onSubmit()">Add</button>
         </div>
     </clr-modal>
 </main>
