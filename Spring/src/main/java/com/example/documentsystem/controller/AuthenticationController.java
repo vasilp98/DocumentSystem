@@ -70,7 +70,7 @@ public class AuthenticationController {
         }
 
         userEntity.setPassword(changePassword.getNewPassword());
-        userService.update(userEntity);
+        //userService.update(userEntity.toUser());
 
         return ResponseEntity.ok("Password changed");
     }

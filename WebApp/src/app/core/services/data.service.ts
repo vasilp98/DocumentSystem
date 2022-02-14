@@ -70,4 +70,19 @@ export class DataService {
         return this.http.get( API_URL + `audit/${documentId}/`, {responseType: 'json'});
     }
 
+    getUsers(): Observable<any> {
+        return this.http.get(API_URL + 'user');
+    }
+
+    createUser(data): Observable<any>{
+        return this.http.post( API_URL + 'user', data);
+    }
+
+    getPermissions(): Observable<any> {
+        return this.http.get(API_URL + 'permission');
+    }
+
+    createPermission(data): Observable<any>{
+        return this.http.post( API_URL + 'permission', data);
+    }
 }

@@ -28,6 +28,8 @@ public class PermissionEntity {
 
     private Long folderId;
 
+    private String name;
+
     @Enumerated(EnumType.STRING)
     private PermissionArea area;
 
@@ -39,8 +41,9 @@ public class PermissionEntity {
 
     private String filter;
 
-    public PermissionEntity(Long folderId, PermissionArea area, Collection<Permission> permissions, String filter) {
+    public PermissionEntity(Long folderId, String name, PermissionArea area, Collection<Permission> permissions, String filter) {
         this.folderId = folderId;
+        this.name = name;
         this.area = area;
         this.permissions = permissions;
         this.filter = filter;

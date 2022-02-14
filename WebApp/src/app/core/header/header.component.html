@@ -25,6 +25,15 @@
                 <div clrDropdownItem (click)="addList()">Add new list</div>
             </clr-dropdown-menu>
         </clr-dropdown>
+        <clr-dropdown [clrCloseMenuOnItemClick]="false">
+            <button clrDropdownTrigger aria-label="Lists" class="active nav-link nav-icon">
+                <clr-icon shape="user" direction="down"></clr-icon>
+            </button>
+            <clr-dropdown-menu *clrIfOpen>
+                <div clrDropdownItem (click)="openUsers()">Users</div>
+                <div clrDropdownItem (click)="openPermissions()">Permissions</div>
+            </clr-dropdown-menu>
+        </clr-dropdown>
     </div>
     <div class="settings">
         <a [routerLink]="['/login']" *ngIf="!isLoggedIn" class="nav-link">

@@ -16,7 +16,7 @@ public interface PermissionService {
 
     boolean hasDocumentPermission(DocumentEntity documentEntity, Permission permission);
 
-    List<PermissionDto> findAllInFolder(Long folderId);
+    List<PermissionDto> findAll();
 
     PermissionDto findById(Long id);
 

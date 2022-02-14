@@ -60,7 +60,7 @@ export class DocumentsComponent implements OnInit {
 
   getDocuments(id: number): void{
     this.router.url.subscribe(segments => {
-      if (segments[0].path === 'list') {
+      if (segments[0].path === 'lists') {
         this.dataService.getDocumentsFromList(id).subscribe({
           next: data => {
             this.documents = data;

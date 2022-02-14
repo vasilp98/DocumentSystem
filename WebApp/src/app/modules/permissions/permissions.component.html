@@ -1,65 +1,99 @@
-<div class="permissions-wrapper">
-    <span *ngIf="folder">Edit permissions on folder: {{ folder.name }}</span>
-    <form class="clr-form clr-form-horizontal">
-        <!-- should load all existing permissions -->
-        <div class="formGroup-wrapper" *ngFor="let formGroup of form.controls" [formGroup]="formGroup">
-            <div class="clr-form-control">
-                <label for="filter" class="clr-control-label">Filter Field</label>
-                <div class="clr-control-container">
-                    <div class="clr-input-wrapper">
-                        <input
-                                type="text"
-                                id="filter"
-                                placeholder="Placeholder"
-                                class="clr-input"
-                        />
-                    </div>
-                </div>
-            </div>
-            <div class="clr-form-control">
-                <label for="filterValue" class="clr-control-label">Filter Value</label>
-                <div class="clr-control-container">
-                    <div class="clr-input-wrapper">
-                        <input
-                                type="text"
-                                id="filterValue"
-                                placeholder="Placeholder"
-                                class="clr-input"
-                        />
-                    </div>
-                </div>
-            </div>
-            <div class="clr-form-control">
-                <label for="users" class="clr-control-label">Users</label>
-                <div class="clr-control-container">
-                    <div class="clr-input-wrapper">
-                        <input
-                                type="text"
-                                id="users"
-                                placeholder="Placeholder"
-                                class="clr-input"
-                        />
-                    </div>
-                </div>
-            </div>
-            <div class="clr-form-control">
-                <label for="rights" class="clr-control-label">Access</label>
-                <div class="clr-control-container">
-                    <div class="clr-input-wrapper">
-                        <input
-                                type="text"
-                                id="rights"
-                                placeholder="Placeholder"
-                                class="clr-input"
-                        />
-                    </div>
-                </div>
-            </div>
-            <hr />
+<main>
+    <p>Permission</p>
+    <div class="clr-row clr-justify-content-start">
+        <div class="clr-col-12">
+            <clr-datagrid>
+                <clr-dg-column [clrDgField]="'name'">Name</clr-dg-column>
+                <clr-dg-column [clrDgField]="'folderName'">Folder name</clr-dg-column>
+                <clr-dg-column [clrDgField]="'level'">Level</clr-dg-column>
+                <clr-dg-column [clrDgField]="'permision'">Permission</clr-dg-column>
+                <clr-dg-column [clrDgField]="'filters'">Filters</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let permission of permissions">
+                    <clr-dg-cell>{{permission.name}}</clr-dg-cell>
+                    <clr-dg-cell>{{permission.folderName}}</clr-dg-cell>
+                    <clr-dg-cell>{{permission.area}}</clr-dg-cell>
+                    <clr-dg-cell>
+                        <span *ngFor="let right of permission.permissions">{{right}} </span>
+                    </clr-dg-cell>
+                    <clr-dg-cell>{{permission.filters[0].field}} {{permission.filters[0].operation}} {{permission.filters[0].value}}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10">
+                        <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Permissions per page</clr-dg-page-size>
+                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{pagination.totalItems}} permissions
+                    </clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
         </div>
-    </form>
-    <!-- should add a new set of inputs to fill new permissions -->
-    <button class="btn btn-link" (click)="addPermissionRule()">
-        Add new permission rule
-    </button>
-</div>
+    </div>
+
+    <div class="clr-row clr-justify-content-start">
+        <div class="clr-col-12">
+            <button type="button" class="btn btn-icon" aria-label="add" (click)="showAddNewPermissionModal = true">
+                <clr-icon shape="plus"></clr-icon>
+            </button>
+        </div>
+    </div>
+
+    <clr-modal [(clrModalOpen)]="showAddNewPermissionModal">
+        <h3 class="modal-title">Add permission</h3>
+        <div class="modal-body">
+            <form clrForm [formGroup]="form">
+                <clr-input-container>
+                    <label>Name:</label>
+                    <input clrInput type="text" name="name" formControlName="name"/>
+                </clr-input-container>
+                <clr-select-container (click)="loadFolders()">
+                    <label>Folder:</label>
+                    <select clrSelect name="folder">
+                        <option *ngFor="let folder of folders">{{folder.name}}</option>
+                    </select>
+                </clr-select-container>
+                <clr-select-container>
+                    <label>Level:</label>
+                    <select clrSelect name="area" formControlName="area">
+                        <option value="folder">Folder</option>
+                        <option value="document">Document</option>
+                    </select>
+                </clr-select-container>
+                <clr-checkbox-container clrInline>
+                    <label>Permissions:</label>
+                    <clr-checkbox-wrapper>
+                        <input type="checkbox" clrCheckbox name="options-1" formControlName="option-1"/>
+                        <label>Read</label>
+                    </clr-checkbox-wrapper>
+                    <clr-checkbox-wrapper>
+                        <input type="checkbox" clrCheckbox name="options-2" formControlName="option-2"/>
+                        <label>Write</label>
+                    </clr-checkbox-wrapper>
+                    <clr-checkbox-wrapper>
+                        <input type="checkbox" clrCheckbox name="options-3" formControlName="option-3" />
+                        <label>Delete</label>
+                    </clr-checkbox-wrapper>
+                    <clr-control-error>This field is required!</clr-control-error>
+                </clr-checkbox-container>
+                <clr-select-container>
+                    <label>Filters:</label>
+                    <select clrSelect name="field" formControlName="field">
+                        <option disabled selected value="">Field</option>
+                        <option *ngFor="let field of fields.keys()">{{field}}</option>
+                    </select>
+                    <select clrSelect name="operation" formControlName="operation">
+                        <option disabled selected value="">Operation</option>
+                        <option *ngFor="let operation of operations.keys()">{{operation}}</option>
+                    </select>
+                </clr-select-container>
+                <clr-input-container>
+                    <input clrInput placeholder="value" type="text" name="value" formControlName="value"/>
+                </clr-input-container>
+            </form>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" (click)="showAddNewPermissionModal = false">Cancel</button>
+            <button type="submit" class="btn btn-primary" (click)="onSubmit()">Add</button>
+        </div>
+    </clr-modal>
+</main>

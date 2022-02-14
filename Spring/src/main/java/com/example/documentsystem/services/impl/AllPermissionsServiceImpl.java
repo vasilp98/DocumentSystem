@@ -1,5 +1,6 @@
 package com.example.documentsystem.services.impl;
 
+import com.example.documentsystem.dao.FolderRepository;
 import com.example.documentsystem.dao.PermissionRepository;
 import com.example.documentsystem.dao.UserRepository;
 import com.example.documentsystem.entities.DocumentEntity;
@@ -11,30 +12,36 @@ import com.example.documentsystem.models.permission.Permission;
 import com.example.documentsystem.models.permission.PermissionArea;
 import com.example.documentsystem.models.permission.PermissionDto;
 import com.example.documentsystem.services.FilterService;
+import com.example.documentsystem.services.FolderService;
 import com.example.documentsystem.services.PermissionService;
 import com.example.documentsystem.services.context.Context;
 import lombok.experimental.ExtensionMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @ExtensionMethod(EntityExtensions.class)
 public class AllPermissionsServiceImpl implements PermissionService {
     private PermissionRepository permissionRepository;
     private UserRepository userRepository;
     private FilterService filterService;
+    private FolderRepository folderRepository;
 
     public AllPermissionsServiceImpl(
             PermissionRepository permissionRepository,
             UserRepository userRepository,
-            FilterService filterService) {
+            FilterService filterService,
+            FolderRepository folderRepository) {
 
         this.permissionRepository = permissionRepository;
         this.userRepository = userRepository;
         this.filterService = filterService;
+        this.folderRepository = folderRepository;
     }
 
     @Override
@@ -58,8 +65,13 @@ public class AllPermissionsServiceImpl implements PermissionService {
     }
 
     @Override
-    public List<PermissionDto> findAllInFolder(Long folderId) {
-        return permissionRepository.findAllByFolderId(folderId).stream().map(pe -> pe.toDto()).collect(Collectors.toList());
+    public List<PermissionDto> findAll() {
+        List<PermissionEntity> permissionEntities = permissionRepository.findAll();
+
+        List<PermissionDto> permissionDtos = permissionEntities.stream().map(pe -> pe.toDto()).collect(Collectors.toList());
+
+        permissionDtos.stream().forEach(p -> p.setFolderName(folderRepository.getById(p.getFolderId()).getName()));
+        return permissionDtos;
     }
 
     @Override
@@ -73,6 +85,7 @@ public class AllPermissionsServiceImpl implements PermissionService {
     public PermissionDto create(PermissionDto permissionDto) {
         return permissionRepository.save(new PermissionEntity(
                 permissionDto.getFolderId(),
+                permissionDto.getName(),
                 permissionDto.getArea(),
                 permissionDto.getPermissions(),
                 permissionDto.getFilters().serialize())).toDto();

@@ -23,6 +23,7 @@ import { DocumentLinksComponent } from './modules/document-links/document-links.
 import { ListComponent } from './modules/list/list.component';
 import { PermissionsComponent } from './modules/permissions/permissions.component';
 import { CdsModule } from '@cds/angular';
+import { UsersComponent } from './modules/users/users.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { CdsModule } from '@cds/angular';
     ViewerComponent,
     DocumentLinksComponent,
     ListComponent,
-    PermissionsComponent
+    PermissionsComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,

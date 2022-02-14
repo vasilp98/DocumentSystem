@@ -44,10 +44,18 @@ export class HeaderComponent implements OnInit {
   }
 
   openList(id) {
-    this.router.navigate(['/list/' + id]);
+    this.router.navigate(['/lists/' + id]);
   }
 
   addList() {
-    this.router.navigate(['list']);
+    this.router.navigate(['lists']);
+  }
+
+  openUsers() {
+    this.router.navigate(['users']);
+  }
+
+  openPermissions() {
+    this.router.navigate(['permissions']);
   }
 }

@@ -8,17 +8,19 @@ import { TestComponent} from "./modules/test/test.component";
 import {DocumentLinksComponent} from './modules/document-links/document-links.component';
 import {ListComponent} from './modules/list/list.component';
 import {PermissionsComponent} from './modules/permissions/permissions.component';
+import {UsersComponent} from './modules/users/users.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'folders', component: FoldersComponent },
   { path: 'folders/:id/documents', component: DocumentsComponent },
-  { path: 'list/:id', component: DocumentsComponent },
-  { path: 'list', component: ListComponent },
-  { path: 'link/:token', component: DocumentLinksComponent },
+  { path: 'lists/:id', component: DocumentsComponent },
+  { path: 'lists', component: ListComponent },
+  { path: 'links/:token', component: DocumentLinksComponent },
   { path: 'test', component: TestComponent },
-  { path: 'permissions/:folderId', component: PermissionsComponent },
+  { path: 'permissions', component: PermissionsComponent },
+  { path: 'users', component: UsersComponent },
 ];
 
 @NgModule({
