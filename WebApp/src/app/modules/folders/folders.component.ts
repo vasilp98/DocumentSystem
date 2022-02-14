@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from "@core/services/data.service";
+import { MessageService } from "@core/services/message.service";
 import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
@@ -16,7 +17,7 @@ export class FoldersComponent implements OnInit {
     "location": new FormControl("", Validators.required),
   });
 
-  constructor(private dataService: DataService, private route: Router) { }
+  constructor(private messageService: MessageService,private dataService: DataService, private route: Router) { }
 
   ngOnInit(): void {
     this.getFolders();
@@ -40,6 +41,22 @@ export class FoldersComponent implements OnInit {
 
   onSubmit(){
     this.dataService.createFolder(this.form.controls['folderName'].value, this.form.controls['location'].value).subscribe({
+      next: data => {
+        this.messageService.changeAlert({
+          show: true,
+          content: 'Folder successfully created',
+          type: 'success'
+        });
+        this.getFolders();
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
+  deleteFolder(folder){
+    this.dataService.deleteFolder(folder).subscribe({
       next: data => {
       },
       error: err => {

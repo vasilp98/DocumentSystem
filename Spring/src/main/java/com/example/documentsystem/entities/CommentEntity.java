@@ -2,6 +2,8 @@ package com.example.documentsystem.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,6 +20,7 @@ public class CommentEntity {
 
     @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
     @JoinColumn(name = "DOCUMENT_ID", insertable = false, updatable = false)
+    @OnDelete( action = OnDeleteAction.CASCADE )
     private DocumentEntity document;
 
     @Column(name = "DOCUMENT_ID")
