@@ -83,4 +83,8 @@ export class HeaderComponent implements OnInit {
   openPermissions() {
     this.router.navigate(['permissions']);
   }
+
+  openFolder() {
+    this.router.navigate(['folders']);
+  }
 }

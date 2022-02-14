@@ -21,7 +21,7 @@
         </a>
     </div>
     <div class="header-nav">
-        <a href="/folders" [class.active] = "currentRoute === '/documents' || currentRoute=='/folders'" class="nav-link nav-icon">
+        <a id="folder-link" (click)="openFolder()" [class.active] = "currentRoute === '/documents' || currentRoute=='/folders'" class="nav-link nav-icon">
             <clr-icon shape="folder"></clr-icon>
         </a>
         <clr-dropdown [clrCloseMenuOnItemClick]="true" (click)="getLists()">

@@ -295,7 +295,7 @@ export class DocumentsComponent implements OnInit {
         console.log(data);
         this.messageService.changeAlert({
           show: true,
-          message: data.token,
+          message: `${window.location.host}/links/${data.token}`,
           type: 'info'
         })
       },
