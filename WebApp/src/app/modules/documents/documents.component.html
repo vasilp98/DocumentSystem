@@ -17,10 +17,10 @@
                             <cds-icon-button title="View Audits" action="outline" size="sm" (click)="showAuditsModal(document)">
                                 <clr-icon shape="history"></clr-icon>
                             </cds-icon-button>
-                            <cds-icon-button action="outline" size="sm">
-                                <clr-icon shape="user"></clr-icon>
+                            <cds-icon-button title="Link" action="outline" size="sm" (click)="showLinksModal(document)">
+                                <clr-icon shape="link" ></clr-icon>
                             </cds-icon-button>
-                            <cds-icon-button action="outline" status="danger" size="sm">
+                            <cds-icon-button title="Delete" action="outline" status="danger" size="sm">
                                 <clr-icon shape="times"></clr-icon>
                             </cds-icon-button>
                         </div>
@@ -43,12 +43,12 @@
         </div>
     </div>
     <clr-modal [(clrModalOpen)]="showDocument" [clrModalSize]="'xl'">
-        <h3 class="modal-title">Document</h3>
+        <h3 class="modal-title">{{isCurrentDocumentVersion() ? ('Document: ' + currentDocument?.userFields.name) : ('Version ' + currentDocument?.versionNumber + ': ' + currentDocument?.userFields.name)}}</h3>
         <div  class="modal-body">
 
             <div class="clr-row">
                 <div class="clr-col-9">
-                    <app-viewer *ngIf="showDocument"></app-viewer>
+                    <app-viewer *ngIf="showViewer"></app-viewer>
                 </div>
                 <div class="clr-col-3">
                     <clr-accordion>
@@ -144,8 +144,23 @@
                         </clr-accordion-panel>
 
                         <clr-accordion-panel>
-                            <clr-accordion-title>Item 3</clr-accordion-title>
-                            <clr-accordion-content *clrIfExpanded>Content 3</clr-accordion-content>
+                            <clr-accordion-title>Versioning</clr-accordion-title>
+                            <clr-accordion-content *clrIfExpanded>
+                                <div *ngIf="isCurrentDocumentVersion()">
+                                    <div *ngFor="let version of versionsToShow">
+                                        <span style="font-weight: bold">Version {{version.versionNumber}}:</span>
+                                        <button class="btn btn-link btn-sm" (click)="openDocument(version)">Open</button>
+                                    </div>
+                                </div>
+                                <div *ngIf="!isCurrentDocumentVersion()">
+                                    <span style="font-weight: bold">Original :</span>
+                                    <button class="btn btn-link btn-sm" (click)="openDocument(originalDocument)">Open</button>
+                                </div>
+                                <div style="text-align:center;" *ngIf="isCurrentDocumentVersion()">
+                                    <button (click)="createNewVersion()" class="btn btn-sm btn-primary">New Version</button>
+                                </div>
+
+                            </clr-accordion-content>
                         </clr-accordion-panel>
                     </clr-accordion>
                 </div>
@@ -223,6 +238,26 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-outline" (click)="showAuditsModalFlag = false">Close</button>
+        </div>
+    </clr-modal>
+
+    <clr-modal [(clrModalOpen)]="showLinksModalFlag">
+        <h3 class="modal-title">Add link to document</h3>
+        <div class="modal-body">
+            <form clrForm>
+                <clr-input-container>
+                    <label>Password:</label>
+                    <input clrInput type="text" name="password" [(ngModel)]="linksPasswordModel"/>
+                </clr-input-container>
+                <clr-date-container>
+                    <label>Valid until:</label>
+                    <input type="date" clrDate name="demo" [(ngModel)]="linksDateModel" />
+                </clr-date-container>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn" (click)="createLink()">Create link</button>
+            <button type="button" class="btn btn-outline" (click)="showLinksModalFlag = false">Close</button>
         </div>
     </clr-modal>
 </main>

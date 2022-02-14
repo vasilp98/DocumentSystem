@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,9 +29,9 @@ public class DocumentLinkEntity {
 
     private String password;
 
-    private LocalDateTime validUntil;
+    private LocalDate validUntil;
 
-    public DocumentLinkEntity(String token, Long documentId, String password, LocalDateTime validUntil) {
+    public DocumentLinkEntity(String token, Long documentId, String password, LocalDate validUntil) {
         this.token = token;
         this.documentId = documentId;
         this.password = password;

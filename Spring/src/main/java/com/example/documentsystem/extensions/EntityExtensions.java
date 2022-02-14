@@ -34,6 +34,8 @@ public class EntityExtensions {
                 documentEntity.getModifyUser(),
                 documentEntity.getSize(),
                 documentEntity.getFilesCount(),
+                documentEntity.getVersionNumber(),
+                documentEntity.getCurrentDocumentId(),
                 new DocumentUserFields(
                         documentEntity.getName(),
                         documentEntity.getDocumentType(),

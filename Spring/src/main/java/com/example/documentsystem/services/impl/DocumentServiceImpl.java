@@ -66,7 +66,8 @@ public class DocumentServiceImpl implements DocumentService {
     public List<Document> findAllInFolder(Long folderId)
     {
         return documentRepository.findByFolderIdOrderById(folderId)
-                .stream().filter(d -> permissionService.hasDocumentPermission(d, Permission.READ))
+                .stream().filter(d -> permissionService.hasDocumentPermission(d, Permission.READ) &&
+                        d.getId() == d.getCurrentDocumentId())
                 .map(de -> de.toDocument()).collect(Collectors.toList());
     }
 

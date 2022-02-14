@@ -2,6 +2,7 @@ package com.example.documentsystem.models;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -10,5 +11,5 @@ public class DocumentLink {
 
     private String password;
 
-    private LocalDateTime validUntil;
+    private LocalDate validUntil;
 }

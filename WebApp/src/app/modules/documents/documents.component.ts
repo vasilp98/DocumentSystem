@@ -18,9 +18,11 @@ export class DocumentsComponent implements OnInit {
   public files = null;
   private valueChangeSubscription:Subscription;
   showDocument: boolean = false;
+  showViewer: boolean = false;
   showAddNewDocumentModal: boolean = false;
   showAuditsModalFlag: boolean = false;
   formHasChanged: boolean = false;
+  showLinksModalFlag: boolean = false;
   form = new FormGroup({
     "name": new FormControl("", Validators.required),
     "documentType": new FormControl("", Validators.required),
@@ -46,6 +48,11 @@ export class DocumentsComponent implements OnInit {
 
   selectedDocument;
   auditsToShow;
+  versionsToShow;
+  currentDocument;
+  linksDateModel;
+  linksPasswordModel;
+  originalDocument;
   constructor(private dataService: DataService, private messageService: MessageService, private router: ActivatedRoute) {
 
   }
@@ -83,9 +90,12 @@ export class DocumentsComponent implements OnInit {
   }
 
   getFiles(document){
+    this.showViewer = false;
+    this.currentDocument = document;
     this.dataService.getFiles(document.id).subscribe({
       next: data => {
         this.files = data;
+        this.showViewer = true;
         this.messageService.changeMessage({
           files: data,
           document: document
@@ -108,11 +118,18 @@ export class DocumentsComponent implements OnInit {
     this.formHasChanged = false;
     this.showDocument = true;
     this.selectedDocument  = document.id;
+    this.originalDocument = document;
     this.documentForm.patchValue(document.userFields);
 
     this.valueChangeSubscription = this.documentForm.valueChanges.subscribe(x => {
       this.formHasChanged = true;
     })
+    this.openDocument(document)
+
+  }
+
+  openDocument(document){
+    this.getVersionsOfDocument(document.id);
     this.getFiles(document);
   }
 
@@ -121,9 +138,17 @@ export class DocumentsComponent implements OnInit {
     this.file = event.target.files[0];
   }
 
-  uploadFileToDocument(documentId = this.selectedDocument) {
+  uploadFileToDocument(documentId = this.currentDocument.id) {
     this.dataService.uploadFile(this.file, documentId).subscribe(
         (event: any) => {
+          this.dataService.getFiles(documentId).subscribe({
+            next: data => {
+              this.files = data;
+            },
+            error: err => {
+              console.log(err);
+            }
+          });
         }
     );
   }
@@ -160,8 +185,67 @@ export class DocumentsComponent implements OnInit {
     });
   }
 
+  getVersionsOfDocument(documentId = this.selectedDocument){
+    this.dataService.getVersionsOfDocument(documentId).subscribe({
+      next: data => {
+        console.log(data);
+        this.versionsToShow = data;
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
   parseDateToString(date){
     return new Date(date).toLocaleDateString();
+  }
+
+  createNewVersion(){
+    this.dataService.createVersion(this.selectedDocument).subscribe({
+      next: data => {
+        this.versionsToShow.unshift(data);
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
+  isCurrentDocumentVersion(){
+    if(this.currentDocument){
+      return this.currentDocument.id === this.currentDocument.currentDocumentId;
+    }
+    else
+      return false;
+  }
+
+  showLinksModal(document){
+    this.showLinksModalFlag = true;
+    this.currentDocument = document;
+  }
+
+  createLink(){
+    let selectedDateObject = new Date(this.linksDateModel);
+    let payload = {
+      documentId: this.currentDocument.id,
+      validUntil: selectedDateObject.toISOString().split('T')[0],
+      password: this.linksPasswordModel
+    };
+
+    this.dataService.createLink(payload).subscribe({
+      next: data => {
+        console.log(data);
+        this.messageService.changeAlert({
+          show: true,
+          message: data.token,
+          type: 'info'
+        })
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 
 }

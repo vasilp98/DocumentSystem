@@ -46,7 +46,7 @@ export class DataService {
         return this.http.get( API_URL + `document/${documentId}/files`, {responseType: 'json'});
     }
 
-    getDocumentIdFromLink(token, password): Observable<any> {
+    getDocumentFromLink(token, password): Observable<any> {
         return this.http.post(API_URL + `link/${token}`, { password: password });
     }
 
@@ -85,4 +85,17 @@ export class DataService {
     createPermission(data): Observable<any>{
         return this.http.post( API_URL + 'permission', data);
     }
+    
+    createVersion(documentId): Observable<any>{
+        return this.http.post( API_URL + `version/${documentId}`, {});
+    }
+
+    getVersionsOfDocument(documentId): Observable<any>{
+        return this.http.get( API_URL + `document/${documentId}/versions`, {responseType: 'json'});
+    }
+
+    createLink(payload): Observable<any>{
+        return this.http.post( API_URL + `link/`, payload);
+    }
+
 }
