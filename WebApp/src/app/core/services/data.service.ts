@@ -74,8 +74,16 @@ export class DataService {
         return this.http.post( API_URL + `version/${documentId}`, {});
     }
 
+    createComment(documentId, content): Observable<any>{
+        return this.http.post( API_URL + `comment/${documentId}`, {content: content});
+    }
+
     getVersionsOfDocument(documentId): Observable<any>{
         return this.http.get( API_URL + `document/${documentId}/versions`, {responseType: 'json'});
+    }
+
+    getCommentsOfDocument(documentId): Observable<any>{
+        return this.http.get( API_URL + `comment/${documentId}`, {responseType: 'json'});
     }
 
     createLink(payload): Observable<any>{

@@ -2,6 +2,7 @@ package com.example.documentsystem.services;
 
 
 import com.example.documentsystem.entities.CommentEntity;
+import com.example.documentsystem.models.Comment;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface CommentService {
 
     CommentEntity findById(Long id);
 
-    CommentEntity create(CommentEntity comment);
+    CommentEntity create(Long documentId, Comment comment);
 
     CommentEntity update(CommentEntity comment);
 

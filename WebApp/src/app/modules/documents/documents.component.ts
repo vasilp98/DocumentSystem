@@ -49,8 +49,10 @@ export class DocumentsComponent implements OnInit {
   selectedDocument;
   auditsToShow;
   versionsToShow;
+  commentsToShow;
   currentDocument;
   linksDateModel;
+  commentValueModel;
   linksPasswordModel;
   originalDocument;
   constructor(private dataService: DataService, private messageService: MessageService, private router: ActivatedRoute) {
@@ -130,6 +132,7 @@ export class DocumentsComponent implements OnInit {
 
   openDocument(document){
     this.getVersionsOfDocument(document.id);
+    this.getCommentsOfDocument(document.id);
     this.getFiles(document);
   }
 
@@ -197,6 +200,18 @@ export class DocumentsComponent implements OnInit {
     });
   }
 
+  getCommentsOfDocument(documentId = this.currentDocument.id){
+    this.dataService.getCommentsOfDocument(documentId).subscribe({
+      next: data => {
+        this.commentsToShow = data;
+        this.commentValueModel = '';
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
   parseDateToString(date){
     return new Date(date).toLocaleDateString();
   }
@@ -223,6 +238,17 @@ export class DocumentsComponent implements OnInit {
   showLinksModal(document){
     this.showLinksModalFlag = true;
     this.currentDocument = document;
+  }
+
+  postComment(){
+    this.dataService.createComment(this.currentDocument.id, this.commentValueModel).subscribe({
+      next: data => {
+        this.getCommentsOfDocument(this.currentDocument.id);
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 
   createLink(){
