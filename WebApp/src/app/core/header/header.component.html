@@ -1,4 +1,4 @@
-<div style="z-index:412323 !important;" class="alert alert-app-level alert-info" *ngIf="alert.show">
+<div style="z-index:412323 !important;" class="alert alert-app-level alert-{{alert.type}}" *ngIf="alert.show">
     <div class="alert-items">
         <div class="alert-item static">
             <div class="alert-icon-wrapper">
@@ -15,20 +15,17 @@
 </div>
 <header class="header header-6">
     <div class="branding">
-        <a href="javascript:void(0)">
+        <a href="/folders">
             <clr-icon style="color: white !important" shape="file"></clr-icon>
             <span class="title">Document System</span>
         </a>
     </div>
     <div class="header-nav">
-        <a href="javascript://" class="nav-link nav-icon">
-            <clr-icon shape="cloud"></clr-icon>
-        </a>
-        <a href="/folders" class="active nav-link nav-icon">
+        <a href="/folders" [class.active] = "currentRoute === '/documents' || currentRoute=='/folders'" class="nav-link nav-icon">
             <clr-icon shape="folder"></clr-icon>
         </a>
         <clr-dropdown [clrCloseMenuOnItemClick]="true" (click)="getLists()">
-            <button clrDropdownTrigger aria-label="Lists" class="active nav-link nav-icon">
+            <button clrDropdownTrigger aria-label="Lists" [class.active] = "currentRoute === '/lists'" class="nav-link nav-icon">
                 <clr-icon shape="list" direction="down"></clr-icon>
             </button>
             <clr-dropdown-menu *clrIfOpen>
@@ -41,7 +38,7 @@
             </clr-dropdown-menu>
         </clr-dropdown>
         <clr-dropdown [clrCloseMenuOnItemClick]="true">
-            <button clrDropdownTrigger aria-label="Lists" class="active nav-link nav-icon">
+            <button clrDropdownTrigger  [class.active] = "currentRoute === '/users' || currentRoute === '/permissions'" aria-label="Lists" class="nav-link nav-icon">
                 <clr-icon shape="user" direction="down"></clr-icon>
             </button>
             <clr-dropdown-menu *clrIfOpen>

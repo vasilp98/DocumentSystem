@@ -83,4 +83,10 @@ public class DocumentController {
     public void addFile(@PathVariable Long documentId, @RequestParam("file") MultipartFile file) {
         documentService.addFile(documentId, file);
     }
+
+    @DeleteMapping("/{documentId}")
+    void delete(@PathVariable Long documentId) {
+        documentService.deleteById(documentId);
+    }
+
 }

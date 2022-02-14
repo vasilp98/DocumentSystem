@@ -20,7 +20,7 @@
                             <cds-icon-button title="Link" action="outline" size="sm" (click)="showLinksModal(document)">
                                 <clr-icon shape="link" ></clr-icon>
                             </cds-icon-button>
-                            <cds-icon-button title="Delete" action="outline" status="danger" size="sm">
+                            <cds-icon-button (click)="removeDocument(document)" title="Delete" action="outline" status="danger" size="sm">
                                 <clr-icon shape="times"></clr-icon>
                             </cds-icon-button>
                         </div>

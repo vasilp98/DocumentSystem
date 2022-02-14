@@ -2,6 +2,8 @@ package com.example.documentsystem.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -16,6 +18,7 @@ public class ListEntity {
 
     @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
     @JoinColumn(name = "FOLDER_ID", insertable = false, updatable = false)
+    @OnDelete( action = OnDeleteAction.CASCADE )
     private FolderEntity folder;
 
     @Column(name = "FOLDER_ID")

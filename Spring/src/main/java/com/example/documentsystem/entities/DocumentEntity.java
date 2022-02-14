@@ -3,6 +3,8 @@ package com.example.documentsystem.entities;
 import com.example.documentsystem.models.DocumentUserFields;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,6 +21,7 @@ public class DocumentEntity {
 
     @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
     @JoinColumn(name = "FOLDER_ID", insertable = false, updatable = false)
+    @OnDelete( action = OnDeleteAction.CASCADE )
     private FolderEntity folder;
 
     @Column(name = "FOLDER_ID")
