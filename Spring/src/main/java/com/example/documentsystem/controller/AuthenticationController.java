@@ -3,11 +3,13 @@ package com.example.documentsystem.controller;
 import com.example.documentsystem.entities.UserEntity;
 import com.example.documentsystem.exceptions.UnauthorizedException;
 import com.example.documentsystem.exceptions.WrongPasswordException;
+import com.example.documentsystem.extensions.EntityExtensions;
 import com.example.documentsystem.models.AuthenticationRequest;
 import com.example.documentsystem.models.AuthenticationResponse;
 import com.example.documentsystem.models.ChangePassword;
 import com.example.documentsystem.services.UserService;
 import com.example.documentsystem.util.JwtUtil;
+import lombok.experimental.ExtensionMethod;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +21,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
-@Slf4j
 @RequestMapping("/api/auth")
+@ExtensionMethod(EntityExtensions.class)
 public class AuthenticationController {
     private AuthenticationManager authenticationManager;
     private UserDetailsService userDetailsService;
@@ -44,7 +48,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
@@ -58,7 +62,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePassword changePassword) {
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePassword changePassword) {
         UserEntity userEntity = userService.getCurrentUser();
 
         if (!userEntity.getUsername().equals(changePassword.getUsername())) {
@@ -70,7 +74,7 @@ public class AuthenticationController {
         }
 
         userEntity.setPassword(changePassword.getNewPassword());
-        //userService.update(userEntity.toUser());
+        userService.update(userEntity.toUser());
 
         return ResponseEntity.ok("Password changed");
     }

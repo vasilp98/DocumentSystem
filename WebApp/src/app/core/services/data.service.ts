@@ -35,7 +35,6 @@ export class DataService {
     }
 
     createDocument(payload, folderId): Observable<any>{
-        payload.date = Date.now();
         return this.http.post( API_URL + 'document', {userFields: payload, folderId: folderId});
     }
 

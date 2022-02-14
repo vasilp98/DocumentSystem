@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -70,7 +71,7 @@ public class DocumentController {
     public List<Document> getVersionHistory(@PathVariable Long documentId) { return documentVersionService.findAllByDocumentId(documentId); }
 
     @PostMapping()
-    public Document upload(@RequestBody StoredDocument document) {
+    public Document upload(@Valid @RequestBody StoredDocument document) {
         return documentService.create(document);
     }
 

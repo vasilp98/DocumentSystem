@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ValidationException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,6 +56,10 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     public FolderEntity create(FolderDto folderDto) {
+        Path path = Paths.get(folderDto.getStorageLocation());
+        if (!Files.exists(path))
+            throw new ValidationException(String.format("Directory %s doesn't exist!", path));
+
         UserEntity currentUser = userService.getCurrentUser();
 
         FolderEntity folderEntity = new FolderEntity(

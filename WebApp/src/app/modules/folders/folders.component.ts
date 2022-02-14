@@ -13,8 +13,8 @@ export class FoldersComponent implements OnInit {
   folders = null;
   showAddNewFolderModal: boolean = false;
   form = new FormGroup({
-    "folderName": new FormControl("", Validators.required),
-    "location": new FormControl("", Validators.required),
+    "folderName": new FormControl(null, Validators.required),
+    "location": new FormControl(null, Validators.required),
   });
 
   constructor(private messageService: MessageService,private dataService: DataService, private route: Router) { }
@@ -59,6 +59,7 @@ export class FoldersComponent implements OnInit {
   deleteFolder(folder){
     this.dataService.deleteFolder(folder).subscribe({
       next: data => {
+        this.folders = this.folders.filter(f => f.id !== data);
       },
       error: err => {
         console.log(err);

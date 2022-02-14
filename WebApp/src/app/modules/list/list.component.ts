@@ -27,11 +27,11 @@ export class ListComponent implements OnInit {
     ["Before", "BEFORE"]]);
 
   form = new FormGroup({
-    "name": new FormControl("", Validators.required),
-    "folder": new FormControl("", Validators.required),
-    "field": new FormControl("",Validators.required),
-    "operation": new FormControl("",Validators.required),
-    "value": new FormControl("",Validators.required),
+    "name": new FormControl(null, Validators.required),
+    "folder": new FormControl(null, Validators.required),
+    "field": new FormControl("Name", Validators.required),
+    "operation": new FormControl("Equal", Validators.required),
+    "value": new FormControl(null, Validators.required),
   });
 
 

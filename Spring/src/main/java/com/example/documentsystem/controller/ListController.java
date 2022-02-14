@@ -7,6 +7,7 @@ import com.example.documentsystem.models.permission.PermissionDto;
 import com.example.documentsystem.services.ListService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -39,7 +40,7 @@ public class ListController {
     }
 
     @PostMapping
-    public ListDto createList(@RequestBody ListDto listDto) {
+    public ListDto createList(@Valid @RequestBody ListDto listDto) {
         return listService.create(listDto);
     }
 

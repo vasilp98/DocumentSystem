@@ -5,6 +5,7 @@ import com.example.documentsystem.models.permission.PermissionDto;
 import com.example.documentsystem.services.PermissionService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -27,7 +28,7 @@ public class PermissionController {
     }
 
     @PostMapping
-    public PermissionDto createPermissions(@RequestBody PermissionDto permissionDto) {
+    public PermissionDto createPermissions(@Valid @RequestBody PermissionDto permissionDto) {
         return permissionService.create(permissionDto);
     }
 

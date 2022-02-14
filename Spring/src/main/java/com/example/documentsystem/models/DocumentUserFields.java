@@ -3,7 +3,9 @@ package com.example.documentsystem.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -14,13 +16,13 @@ public class DocumentUserFields {
 
     private String company;
 
-    private Long date;
+    private LocalDate date;
 
     private String contact;
 
     private String status;
 
-    private Double amount;
+    private Integer amount;
 
     private Integer number;
 }

@@ -28,6 +28,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +98,7 @@ public class DocumentVersionServiceImpl implements DocumentVersionService {
         documentRepository.save(currentDocumentEntity);
 
         versionEntity.setModifyUser(Context.getCurrentUserName());
-        versionEntity.setModifyDate(System.currentTimeMillis() / 1000L);
+        versionEntity.setModifyDate(LocalDate.now());
         versionEntity = documentRepository.save(versionEntity);
 
         auditingService.auditEvent(AuditEventType.CREATE_VERSION, documentId);

@@ -9,9 +9,11 @@ import com.example.documentsystem.services.DocumentService;
 import com.example.documentsystem.services.FolderService;
 import com.example.documentsystem.services.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -47,12 +49,13 @@ public class FolderController {
     }
 
     @PostMapping
-    public FolderEntity createFolder(@RequestBody FolderDto folderDto) {
+    public FolderEntity createFolder(@Valid @RequestBody FolderDto folderDto) {
         return folderService.create(folderDto);
     }
 
     @DeleteMapping("/{folderId}")
-    void delete(@PathVariable Long folderId) {
-        folderService.deleteById(folderId);
+    public ResponseEntity<Long> delete(@PathVariable Long folderId) {
+        Long id = folderService.deleteById(folderId).getId();
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 }

@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -112,7 +113,7 @@ public class DocumentServiceImpl implements DocumentService {
         DocumentEntity documentEntity = findEntityById(documentId);
         permissionService.checkDocumentPermission(documentEntity, Permission.WRITE);
 
-        documentEntity.setModifyDate(System.currentTimeMillis() / 1000L);
+        documentEntity.setModifyDate(LocalDate.now());
         documentEntity.setModifyUser(Context.getCurrentUserName());
 
         //User fields
@@ -136,7 +137,7 @@ public class DocumentServiceImpl implements DocumentService {
         DocumentEntity documentEntity = findEntityById(documentId);
         permissionService.checkDocumentPermission(documentEntity, Permission.WRITE);
 
-        documentEntity.setModifyDate(System.currentTimeMillis() / 1000L);
+        documentEntity.setModifyDate(LocalDate.now());
         documentEntity.setModifyUser(Context.getCurrentUserName());
 
         Integer fileNumber = documentEntity.getFilesCount();

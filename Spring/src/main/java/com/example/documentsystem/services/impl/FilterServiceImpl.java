@@ -48,7 +48,7 @@ public class FilterServiceImpl implements FilterService {
                         isValid = checkNumericValue(filter, (Integer)value);
                         break;
                     case DATE:
-                        isValid = checkDateValue(filter, (LocalDateTime) value);
+                        isValid = checkDateValue(filter, (LocalDate)value);
                         break;
                 }
 
@@ -154,20 +154,20 @@ public class FilterServiceImpl implements FilterService {
         return false;
     }
 
-    private boolean checkDateValue(Filter filter, LocalDateTime value) {
+    private boolean checkDateValue(Filter filter, LocalDate value) {
         LocalDate date = LocalDate.parse(filter.getValue());
 
         switch (filter.getOperation()) {
             case EQUAL:
-                return date.equals(value.toLocalDate());
+                return date.equals(value);
             case NOT_EQUAL:
-                return !date.equals(value.toLocalDate());
+                return !date.equals(value);
             case CONTAINS:
                 throw new InvalidOperationException("Operation 'Contains' is not valid for date fields");
             case BEFORE:
-                return value.toLocalDate().isBefore(date);
+                return value.isBefore(date);
             case AFTER:
-                return value.toLocalDate().isAfter(date);
+                return value.isAfter(date);
         }
 
         return false;

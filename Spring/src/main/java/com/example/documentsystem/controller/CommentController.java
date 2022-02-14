@@ -6,6 +6,7 @@ import com.example.documentsystem.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class CommentController {
     }
 
     @PostMapping("/{documentId}")
-    public CommentEntity create(@PathVariable Long documentId, @RequestBody Comment commentDto) {
+    public CommentEntity create(@PathVariable Long documentId, @Valid @RequestBody Comment commentDto) {
         return this.commentService.create(documentId, commentDto);
     }
 }

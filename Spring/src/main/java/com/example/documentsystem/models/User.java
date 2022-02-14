@@ -28,4 +28,10 @@ public class User {
     private LocalDateTime created;
 
     private LocalDateTime modified;
+
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 }

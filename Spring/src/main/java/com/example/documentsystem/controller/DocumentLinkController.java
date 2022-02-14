@@ -10,6 +10,7 @@ import com.example.documentsystem.services.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.InputStream;
 
 @RestController
@@ -25,12 +26,12 @@ public class DocumentLinkController {
     }
 
     @PostMapping("/{token}")
-    public Document getDocumentId(@PathVariable String token, @RequestBody DocumentLinkPassword linkPassword) {
+    public Document getDocumentId(@PathVariable String token, @Valid @RequestBody DocumentLinkPassword linkPassword) {
         return documentLinkService.getDocumentFromLink(token, linkPassword.getPassword());
     }
 
     @PostMapping
-    public DocumentLinkEntity createLink(@RequestBody DocumentLink documentLink) {
+    public DocumentLinkEntity createLink(@Valid @RequestBody DocumentLink documentLink) {
         return documentLinkService.create(documentLink);
     }
 }

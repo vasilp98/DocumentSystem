@@ -11,9 +11,9 @@ export class UsersComponent implements OnInit {
   users = null;
   showAddNewUserModal: boolean = false;
   form = new FormGroup({
-    "username": new FormControl("", Validators.required),
-    "password": new FormControl("", Validators.required),
-    "email": new FormControl("",[Validators.required, Validators.email]),
+    "username": new FormControl(null, Validators.required),
+    "password": new FormControl(null, Validators.required),
+    "email": new FormControl(null,[Validators.required, Validators.email]),
   });
   constructor(private dataService: DataService) { }
 

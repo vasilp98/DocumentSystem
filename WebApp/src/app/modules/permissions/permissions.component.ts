@@ -30,8 +30,8 @@ export class PermissionsComponent implements OnInit {
         ["Before", "BEFORE"]]);
 
     form = new FormGroup({
-        "name": new FormControl("", Validators.required),
-        "folder": new FormControl("", Validators.required),
+        "name": new FormControl(null, Validators.required),
+        "folder": new FormControl(null, Validators.required),
         "area": new FormControl("FOLDER", Validators.required),
         "option-1": new FormControl(false,Validators.required),
         "option-2": new FormControl(false,Validators.required),

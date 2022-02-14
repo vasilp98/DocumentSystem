@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,13 +32,13 @@ public class DocumentEntity {
     private String name;
 
     @NotNull
-    private Long storeDate = System.currentTimeMillis() / 1000L;;
+    private LocalDate storeDate = LocalDate.now();
 
     @NotNull
     private String storeUser;
 
     @NotNull
-    private Long modifyDate = System.currentTimeMillis() / 1000L;
+    private LocalDate modifyDate = LocalDate.now();
 
     @NotNull
     private String modifyUser;
@@ -58,13 +59,13 @@ public class DocumentEntity {
 
     private String company;
 
-    private Long date;
+    private LocalDate date;
 
     private String contact;
 
     private String status;
 
-    private Double amount;
+    private Integer amount;
 
     private Integer number;
 

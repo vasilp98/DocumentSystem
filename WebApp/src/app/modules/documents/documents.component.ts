@@ -160,6 +160,7 @@ export class DocumentsComponent implements OnInit {
 
   onSubmit(){
     if(this.file){
+      this.form.controls['date'].setValue(new Date(this.form.controls['date'].value).toISOString().split('T')[0]);
       this.dataService.createDocument(this.form.getRawValue(), this.currentFolderId).subscribe({
         next: data => {
           this.selectedDocument = data.id;

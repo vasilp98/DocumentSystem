@@ -29,7 +29,7 @@ public class UsersController {
     public User getUser(@PathVariable Long userId) {return userService.findById(userId);}
 
     @PostMapping
-    public User createUser(@Valid @RequestBody User user, Error error) {
+    public User createUser(@Valid @RequestBody User user) {
         return userService.create(user);
     }
 
