@@ -16,6 +16,9 @@ export class MessageService {
     private alertSource = new BehaviorSubject({show: false, message: '', type: ''});
     currentAlert = this.alertSource.asObservable();
 
+    private listSource = new BehaviorSubject({});
+    list = this.listSource.asObservable();
+
     constructor() { }
 
     changeMessage(message: any) {
@@ -28,5 +31,9 @@ export class MessageService {
 
     changeAlert(message: any){
         this.alertSource.next(message);
+    }
+
+    pushList(message: any) {
+        this.listSource.next(message);
     }
 }

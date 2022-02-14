@@ -1,0 +1,33 @@
+<main>
+    <div class="form-div">
+        <form clrForm [formGroup]="form">
+            <clr-input-container>
+                <label>Name:</label>
+                <input clrInput type="text" name="name" formControlName="name"/>
+            </clr-input-container>
+            <clr-select-container (click)="loadFolders()">
+                <label>Folder:</label>
+                <select clrSelect name="folder">
+                    <option *ngFor="let folder of folders">{{folder.name}}</option>
+                </select>
+            </clr-select-container>
+            <clr-select-container>
+                <label>Filters:</label>
+                <select clrSelect name="field" formControlName="field">
+                    <option disabled selected value="">Field</option>
+                    <option *ngFor="let field of fields.keys()">{{field}}</option>
+                </select>
+                <select clrSelect name="operation" formControlName="operation">
+                    <option disabled selected value="">Operation</option>
+                    <option *ngFor="let operation of operations.keys()">{{operation}}</option>
+                </select>
+            </clr-select-container>
+            <clr-input-container>
+                <input clrInput placeholder="value" type="text" name="value" formControlName="value"/>
+            </clr-input-container>
+        </form>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" (click)="onSubmit()">Add</button>
+        </div>
+    </div>
+</main>
