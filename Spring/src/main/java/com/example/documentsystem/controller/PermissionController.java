@@ -16,9 +16,9 @@ public class PermissionController {
         this.permissionService = permissionService;
     }
 
-    @GetMapping("/{folderId}")
-    public List<PermissionDto> getAllInFolder(@PathVariable Long folderId) {
-        return permissionService.findAllInFolder(folderId);
+    @GetMapping
+    public List<PermissionDto> getAll() {
+        return permissionService.findAll();
     }
 
     @GetMapping("/{permissionId}")

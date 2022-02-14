@@ -7,6 +7,7 @@ import com.example.documentsystem.entities.UserEntity;
 import com.example.documentsystem.models.Document;
 import com.example.documentsystem.models.DocumentUserFields;
 import com.example.documentsystem.models.ListDto;
+import com.example.documentsystem.models.User;
 import com.example.documentsystem.models.filter.Filter;
 import com.example.documentsystem.models.filter.FilterList;
 import com.example.documentsystem.models.permission.Permission;
@@ -52,6 +53,7 @@ public class EntityExtensions {
         return new PermissionDto(
                 permissionEntity.getId(),
                 permissionEntity.getFolderId(),
+                permissionEntity.getName(),
                 permissionEntity.getUsers().stream().map(UserEntity::getId).collect(Collectors.toList()),
                 permissionEntity.getArea(),
                 new ArrayList<>(permissionEntity.getPermissions()),
@@ -93,5 +95,16 @@ public class EntityExtensions {
         } catch (JAXBException exception) {
             throw new ValidationException(exception.getMessage());
         }
+    }
+
+    public static User toUser(UserEntity userEntity) {
+        return new User(
+                userEntity.getId(),
+                userEntity.getUsername(),
+                userEntity.getPassword(),
+                userEntity.getEmail(),
+                userEntity.getCreated(),
+                userEntity.getModified()
+        );
     }
 }

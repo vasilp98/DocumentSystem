@@ -2,19 +2,20 @@ package com.example.documentsystem.services;
 
 import com.example.documentsystem.entities.TaskEntity;
 import com.example.documentsystem.entities.UserEntity;
+import com.example.documentsystem.models.User;
 
 import java.util.List;
 
 public interface UserService {
     UserEntity getCurrentUser();
 
-    List<UserEntity> findAll();
+    List<User> findAll();
 
-    UserEntity findById(Long id);
+    User findById(Long id);
 
-    UserEntity create(UserEntity userEntity);
+    User create(User userEntity);
 
-    UserEntity update(UserEntity userEntity);
+    User update(User userEntity);
 
-    UserEntity deleteById(Long id);
+    User deleteById(Long id);
 }

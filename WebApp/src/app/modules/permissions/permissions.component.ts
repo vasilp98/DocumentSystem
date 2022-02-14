@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormArray, FormBuilder } from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { ActivatedRoute } from "@angular/router";
 import { DataService } from "@core/services/data.service";
 
@@ -9,53 +9,84 @@ import { DataService } from "@core/services/data.service";
   styleUrls: ["./permissions.component.scss"],
 })
 export class PermissionsComponent implements OnInit {
-  folder = null;
-  form: FormArray = this.fb.array([]);
+    permissions = null;
+    showAddNewPermissionModal: boolean = false;
+    folders;
+    fields = new Map([["Name", "name"], ["Document type", "documentType"]]);
+    operations = new Map([["Equal", "EQUAL"], ["Not equal", "NOT_EQUAL"]]);
 
-  constructor(
-      private route: ActivatedRoute,
-      private dataService: DataService,
-      private fb: FormBuilder
-  ) {}
-
-  ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      this.getFolder(params['folderId']);
+    form = new FormGroup({
+        "name": new FormControl("", Validators.required),
+        "folder": new FormControl("", Validators.required),
+        "area": new FormControl("FOLDER", Validators.required),
+        "option-1": new FormControl(false,Validators.required),
+        "option-2": new FormControl(false,Validators.required),
+        "option-3": new FormControl(false,Validators.required),
+        "field": new FormControl("",Validators.required),
+        "operation": new FormControl("",Validators.required),
+        "value": new FormControl("",Validators.required),
     });
-  }
 
-  private getFolder(folderId: number) {
-    this.dataService.getFolder(folderId).subscribe((data) => {
-      this.folder = data;
-      this.initForm();
-    });
-  }
+    constructor(private dataService: DataService) {}
 
-  private initForm() {
-    // load all existing permissions for a folder (make this readonly maybe)
-    this.folder!.permissions.forEach((p) => {
-      this.form.push(
-          this.fb.group({
-            area: [p.area],
-            filter: [p.filter.value],
-            filterValue: [p.filter.value],
-            users: [p.users],
-          })
-      );
-    });
-  }
+    ngOnInit(): void {
+        this.getPermissions();
+    }
 
-  addPermissionRule() {
-    this.form.push(
-        this.fb.group({
-          area: [],
-          filter: [],
-          filterValue: [],
-          users: [],
-        })
-    );
-    console.log(this.form)
-  }
+    getPermissions(): void{
+        this.dataService.getPermissions().subscribe({
+            next: data => {
+                this.permissions = data;
+            },
+            error: err => {
+                console.log(err);
+            }
+        });
+    }
 
-  submitPermissions() {}
+    loadFolders() {
+        this.dataService.getFolders().subscribe({
+            next: data => {
+                this.folders = data;
+                this.form.controls['folder'].setValue(data[0]);
+            },
+            error: err => {
+                console.log(err);
+            }
+        });
+    }
+
+    onSubmit(){
+        let payload = this.form.getRawValue();
+
+        payload.filters = [{
+            field: this.fields.get(this.form.controls['field'].value),
+            operation: this.operations.get(this.form.controls['operation'].value),
+            value: this.form.controls['value'].value,
+        }];
+
+        payload.permissions = [];
+        if (this.form.controls['option-1'].value)
+            payload.permissions.push('READ');
+
+        if (this.form.controls['option-2'].value)
+            payload.permissions.push('WRITE');
+
+        if (this.form.controls['option-3'].value)
+            payload.permissions.push('DELETE');
+
+        payload.folderId = this.form.controls['folder'].value.id;
+
+        payload.area = payload.area.toUpperCase();
+
+        this.dataService.createPermission(payload).subscribe({
+            next: data => {
+                this.permissions.push(data);
+                this.showAddNewPermissionModal = false;
+            },
+            error: err => {
+                console.log(err);
+            }
+        });
+    }
 }
