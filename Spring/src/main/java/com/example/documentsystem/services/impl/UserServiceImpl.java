@@ -78,10 +78,4 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
         return old;
     }
-
-    private void ValidatePassword(String password) {
-        Pattern pattern = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$");
-        if (!pattern.matcher(password).matches())
-            throw new InvalidEntityDataException("Password not correct");
-    }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, ReplaySubject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +16,7 @@ export class MessageService {
     private alertSource = new BehaviorSubject({show: false, message: '', type: ''});
     currentAlert = this.alertSource.asObservable();
 
-    private listSource = new BehaviorSubject({});
+    private listSource = new ReplaySubject();
     list = this.listSource.asObservable();
 
     constructor() { }

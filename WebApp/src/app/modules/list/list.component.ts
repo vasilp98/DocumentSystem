@@ -56,11 +56,11 @@ export class ListComponent implements OnInit {
   onSubmit(){
     let payload = this.form.getRawValue();
 
-    payload.filters = [{
+    payload.filter = {
       field: this.fields.get(this.form.controls['field'].value),
       operation: this.operations.get(this.form.controls['operation'].value),
       value: this.form.controls['value'].value,
-    }];
+    };
 
     payload.folderId = this.form.controls['folder'].value.id;
 

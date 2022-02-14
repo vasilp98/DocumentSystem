@@ -9,4 +9,6 @@ public interface FilterService {
     List<DocumentEntity> filterDocuments(List<DocumentEntity> documentEntities, List<Filter> filters);
 
     boolean checkDocument(DocumentEntity documentEntity, List<Filter> filters);
+
+    void validateFilter(Filter filter);
 }

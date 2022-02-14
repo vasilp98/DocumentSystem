@@ -161,6 +161,9 @@ export class DocumentsComponent implements OnInit {
       next: data => {
         this.selectedDocument = data.id;
         this.uploadFileToDocument(data.id);
+
+        this.documents.push(data);
+        this.showAddNewDocumentModal = false;
       },
       error: err => {
         console.log(err);

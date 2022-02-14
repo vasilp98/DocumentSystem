@@ -4,21 +4,20 @@ import com.example.documentsystem.dao.DocumentRepository;
 import com.example.documentsystem.dao.ListRepository;
 import com.example.documentsystem.entities.DocumentEntity;
 import com.example.documentsystem.entities.ListEntity;
+import com.example.documentsystem.entities.PermissionEntity;
 import com.example.documentsystem.entities.UserEntity;
 import com.example.documentsystem.extensions.EntityExtensions;
 import com.example.documentsystem.models.Document;
 import com.example.documentsystem.models.ListDto;
 import com.example.documentsystem.models.filter.Filter;
 import com.example.documentsystem.models.permission.Permission;
-import com.example.documentsystem.services.DocumentService;
-import com.example.documentsystem.services.FilterService;
-import com.example.documentsystem.services.ListService;
-import com.example.documentsystem.services.UserService;
+import com.example.documentsystem.services.*;
 import lombok.experimental.ExtensionMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,17 +29,20 @@ public class ListServiceImpl implements ListService {
     private UserService userService;
     private DocumentRepository documentRepository;
     private FilterService filterService;
+    private PermissionService permissionService;
 
     public ListServiceImpl(
             ListRepository listRepository,
             UserService userService,
             DocumentRepository documentRepository,
-            FilterService filterService) {
+            FilterService filterService,
+            PermissionService permissionService) {
 
         this.listRepository = listRepository;
         this.userService = userService;
         this.documentRepository = documentRepository;
         this.filterService = filterService;
+        this.permissionService = permissionService;
     }
 
     @Override
@@ -48,7 +50,9 @@ public class ListServiceImpl implements ListService {
         ListDto listDto = findById(listId);
         List<DocumentEntity> documentEntities = documentRepository.findByFolderIdOrderById(listDto.getFolderId());
 
-        return filterService.filterDocuments(documentEntities, listDto.getFilters()).stream().map(d -> d.toDocument()).collect(Collectors.toList());
+        List<DocumentEntity> documentsFromList = filterService.filterDocuments(documentEntities, Arrays.asList(listDto.getFilter()));
+        return documentsFromList.stream().filter(d -> permissionService.hasDocumentPermission(d, Permission.READ) &&
+                        d.getId() == d.getCurrentDocumentId()).map(de -> de.toDocument()).collect(Collectors.toList());
     }
 
     @Override
@@ -58,6 +62,7 @@ public class ListServiceImpl implements ListService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ListDto> findAllForCurrentUser() {
         UserEntity userEntity = userService.getCurrentUser();
         return listRepository.findAllByOwnerId(userEntity.getId()).stream().map(l -> l.toDto()).collect(Collectors.toList());
@@ -75,11 +80,13 @@ public class ListServiceImpl implements ListService {
     public ListDto create(ListDto listDto) {
         UserEntity userEntity = userService.getCurrentUser();
 
+        filterService.validateFilter(listDto.getFilter());
+
         return listRepository.save(new ListEntity(
                 listDto.getFolderId(),
                 userEntity.getId(),
                 listDto.getName(),
-                listDto.getFilters().serialize())).toDto();
+                listDto.getFilter().serialize())).toDto();
     }
 
     @Override

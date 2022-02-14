@@ -12,12 +12,11 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 public class AuditEntity {
-    public AuditEntity(Long documentId, String eventType, LocalDateTime eventDate, String userInitiated, String details) {
+    public AuditEntity(Long documentId, String eventType, LocalDateTime eventDate, String userInitiated) {
         this.documentId = documentId;
         this.eventType = eventType;
         this.eventDate = eventDate;
         this.userInitiated = userInitiated;
-        this.details = details;
     }
 
     @Id
@@ -34,6 +33,4 @@ public class AuditEntity {
     private LocalDateTime eventDate;
 
     private String userInitiated;
-
-    private String details;
 }

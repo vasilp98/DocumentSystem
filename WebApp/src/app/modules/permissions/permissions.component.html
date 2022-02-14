@@ -17,7 +17,7 @@
                     <clr-dg-cell>
                         <span *ngFor="let right of permission.permissions">{{right}} </span>
                     </clr-dg-cell>
-                    <clr-dg-cell>{{permission.filters[0].field}} {{permission.filters[0].operation}} {{permission.filters[0].value}}</clr-dg-cell>
+                    <clr-dg-cell>{{permission.filter.field}} {{permission.filter.operation}} {{permission.filter.value}}</clr-dg-cell>
                     <clr-dg-cell>
                         <clr-combobox-container>
                             <clr-combobox [(ngModel)]="permission.userIds" name="users" clrMulti="true">

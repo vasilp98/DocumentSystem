@@ -21,6 +21,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,8 +58,7 @@ public class EntityExtensions {
                 permissionEntity.getUsers().stream().map(UserEntity::getId).collect(Collectors.toList()),
                 permissionEntity.getArea(),
                 new ArrayList<>(permissionEntity.getPermissions()),
-                deserializeToFilters(permissionEntity.getFilter())
-        );
+                deserializeToFilters(permissionEntity.getFilter()).get(0));
     }
 
     public static ListDto toDto(ListEntity listEntity) {
@@ -67,12 +67,14 @@ public class EntityExtensions {
                 listEntity.getFolderId(),
                 listEntity.getOwnerId(),
                 listEntity.getName(),
-                deserializeToFilters(listEntity.getFilters())
-        );
+                deserializeToFilters(listEntity.getFilters()).get(0));
     }
 
     public static List<Filter> deserializeToFilters(String filters) {
         try {
+            if (filters == null)
+                return Arrays.asList(new Filter());
+
             StringReader reader = new StringReader(filters);
             JAXBContext context = JAXBContext.newInstance(FilterList.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -83,13 +85,16 @@ public class EntityExtensions {
         }
     }
 
-    public static String serialize(List<Filter> filters) {
+    public static String serialize(Filter filter) {
         try {
+            if (filter == null)
+                return null;
+
             StringWriter writer = new StringWriter();
             JAXBContext context = JAXBContext.newInstance(FilterList.class);
 
             Marshaller marshaller = context.createMarshaller();
-            marshaller.marshal(new FilterList(filters), writer);
+            marshaller.marshal(new FilterList(Arrays.asList(filter)), writer);
 
             return writer.toString();
         } catch (JAXBException exception) {

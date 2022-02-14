@@ -25,16 +25,16 @@ public class PermissionDto {
 
     private List<Permission> permissions;
 
-    private List<Filter> filters;
+    private Filter filter;
 
     public PermissionDto(Long id, Long folderId, String name,
-                         List<Long> userIds, PermissionArea area, List<Permission> permissions, List<Filter> filters) {
+                         List<Long> userIds, PermissionArea area, List<Permission> permissions, Filter filter) {
         this.id = id;
         this.folderId = folderId;
         this.name = name;
         this.userIds = userIds;
         this.area = area;
         this.permissions = permissions;
-        this.filters = filters;
+        this.filter = filter;
     }
 }

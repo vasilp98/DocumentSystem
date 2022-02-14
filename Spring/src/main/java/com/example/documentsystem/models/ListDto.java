@@ -17,5 +17,5 @@ public class ListDto {
 
     private String name;
 
-    private List<Filter> filters;
+    private Filter filter;
 }

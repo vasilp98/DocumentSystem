@@ -7,6 +7,8 @@ import com.example.documentsystem.exceptions.UnauthorizedException;
 import com.example.documentsystem.extensions.EntityExtensions;
 import com.example.documentsystem.models.Document;
 import com.example.documentsystem.models.DocumentLink;
+import com.example.documentsystem.models.auditing.AuditEventType;
+import com.example.documentsystem.services.AuditingService;
 import com.example.documentsystem.services.DocumentLinkService;
 import com.example.documentsystem.services.DocumentService;
 import lombok.experimental.ExtensionMethod;
@@ -28,17 +30,24 @@ import java.util.UUID;
 @ExtensionMethod(EntityExtensions.class)
 public class DocumentLinkServiceImpl implements DocumentLinkService {
     private final DocumentLinkRepository documentLinkRepository;
+    private AuditingService auditingService;
     private PasswordEncoder passwordEncoder;
     private DocumentRepository documentRepository;
 
     @Autowired
-    public DocumentLinkServiceImpl(DocumentRepository documentRepository, DocumentLinkRepository documentLinkRepository, PasswordEncoder passwordEncoder) {
+    public DocumentLinkServiceImpl(
+            DocumentRepository documentRepository,
+            DocumentLinkRepository documentLinkRepository,
+            AuditingService auditingService,
+            PasswordEncoder passwordEncoder) {
         this.documentLinkRepository = documentLinkRepository;
+        this.auditingService = auditingService;
         this.passwordEncoder = passwordEncoder;
         this.documentRepository = documentRepository;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Document getDocumentFromLink(String token, String password) {
         DocumentLinkEntity documentLinkEntity = documentLinkRepository.findByToken(token)
                 .orElseThrow(() -> new UnauthorizedException("Wrong password for document link"));
@@ -64,6 +73,7 @@ public class DocumentLinkServiceImpl implements DocumentLinkService {
                 encryptedPassword,
                 link.getValidUntil());
 
+        auditingService.auditEvent(AuditEventType.CREATE_LINK, link.getDocumentId());
         return documentLinkRepository.save(documentLinkEntity);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ValidationException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 @ControllerAdvice
@@ -24,7 +25,7 @@ public class ErrorHandlerControllerAdvice {
         );
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, InvalidOperationException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, InvalidOperationException.class, ValidationException.class})
     public ResponseEntity<ErrorResponse> handleBadRequest(Exception ex) {
         return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(
                 new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage())

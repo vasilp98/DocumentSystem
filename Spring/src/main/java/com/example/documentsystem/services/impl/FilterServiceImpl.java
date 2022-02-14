@@ -3,6 +3,7 @@ package com.example.documentsystem.services.impl;
 import com.example.documentsystem.entities.DocumentEntity;
 import com.example.documentsystem.exceptions.InvalidOperationException;
 import com.example.documentsystem.models.filter.Filter;
+import com.example.documentsystem.models.filter.Operation;
 import com.example.documentsystem.services.FilterService;
 import com.example.documentsystem.settings.FieldType;
 import com.example.documentsystem.settings.Settings;
@@ -13,6 +14,7 @@ import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,6 +32,9 @@ public class FilterServiceImpl implements FilterService {
 
         for (Filter filter: filters) {
             try {
+                if (filter.getField() == null && filter.getOperation() == null && filter.getValue() == null)
+                    return true;
+
                 Field field = documentEntity.getClass().getDeclaredField(filter.getField());
                 field.setAccessible(true);
                 Object value = field.get(documentEntity);
@@ -53,11 +58,66 @@ public class FilterServiceImpl implements FilterService {
             } catch (NoSuchFieldException exception) {
                 throw new ValidationException(String.format("Field with name='%s' is not valid", filter.getField()));
             } catch (IllegalAccessException illegalAccessException) {
-                throw new RuntimeException("");
+                throw new RuntimeException(illegalAccessException.getMessage());
+            } catch (NullPointerException exception) {
+                return false;
             }
         }
 
         return true;
+    }
+
+    @Override
+    public void validateFilter(Filter filter) {
+        if (filter == null)
+            return;
+
+        Map<String, FieldType> fieldTypes = Settings.getFieldTypes();
+
+            switch (fieldTypes.get(filter.getField())) {
+                case TEXT:
+                    validateStringFilter(filter);
+                    break;
+                case NUMERIC:
+                    validateNumericFilter(filter);
+                    break;
+                case DATE:
+                    validateDateFilter(filter);
+                    break;
+            }
+    }
+
+    private void validateStringFilter(Filter filter) {
+        switch (filter.getOperation()) {
+            case BEFORE:
+                throw new InvalidOperationException("Operation 'Before' is not valid for text fields");
+            case AFTER:
+                throw new InvalidOperationException("Operation 'After' is not valid for text fields");
+        }
+    }
+
+    private void validateNumericFilter(Filter filter) {
+        if (filter.getOperation() == Operation.CONTAINS) {
+            throw new InvalidOperationException("Operation 'Contains' is not valid for numeric fields");
+        }
+
+        try {
+            Integer.parseInt(filter.getValue());
+        } catch (NumberFormatException e) {
+            throw new ValidationException(String.format("'%s' is not valid number!", filter.getValue()));
+        }
+    }
+
+    private void validateDateFilter(Filter filter) {
+        if (filter.getOperation() == Operation.CONTAINS) {
+            throw new InvalidOperationException("Operation 'Contains' is not valid for date fields");
+        }
+
+        try {
+            LocalDate.parse(filter.getValue());
+        } catch (DateTimeParseException e) {
+            throw new ValidationException(String.format("'%s' is not valid date!", filter.getValue()));
+        }
     }
 
     private boolean checkStringValue(Filter filter, String value) {

@@ -41,6 +41,8 @@ export class FoldersComponent implements OnInit {
   onSubmit(){
     this.dataService.createFolder(this.form.controls['folderName'].value, this.form.controls['location'].value).subscribe({
       next: data => {
+        this.folders.push(data);
+        this.showAddNewFolderModal = false;
       },
       error: err => {
         console.log(err);

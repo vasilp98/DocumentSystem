@@ -7,5 +7,7 @@ public enum AuditEventType {
     CHANGE_CONTENT,
     DOWNLOAD,
     OPEN,
-    CREATE_VERSION
+    CREATE_VERSION,
+    COMMENT,
+    CREATE_LINK
 }

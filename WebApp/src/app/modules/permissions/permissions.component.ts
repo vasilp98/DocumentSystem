@@ -36,9 +36,9 @@ export class PermissionsComponent implements OnInit {
         "option-1": new FormControl(false,Validators.required),
         "option-2": new FormControl(false,Validators.required),
         "option-3": new FormControl(false,Validators.required),
-        "field": new FormControl("",Validators.required),
-        "operation": new FormControl("",Validators.required),
-        "value": new FormControl("",Validators.required),
+        "field": new FormControl(null, Validators.required),
+        "operation": new FormControl(null, Validators.required),
+        "value": new FormControl(null, Validators.required),
     });
 
     constructor(private dataService: DataService) {}
@@ -102,11 +102,15 @@ export class PermissionsComponent implements OnInit {
     onSubmit(){
         let payload = this.form.getRawValue();
 
-        payload.filters = [{
-            field: this.fields.get(this.form.controls['field'].value),
-            operation: this.operations.get(this.form.controls['operation'].value),
-            value: this.form.controls['value'].value,
-        }];
+        payload.filter = null;
+
+        if (this.form.controls['field'].value != null || this.form.controls['operation'].value != null || this.form.controls['value'].value != null) {
+            payload.filter = {
+                field: this.fields.get(this.form.controls['field'].value),
+                operation: this.operations.get(this.form.controls['operation'].value),
+                value: this.form.controls['value'].value,
+            };
+        }
 
         payload.permissions = [];
         if (this.form.controls['option-1'].value)
@@ -124,6 +128,7 @@ export class PermissionsComponent implements OnInit {
 
         this.dataService.createPermission(payload).subscribe({
             next: data => {
+                data.folderName = this.form.controls['folder'].value.name;
                 this.permissions.push(data);
                 this.showAddNewPermissionModal = false;
             },

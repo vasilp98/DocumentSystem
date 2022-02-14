@@ -10,7 +10,6 @@ import com.example.documentsystem.exceptions.UploadFileException;
 import com.example.documentsystem.extensions.EntityExtensions;
 import com.example.documentsystem.models.*;
 import com.example.documentsystem.models.auditing.AuditEventType;
-import com.example.documentsystem.models.auditing.AuditedField;
 import com.example.documentsystem.models.permission.Permission;
 import com.example.documentsystem.services.AuditingService;
 import com.example.documentsystem.services.DocumentService;
@@ -18,20 +17,13 @@ import com.example.documentsystem.services.PermissionService;
 import com.example.documentsystem.services.context.Context;
 import lombok.experimental.ExtensionMethod;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,9 +66,7 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     @Transactional(readOnly = true)
     public Document findById(Long documentId) {
-        DocumentEntity documentEntity = documentRepository.findById(documentId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Document with ID=%s not found.", documentId)));
-
+        DocumentEntity documentEntity = findEntityById(documentId);
         permissionService.checkDocumentPermission(documentEntity, Permission.READ);
 
         return documentEntity.toDocument();
@@ -94,6 +84,8 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Document create(StoredDocument storedDocument) {
+        permissionService.checkFolderPermission(storedDocument.getFolderId(), Permission.WRITE);
+
         String currentUser = Context.getCurrentUserName();
         DocumentEntity documentEntity = new DocumentEntity(
                 storedDocument.getFolderId(),
@@ -110,14 +102,14 @@ public class DocumentServiceImpl implements DocumentService {
         documentEntity.setVersionNumber(1);
         documentEntity = documentRepository.save(documentEntity);
 
-        auditingService.auditStore(new ArrayList<>(), documentEntity.getId());
+        auditingService.auditEvent(AuditEventType.STORE, documentEntity.getId());
 
         return documentEntity.toDocument();
     }
 
     @Override
     public Document updateFields(Long documentId, DocumentUserFields fields) {
-        DocumentEntity documentEntity = documentRepository.getById(documentId);
+        DocumentEntity documentEntity = findEntityById(documentId);
         permissionService.checkDocumentPermission(documentEntity, Permission.WRITE);
 
         documentEntity.setModifyDate(System.currentTimeMillis() / 1000L);
@@ -135,13 +127,13 @@ public class DocumentServiceImpl implements DocumentService {
 
         documentRepository.save(documentEntity);
 
-        auditingService.auditUpdateFields(getAuditedFields(documentEntity, fields), documentId);
+        auditingService.auditEvent(AuditEventType.UPDATE_FIELDS, documentId);
         return documentEntity.toDocument();
     }
 
     @Override
     public void addFile(Long documentId, MultipartFile file) {
-        DocumentEntity documentEntity = documentRepository.getById(documentId);
+        DocumentEntity documentEntity = findEntityById(documentId);
         permissionService.checkDocumentPermission(documentEntity, Permission.WRITE);
 
         documentEntity.setModifyDate(System.currentTimeMillis() / 1000L);
@@ -168,6 +160,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FileStream getFile(Long documentId, Integer fileNumber) {
         FileEntity firstFileEntity = fileRepository.findByDocumentIdAndNumber(documentId, fileNumber);
 
@@ -178,23 +171,23 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public List<FileEntity> getFiles(Long documentId) {
+        auditingService.auditEvent(AuditEventType.OPEN, documentId);
         return fileRepository.findAllByDocumentId(documentId);
-    }
-
-    private List<AuditedField> getAuditedFields(DocumentEntity currentDocumentEntity, DocumentUserFields updatedFields) {
-        return new ArrayList<>();
     }
 
     @Override
     public Document deleteById(Long documentId) {
-        DocumentEntity documentEntity = documentRepository.findById(documentId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Document with ID=%s not found.", documentId)));
-
+        DocumentEntity documentEntity = findEntityById(documentId);
         permissionService.checkDocumentPermission(documentEntity, Permission.DELETE);
 
         documentRepository.deleteById(documentId);
 
         auditingService.auditEvent(AuditEventType.DELETE, documentId);
         return documentEntity.toDocument();
+    }
+
+    private DocumentEntity findEntityById(Long documentId) {
+        return documentRepository.findById(documentId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Document with ID=%s not found.", documentId)));
     }
 }

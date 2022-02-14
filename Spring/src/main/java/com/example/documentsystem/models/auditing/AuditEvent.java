@@ -18,6 +18,4 @@ public class AuditEvent {
     private LocalDateTime eventDate;
 
     private String userInitiated;
-
-    private List<AuditedField> details;
 }

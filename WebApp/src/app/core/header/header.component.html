@@ -27,20 +27,20 @@
         <a href="/folders" class="active nav-link nav-icon">
             <clr-icon shape="folder"></clr-icon>
         </a>
-        <clr-dropdown [clrCloseMenuOnItemClick]="false" (click)="getLists()">
+        <clr-dropdown [clrCloseMenuOnItemClick]="true" (click)="getLists()">
             <button clrDropdownTrigger aria-label="Lists" class="active nav-link nav-icon">
                 <clr-icon shape="list" direction="down"></clr-icon>
             </button>
             <clr-dropdown-menu *clrIfOpen>
                 <label class="dropdown-header" aria-hidden="true">Lists:</label>
-                <div *ngFor="let list of lists" (click)="openList(list.id)">
-                    <div clrDropdownItem>{{list.name}}</div>
+                <div *ngFor="let list of lists">
+                    <div (click)="openList(list.id)" clrDropdownItem>{{list.name}}</div>
                 </div>
                 <div class="dropdown-divider" role="separator" aria-hidden="true"></div>
                 <div clrDropdownItem (click)="addList()">Add new list</div>
             </clr-dropdown-menu>
         </clr-dropdown>
-        <clr-dropdown [clrCloseMenuOnItemClick]="false">
+        <clr-dropdown [clrCloseMenuOnItemClick]="true">
             <button clrDropdownTrigger aria-label="Lists" class="active nav-link nav-icon">
                 <clr-icon shape="user" direction="down"></clr-icon>
             </button>

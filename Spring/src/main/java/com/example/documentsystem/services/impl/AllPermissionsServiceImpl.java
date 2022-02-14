@@ -23,7 +23,6 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 @Transactional
 @ExtensionMethod(EntityExtensions.class)
 public class AllPermissionsServiceImpl implements PermissionService {
@@ -88,7 +87,7 @@ public class AllPermissionsServiceImpl implements PermissionService {
                 permissionDto.getName(),
                 permissionDto.getArea(),
                 permissionDto.getPermissions(),
-                permissionDto.getFilters().serialize())).toDto();
+                permissionDto.getFilter().serialize())).toDto();
     }
 
     @Override

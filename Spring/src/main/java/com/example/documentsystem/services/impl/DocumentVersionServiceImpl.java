@@ -12,8 +12,10 @@ import com.example.documentsystem.exceptions.UploadFileException;
 import com.example.documentsystem.extensions.EntityExtensions;
 import com.example.documentsystem.models.Document;
 import com.example.documentsystem.models.auditing.AuditEventType;
+import com.example.documentsystem.models.permission.Permission;
 import com.example.documentsystem.services.AuditingService;
 import com.example.documentsystem.services.DocumentVersionService;
+import com.example.documentsystem.services.PermissionService;
 import com.example.documentsystem.services.context.Context;
 import lombok.experimental.ExtensionMethod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +41,21 @@ public class DocumentVersionServiceImpl implements DocumentVersionService {
     private final DocumentRepository documentRepository;
     private FileRepository fileRepository;
     private FileContentRepository fileContentRepository;
+    private PermissionService permissionService;
     private AuditingService auditingService;
 
     @Autowired
-    public DocumentVersionServiceImpl(DocumentRepository documentRepository,
-                                      FileRepository fileRepository,
-                                      FileContentRepository fileContentRepository,
-                                      AuditingService auditingService) {
+    public DocumentVersionServiceImpl(
+            DocumentRepository documentRepository,
+            FileRepository fileRepository,
+            FileContentRepository fileContentRepository,
+            PermissionService permissionService,
+            AuditingService auditingService) {
+
         this.documentRepository = documentRepository;
         this.fileRepository = fileRepository;
         this.fileContentRepository = fileContentRepository;
+        this.permissionService = permissionService;
         this.auditingService = auditingService;
     }
 
@@ -68,6 +75,7 @@ public class DocumentVersionServiceImpl implements DocumentVersionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public InputStream getFile(Long versionId, Integer fileNumber) {
         FileEntity firstFileEntity = fileRepository.findByDocumentIdAndNumber(versionId, fileNumber);
 
@@ -78,7 +86,11 @@ public class DocumentVersionServiceImpl implements DocumentVersionService {
 
     @Override
     public Document create(Long documentId) {
-        DocumentEntity currentDocumentEntity = documentRepository.getById(documentId);
+        DocumentEntity currentDocumentEntity = documentRepository.findById(documentId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Document with ID=%s not found.", documentId)));
+
+        permissionService.checkDocumentPermission(currentDocumentEntity, Permission.WRITE);
+
         DocumentEntity versionEntity = new DocumentEntity(currentDocumentEntity);
 
         currentDocumentEntity.setVersionNumber(currentDocumentEntity.getVersionNumber() + 1);

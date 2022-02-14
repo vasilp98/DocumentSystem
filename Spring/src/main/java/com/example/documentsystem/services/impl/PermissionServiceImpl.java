@@ -23,6 +23,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 @Transactional
 @ExtensionMethod(EntityExtensions.class)
 public class PermissionServiceImpl implements PermissionService {
@@ -56,6 +57,9 @@ public class PermissionServiceImpl implements PermissionService {
                 new EntityNotFoundException(
                         String.format("User with username=%s not found or you don't have permissions to access it.", username)));
 
+        if (folderRepository.getById(folderId).getOwnerId() == userEntity.getId())
+            return true;
+
         return userEntity.getPermissions()
                 .stream().anyMatch(p -> p.getArea() == PermissionArea.FOLDER &&
                         p.getFolderId() == folderId &&
@@ -64,7 +68,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public void checkDocumentPermission(DocumentEntity documentEntity, Permission permission) {
-        if (hasDocumentPermission(documentEntity, permission))
+        if (!hasDocumentPermission(documentEntity, permission))
             throw new PermissionException("You don't have permission to execute this action");
     }
 
@@ -74,6 +78,9 @@ public class PermissionServiceImpl implements PermissionService {
         UserEntity userEntity = userRepository.findByUsername(username).orElseThrow(() ->
                 new EntityNotFoundException(
                         String.format("User with username=%s not found or you don't have permissions to access it.", username)));
+
+        if (documentEntity.getStoreUser().equals(username))
+            return true;
 
         List<PermissionEntity> documentPermissions = userEntity.getPermissions()
                 .stream().filter(p -> p.getArea() == PermissionArea.DOCUMENT)
@@ -106,12 +113,14 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public PermissionDto create(PermissionDto permissionDto) {
+        filterService.validateFilter(permissionDto.getFilter());
+
         return permissionRepository.save(new PermissionEntity(
                 permissionDto.getFolderId(),
                 permissionDto.getName(),
                 permissionDto.getArea(),
                 permissionDto.getPermissions(),
-                permissionDto.getFilters().serialize())).toDto();
+                permissionDto.getFilter().serialize())).toDto();
     }
 
     @Override
