@@ -23,8 +23,8 @@ public class CommentController {
         return commentService.findAllByDocumentId(documentId);
     }
 
-    @PostMapping("{documentId}")
+    @PostMapping("/{documentId}")
     public CommentEntity create(@PathVariable Long documentId, @RequestBody Comment commentDto) {
-        return this.commentService.create(new CommentEntity(commentDto.getDocumentId(), commentDto.getCreatedUser(), commentDto.getContent()));
+        return this.commentService.create(documentId, commentDto);
     }
 }

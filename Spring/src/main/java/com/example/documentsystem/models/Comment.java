@@ -9,20 +9,9 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 public class Comment {
-    private Long id;
-
     @NotNull
     private Long documentId;
 
     @NotNull
-    private String createdUser;
-
-    @NotNull
     private String content;
-
-    @NotNull
-    private LocalDateTime created;
-
-    @NotNull
-    private LocalDateTime modified;
 }

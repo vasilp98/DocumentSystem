@@ -162,6 +162,25 @@
 
                             </clr-accordion-content>
                         </clr-accordion-panel>
+                        <clr-accordion-panel>
+                            <clr-accordion-title>Comments</clr-accordion-title>
+                            <clr-accordion-content *clrIfExpanded>
+                                <div *ngFor="let comment of commentsToShow">
+                                    <span style="font-weight: bold">{{comment.created.substring(0,10)}} : {{comment.createdUser}}:</span>
+                                    <span> {{comment.content}}</span>
+                                </div>
+                                <div>
+                                    <textarea clrTextarea [(ngModel)]="commentValueModel" required></textarea>
+                                    <div style="text-align:center;">
+                                        <button (click)="postComment()" class="btn btn-sm btn-primary">Post</button>
+                                    </div>
+                                    <div *ngFor="let comment of commentsToShow">
+
+                                    </div>
+                                </div>
+
+                            </clr-accordion-content>
+                        </clr-accordion-panel>
                     </clr-accordion>
                 </div>
             </div>
