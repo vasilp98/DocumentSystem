@@ -31,8 +31,8 @@ public class PermissionController {
         return permissionService.create(permissionDto);
     }
 
-    @PostMapping("/{permissionId}")
-    public PermissionDto updatePermission(@PathVariable Long permissionId, @RequestBody PermissionDto permissionDto) {
-        return permissionService.update(permissionDto);
+    @PostMapping("/{permissionId}/users")
+    public PermissionDto updatePermission(@PathVariable Long permissionId, @RequestBody List<Long> userIds) {
+        return permissionService.update(permissionId, userIds);
     }
 }

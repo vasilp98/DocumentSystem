@@ -8,6 +8,7 @@
                 <clr-dg-column [clrDgField]="'level'">Level</clr-dg-column>
                 <clr-dg-column [clrDgField]="'permision'">Permission</clr-dg-column>
                 <clr-dg-column [clrDgField]="'filters'">Filters</clr-dg-column>
+                <clr-dg-column [clrDgField]="'users'">Users</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let permission of permissions">
                     <clr-dg-cell>{{permission.name}}</clr-dg-cell>
@@ -17,6 +18,29 @@
                         <span *ngFor="let right of permission.permissions">{{right}} </span>
                     </clr-dg-cell>
                     <clr-dg-cell>{{permission.filters[0].field}} {{permission.filters[0].operation}} {{permission.filters[0].value}}</clr-dg-cell>
+<!--                    <clr-dg-cell class="btn-users">-->
+<!--                    <div class="btn-container">-->
+<!--                        <button type="button" class="btn btn-icon btn-users" aria-label="users" (click)="showUsersModal = true">-->
+<!--                            <clr-icon shape="user"></clr-icon>-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                    </clr-dg-cell>-->
+                    <clr-dg-cell>
+                        <clr-combobox-container>
+                            <clr-combobox [(ngModel)]="permission.userIds" name="users" clrMulti="true">
+                                <ng-container *clrOptionSelected="let selected">
+                                    <clr-icon shape="user" role="img"></clr-icon> {{getUserName(selected)}}
+                                </ng-container>
+                                <clr-options>
+                                    <clr-option *clrOptionItems="let user of users; field:'name'" [clrValue]="user.id">
+                                        <clr-icon shape="user" role="img"></clr-icon> {{user.username}}</clr-option>
+                                </clr-options>
+                            </clr-combobox>
+                        </clr-combobox-container>
+                        <button type="button" class="btn btn-icon" aria-label="save" (click)="savePermissionUsers(permission.id, permission.userIds)">
+                            <clr-icon shape="floppy"></clr-icon>
+                        </button>
+                    </clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
@@ -36,6 +60,19 @@
             </button>
         </div>
     </div>
+
+    <clr-modal [(clrModalOpen)]="showUsersModal">
+        <h3 class="modal-title">Users</h3>
+        <div class="modal-body">
+            <form clrForm [formGroup]="form">
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" (click)="showUsersModal = false">Cancel</button>
+            <button type="submit" class="btn btn-primary" (click)="onSubmit()">Add</button>
+        </div>
+    </clr-modal>
 
     <clr-modal [(clrModalOpen)]="showAddNewPermissionModal">
         <h3 class="modal-title">Add permission</h3>

@@ -11,9 +11,23 @@ import { DataService } from "@core/services/data.service";
 export class PermissionsComponent implements OnInit {
     permissions = null;
     showAddNewPermissionModal: boolean = false;
+    showUsersModal: boolean = false;
     folders;
-    fields = new Map([["Name", "name"], ["Document type", "documentType"]]);
-    operations = new Map([["Equal", "EQUAL"], ["Not equal", "NOT_EQUAL"]]);
+    users;
+    fields = new Map([["Name", "name"],
+        ["Document type", "documentType"],
+        ["Company", "company"],
+        ["Date", "date"],
+        ["Contact", "contact"],
+        ["Status", "status"],
+        ["Amount", "amount"],
+        ["Number", "number"]]);
+
+    operations = new Map([["Equal", "EQUAL"],
+        ["Not equal", "NOT_EQUAL"],
+        ["Contains", "CONTAINS"],
+        ["After", "AFTER"],
+        ["Before", "BEFORE"]]);
 
     form = new FormGroup({
         "name": new FormControl("", Validators.required),
@@ -31,6 +45,7 @@ export class PermissionsComponent implements OnInit {
 
     ngOnInit(): void {
         this.getPermissions();
+        this.getUsers();
     }
 
     getPermissions(): void{
@@ -44,8 +59,36 @@ export class PermissionsComponent implements OnInit {
         });
     }
 
+    getUsers(): void{
+        this.dataService.getUsers().subscribe({
+            next: data => {
+                this.users = data;
+            },
+            error: err => {
+                console.log(err);
+            }
+        });
+    }
+
+    getUserName(userId: number): string {
+        const user = this.users.filter(u => u.id === userId)[0];
+        return user.username;
+    }
+
     loadFolders() {
         this.dataService.getFolders().subscribe({
+            next: data => {
+                this.folders = data;
+                this.form.controls['folder'].setValue(data[0]);
+            },
+            error: err => {
+                console.log(err);
+            }
+        });
+    }
+
+    savePermissionUsers(permissionId: number, userIds: []) {
+        this.dataService.updatePermissionUsers(permissionId, userIds).subscribe({
             next: data => {
                 this.folders = data;
                 this.form.controls['folder'].setValue(data[0]);

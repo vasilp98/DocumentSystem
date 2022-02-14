@@ -92,23 +92,18 @@ public class AllPermissionsServiceImpl implements PermissionService {
     }
 
     @Override
-    public PermissionDto update(PermissionDto permissionDto) {
-        PermissionEntity permissionEntity = permissionRepository.getById(permissionDto.getId());
+    public PermissionDto update(Long permissionId, List<Long> userIds) {
+        PermissionEntity permissionEntity = permissionRepository.getById(permissionId);
 
-        if (permissionDto.getPermissions() != null)
-            permissionEntity.setPermissions(permissionDto.getPermissions());
+        for (UserEntity userEntity: permissionEntity.getUsers()) {
+            userEntity.getPermissions().remove(permissionEntity);
+            userRepository.save(userEntity);
+        }
 
-        if (permissionDto.getFilters() != null)
-            permissionEntity.setFilter(permissionDto.getFilters().serialize());
-
-        permissionRepository.save(permissionEntity);
-
-        if (permissionDto.getUserIds() != null) {
-            for (Long userId: permissionDto.getUserIds()) {
-                UserEntity userEntity = userRepository.getById(userId);
-                userEntity.getPermissions().add(permissionEntity);
-                userRepository.save(userEntity);
-            }
+        for (Long userId: userIds) {
+            UserEntity userEntity = userRepository.getById(userId);
+            userEntity.getPermissions().add(permissionEntity);
+            userRepository.save(userEntity);
         }
 
         return permissionEntity.toDto();

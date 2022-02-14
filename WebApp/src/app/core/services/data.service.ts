@@ -98,4 +98,8 @@ export class DataService {
         return this.http.post( API_URL + `link/`, payload);
     }
 
+    updatePermissionUsers(permissionId: number, users: []): Observable<any> {
+        return this.http.post(API_URL + `permission/${permissionId}/users`, users);
+    }
+
 }

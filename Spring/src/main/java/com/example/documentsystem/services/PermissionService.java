@@ -22,7 +22,7 @@ public interface PermissionService {
 
     PermissionDto create(PermissionDto permissionDto);
 
-    PermissionDto update(PermissionDto permissionDto);
+    PermissionDto update(Long permissionId, List<Long> userIds);
 
     PermissionDto deleteById(Long id);
 }
