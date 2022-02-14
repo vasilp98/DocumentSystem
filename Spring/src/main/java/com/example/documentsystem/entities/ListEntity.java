@@ -33,5 +33,7 @@ public class ListEntity {
     public ListEntity(Long folderId, Long ownerId, String name, String filters) {
         this.folderId = folderId;
         this.filters = filters;
+        this.ownerId = ownerId;
+        this.name = name;
     }
 }

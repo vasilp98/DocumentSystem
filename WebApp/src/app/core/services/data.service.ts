@@ -114,4 +114,8 @@ export class DataService {
         return this.http.post(API_URL + `permission/${permissionId}/users`, users);
     }
 
+    createList(data): Observable<any>{
+        return this.http.post( API_URL + 'list', data);
+    }
+
 }

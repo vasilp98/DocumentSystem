@@ -18,13 +18,6 @@
                         <span *ngFor="let right of permission.permissions">{{right}} </span>
                     </clr-dg-cell>
                     <clr-dg-cell>{{permission.filters[0].field}} {{permission.filters[0].operation}} {{permission.filters[0].value}}</clr-dg-cell>
-<!--                    <clr-dg-cell class="btn-users">-->
-<!--                    <div class="btn-container">-->
-<!--                        <button type="button" class="btn btn-icon btn-users" aria-label="users" (click)="showUsersModal = true">-->
-<!--                            <clr-icon shape="user"></clr-icon>-->
-<!--                        </button>-->
-<!--                    </div>-->
-<!--                    </clr-dg-cell>-->
                     <clr-dg-cell>
                         <clr-combobox-container>
                             <clr-combobox [(ngModel)]="permission.userIds" name="users" clrMulti="true">

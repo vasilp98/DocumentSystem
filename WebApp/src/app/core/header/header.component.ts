@@ -27,6 +27,13 @@ export class HeaderComponent implements OnInit {
     this.messageService.currentAlert.subscribe(message => {
       this.alert = message;
     });
+
+    this.messageService.list.subscribe(message => {
+      if (this.lists == null)
+        this.getLists();
+
+      this.lists.push(message);
+    });
   }
 
   closeAlert(){
