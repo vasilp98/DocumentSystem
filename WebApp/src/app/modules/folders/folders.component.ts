@@ -44,10 +44,11 @@ export class FoldersComponent implements OnInit {
       next: data => {
         this.messageService.changeAlert({
           show: true,
-          content: 'Folder successfully created',
+          message: 'Folder successfully created',
           type: 'success'
         });
         this.getFolders();
+        this.showAddNewFolderModal = false;
       },
       error: err => {
         console.log(err);

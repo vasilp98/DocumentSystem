@@ -26,6 +26,10 @@ export class DataService {
         return this.http.delete( API_URL + `folder/${folder.id}`);
     }
 
+    deleteDocument(document): Observable<any>{
+        return this.http.delete( API_URL + `document/${document.id}`);
+    }
+
     getDocuments(id: number): Observable<any>{
         return this.http.get( API_URL + `folder/${id}/documents`, {responseType: 'json'});
     }

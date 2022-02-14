@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "../../core/services/data.service";
+import {TokenStorageService} from '@core/services/token-storage.service';
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-home',
@@ -10,11 +12,16 @@ export class HomeComponent implements OnInit {
     content: string = '';
     hideAlert: boolean = true;
     alertType: string;
-    constructor(private dataService: DataService) {
+    constructor(private router: Router, private tokenStorage: TokenStorageService, private dataService: DataService) {
     }
 
     ngOnInit(): void {
-
+        if (this.tokenStorage.getToken()) {
+            this.router.navigate(['/folders']);
+        }
+        else{
+            this.router.navigate(['/login']);
+        }
     }
 
     testCall(){

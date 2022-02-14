@@ -6,7 +6,8 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule,  HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HttpInterceptorService } from "./core/interceptors/error.interceptor";
 
 import { authInterceptorProviders } from "./core/interceptors/auth.interceptor";
 import { HomeComponent } from "./modules/home/home.component";
@@ -24,6 +25,7 @@ import { ListComponent } from './modules/list/list.component';
 import { PermissionsComponent } from './modules/permissions/permissions.component';
 import { CdsModule } from '@cds/angular';
 import { UsersComponent } from './modules/users/users.component';
+import {AuthGuardService } from "@core/services/auth.guard";
 
 @NgModule({
   declarations: [
@@ -39,7 +41,7 @@ import { UsersComponent } from './modules/users/users.component';
     DocumentLinksComponent,
     ListComponent,
     PermissionsComponent,
-    UsersComponent
+    UsersComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,7 +53,13 @@ import { UsersComponent } from './modules/users/users.component';
     ReactiveFormsModule,
     CdsModule,
   ],
-  providers: [authInterceptorProviders],
+  providers: [authInterceptorProviders, AuthGuardService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptorService,
+      multi: true
+    }],
   bootstrap: [AppComponent],
+
 })
 export class AppModule {}

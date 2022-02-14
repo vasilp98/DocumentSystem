@@ -55,12 +55,14 @@ export class DocumentsComponent implements OnInit {
   commentValueModel;
   linksPasswordModel;
   originalDocument;
+  initalDocument;
   constructor(private dataService: DataService, private messageService: MessageService, private router: ActivatedRoute) {
 
   }
 
   ngOnInit(): void {
     this.router.params.subscribe(params => {
+      this.initalDocument = params['id'];
       this.getDocuments(params['id']);
       this.currentFolderId = params['id'];
     });
@@ -94,6 +96,7 @@ export class DocumentsComponent implements OnInit {
   getFiles(document){
     this.showViewer = false;
     this.currentDocument = document;
+    this.documentForm.patchValue(document.userFields);
     this.dataService.getFiles(document.id).subscribe({
       next: data => {
         this.files = data;
@@ -121,7 +124,6 @@ export class DocumentsComponent implements OnInit {
     this.showDocument = true;
     this.selectedDocument  = document.id;
     this.originalDocument = document;
-    this.documentForm.patchValue(document.userFields);
 
     this.valueChangeSubscription = this.documentForm.valueChanges.subscribe(x => {
       this.formHasChanged = true;
@@ -157,10 +159,39 @@ export class DocumentsComponent implements OnInit {
   }
 
   onSubmit(){
-    this.dataService.createDocument(this.form.getRawValue(), this.currentFolderId).subscribe({
+    if(this.file){
+      this.dataService.createDocument(this.form.getRawValue(), this.currentFolderId).subscribe({
+        next: data => {
+          this.selectedDocument = data.id;
+          this.uploadFileToDocument(data.id);
+          this.messageService.changeAlert({
+            show: true,
+            message: 'Document successfully created',
+            type: 'success'
+          });
+          this.showAddNewDocumentModal = false;
+          this.getDocuments(this.initalDocument);
+        },
+        error: err => {
+          console.log(err);
+        }
+      });
+    }else{
+      this.messageService.changeAlert({
+        show: true,
+        message: 'No file selected',
+        type: 'danger'
+      });
+    }
+
+
+
+  }
+
+  removeDocument(document){
+    this.dataService.deleteDocument(document).subscribe({
       next: data => {
-        this.selectedDocument = data.id;
-        this.uploadFileToDocument(data.id);
+        this.getDocuments(this.initalDocument);
       },
       error: err => {
         console.log(err);
@@ -169,7 +200,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   updateFields(){
-    this.dataService.updateFields(this.selectedDocument, this.documentForm.getRawValue()).subscribe(
+    this.dataService.updateFields(this.currentDocument.id, this.documentForm.getRawValue()).subscribe(
         (event: any) => {
             this.formHasChanged = false;
         }
