@@ -202,8 +202,12 @@ export class DocumentsComponent implements OnInit {
 
   updateFields(){
     this.dataService.updateFields(this.currentDocument.id, this.documentForm.getRawValue()).subscribe(
-        (event: any) => {
+        (data: any) => {
             this.formHasChanged = false;
+            const index = this.documents.indexOf(this.currentDocument);
+            if (index !== -1) {
+                this.documents[index] = data;
+            }
         }
     );
   }

@@ -1,5 +1,6 @@
 package com.example.documentsystem.entities;
 
+import com.example.documentsystem.models.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
@@ -34,6 +35,10 @@ public class UserEntity {
 
     @NotNull
     private String email;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private UserRole role = UserRole.USER;
 
     private LocalDateTime created = LocalDateTime.now();
 

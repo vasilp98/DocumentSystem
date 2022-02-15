@@ -98,7 +98,7 @@ export class DataService {
     }
 
     createComment(documentId, content): Observable<any>{
-        return this.http.post( API_URL + `comment/${documentId}`, {content: content});
+        return this.http.post( API_URL + `comment/${documentId}`, {documentId: documentId, content: content});
     }
 
     getVersionsOfDocument(documentId): Observable<any>{

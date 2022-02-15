@@ -8,6 +8,7 @@ import com.example.documentsystem.entities.PermissionEntity;
 import com.example.documentsystem.entities.UserEntity;
 import com.example.documentsystem.exceptions.PermissionException;
 import com.example.documentsystem.extensions.EntityExtensions;
+import com.example.documentsystem.models.UserRole;
 import com.example.documentsystem.models.permission.Permission;
 import com.example.documentsystem.models.permission.PermissionArea;
 import com.example.documentsystem.models.permission.PermissionDto;
@@ -57,7 +58,7 @@ public class PermissionServiceImpl implements PermissionService {
                 new EntityNotFoundException(
                         String.format("User with username=%s not found or you don't have permissions to access it.", username)));
 
-        if (folderRepository.getById(folderId).getOwnerId() == userEntity.getId())
+        if (folderRepository.getById(folderId).getOwnerId() == userEntity.getId() || userEntity.getRole() == UserRole.ADMIN)
             return true;
 
         return userEntity.getPermissions()
@@ -79,7 +80,7 @@ public class PermissionServiceImpl implements PermissionService {
                 new EntityNotFoundException(
                         String.format("User with username=%s not found or you don't have permissions to access it.", username)));
 
-        if (documentEntity.getStoreUser().equals(username))
+        if (documentEntity.getStoreUser().equals(username) || userEntity.getRole() == UserRole.ADMIN)
             return true;
 
         List<PermissionEntity> documentPermissions = userEntity.getPermissions()

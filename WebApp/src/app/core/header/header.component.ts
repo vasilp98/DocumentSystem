@@ -55,6 +55,10 @@ export class HeaderComponent implements OnInit {
     location.reload();
   }
 
+  isAdmin (): boolean {
+    return this.username == 'admin';
+}
+
   getLists() {
     if (this.lists == null) {
       this.dataService.getLists().subscribe({
@@ -69,6 +73,10 @@ export class HeaderComponent implements OnInit {
   }
 
   openList(id) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => {
+      return false;
+    };
+
     this.router.navigate(['/lists/' + id]);
   }
 

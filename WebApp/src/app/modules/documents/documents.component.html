@@ -7,6 +7,13 @@
                 <clr-dg-column [clrDgField]="'name'">Name</clr-dg-column>
                 <clr-dg-column [clrDgField]="'name'">Modify User</clr-dg-column>
                 <clr-dg-column [clrDgField]="'name'">Store User</clr-dg-column>
+                <clr-dg-column [clrDgField]="'name'">Document Type</clr-dg-column>
+                <clr-dg-column [clrDgField]="'name'">Company</clr-dg-column>
+                <clr-dg-column [clrDgField]="'name'">Contact</clr-dg-column>
+                <clr-dg-column [clrDgField]="'name'">Status</clr-dg-column>
+                <clr-dg-column [clrDgField]="'name'">Amount</clr-dg-column>
+                <clr-dg-column [clrDgField]="'name'">Number</clr-dg-column>
+                <clr-dg-column [clrDgField]="'name'">Date</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let document of documents" (dblclick)="showModal(document)">
                     <clr-dg-cell>
@@ -29,9 +36,21 @@
                     <clr-dg-cell>{{document.userFields.name}}</clr-dg-cell>
                     <clr-dg-cell>{{document.modifyUser}}</clr-dg-cell>
                     <clr-dg-cell>{{document.storeUser}}</clr-dg-cell>
+                    <clr-dg-cell>{{document.userFields.documentType}}</clr-dg-cell>
+                    <clr-dg-cell>{{document.userFields.company}}</clr-dg-cell>
+                    <clr-dg-cell>{{document.userFields.contact}}</clr-dg-cell>
+                    <clr-dg-cell>{{document.userFields.status}}</clr-dg-cell>
+                    <clr-dg-cell>{{document.userFields.amount}}</clr-dg-cell>
+                    <clr-dg-cell>{{document.userFields.number}}</clr-dg-cell>
+                    <clr-dg-cell>{{document.userFields.date}}</clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer>{{documents?.length || 0}} document(s)</clr-dg-footer>
+                <clr-dg-footer>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10">
+                        <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Documents per page</clr-dg-page-size>
+                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{pagination.totalItems}} documents
+                    </clr-dg-pagination>
+                </clr-dg-footer>
             </clr-datagrid>
         </div>
     </div>
@@ -115,7 +134,7 @@
                                     <label for="number" class="clr-control-label">Number</label>
                                     <div class="clr-control-container">
                                         <div class="clr-input-wrapper">
-                                            <input type="text" id="number" placeholder="Number" class="clr-input" name="number" formControlName="number"/>
+                                            <input type="number" id="number" placeholder="Number" class="clr-input" name="number" formControlName="number"/>
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +150,7 @@
                                     <label for="amount" class="clr-control-label">Amount</label>
                                     <div class="clr-control-container">
                                         <div class="clr-input-wrapper">
-                                            <input type="text" id="amount" placeholder="Amount" class="clr-input" name="amount" formControlName="amount"/>
+                                            <input type="number" id="amount" placeholder="Amount" class="clr-input" name="amount" formControlName="amount"/>
                                         </div>
                                     </div>
                                 </div>
@@ -217,7 +236,7 @@
                 </clr-input-container>
                 <clr-input-container>
                     <label>Amount:</label>
-                    <input  clrInput type="text" name="amount"  formControlName="amount"/>
+                    <input  clrInput type="number" name="amount"  formControlName="amount"/>
                 </clr-input-container>
                 <clr-input-container>
                     <label>Number:</label>
